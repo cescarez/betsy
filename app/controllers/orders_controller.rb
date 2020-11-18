@@ -76,14 +76,12 @@ class OrdersController < ApplicationController
   end
 
   def complete
-    if @order.update(order_params) && @order.update(complete_date: Time.now)
+    if @order.update(status: "complete", complete_date: Time.now)
       flash[:success] = "Your order has successfully been submitted."
-      redirect_to root_page
+      redirect_back fallback_location: root_path
     else
-      #flash.now[:error] = "Error: Order was not completed."
-      #@order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}."
-      #flash.now[:error] << "Please try again."
-      render :checkout, status: :bad_request
+      flash[:error] = "Error: Order was not completed. Please try again."
+      redirect_back fallback_location: order_path(@order.id), status: :bad_request
     end
     return
   end
@@ -91,7 +89,7 @@ class OrdersController < ApplicationController
   private
 
   def order_params
-    return require(:order).permit(:user_id, :order_item_id, :shipping_info_id, :billing_info_id, :status, :complete_date)
+    return require(:order).permit(:user_id, :order_item_id, :shipping_info_id, :billing_info_id, :status, :submit_date, :complete_date)
   end
 
   def find_order
