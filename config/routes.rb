@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+
+  root "users#index"
+
   # Omniauth login route
   get "/auth/github", as: "github_login"
 
