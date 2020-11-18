@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_action :find_order, except: [:index, :new, :create]
+  before_action :find_order, except: [:index, :new, :create, :status_filter]
 
   def index
     @orders = Order.all
@@ -62,6 +62,11 @@ class OrdersController < ApplicationController
     return
   end
 
+  def self.status_filter
+    status = params[:order][:status]
+    #call some model method that will return a filter of Order.all
+  end
+
   ###TODO: COMPLETE CHECKOUT METHOD
   def checkout
     unless @order.user.is_auth
@@ -86,7 +91,7 @@ class OrdersController < ApplicationController
   private
 
   def order_params
-    return require(:order).permit(:user_id, :order_item_id, :shipping_info_id, :billing_info_id, :completed)
+    return require(:order).permit(:user_id, :order_item_id, :shipping_info_id, :billing_info_id, :status, :complete_date)
   end
 
   def find_order
