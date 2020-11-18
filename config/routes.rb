@@ -4,4 +4,7 @@ Rails.application.routes.draw do
   get "/orders/:id/checkout", to: "orders#checkout", as: "checkout_order"
   post "/orders/:id/complete", to: "orders#complete", as: "complete_order"
   resources :orders
+
+  resources :products
+
 end
