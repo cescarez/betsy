@@ -1,0 +1,19 @@
+<main>
+  <h2>
+    <section class=”product-index”>
+      <%= "Product: #{@product.name}" %>
+    </section>
+  </h2>
+  <section>
+    <ul>
+      <li> <%= "Category: #{@product.category}" %> </li>
+      <li> <%= "Price: #{@product.price}" %> </li>
+    </ul>
+  </section>
+  <section>
+    <p>
+      <%= @product.description %>
+    </p>
+  </section>
+
+</main>
