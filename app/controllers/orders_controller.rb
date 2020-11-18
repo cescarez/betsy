@@ -31,16 +31,16 @@ class OrdersController < ApplicationController
   end
 
   def update
-    if @order.submitted
+    if @order.complete_date
       flash[:error] = "Your order has already been submitted for fulfillment. Please contact customer service for assistance."
       redirect_back fallback_location: order_path(@order.id)
     end
 
     if @order.update(order_params)
-      flash[:success] = "#{@order.submitted ? "Order" : "Shopping cart" } successfully updated."
+      flash[:success] = "#{@order.complete_date ? "Order" : "Shopping cart" } successfully updated."
       redirect_to order_path(@order.id)
     else
-      #flash.now[:error] = "Error: #{@order.submitted ? "order" : "shopping cart" } did not update."
+      #flash.now[:error] = "Error: #{@order.complete_date ? "order" : "shopping cart" } did not update."
       #@order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}."
       #flash.now[:error] << "Please try again."
       render :edit, status: :bad_request
@@ -53,10 +53,10 @@ class OrdersController < ApplicationController
     # @order.order_items.destroy_all
 
     if @order.destroy
-      flash[:success] = "#{@order.submitted ? "Order successfully deleted" : "Shopping cart successfully cancelled" }."
+      flash[:success] = "#{@order.complete_date ? "Order successfully deleted" : "Shopping cart successfully cancelled" }."
       redirect_back fallback_location: orders_path
     else
-      flash[:error] = "Error: #{@order.submitted ? "order was not deleted" : "shopping cart was not cancelled" }. Please try again."
+      flash[:error] = "Error: #{@order.complete_date ? "order was not deleted" : "shopping cart was not cancelled" }. Please try again."
       redirect_back fallback_location: order_path(@order.id), status: :internal_server_error
     end
     return
@@ -71,7 +71,7 @@ class OrdersController < ApplicationController
   end
 
   def complete
-    if @order.update(order_params) && @order.update(submitted: Time.now)
+    if @order.update(order_params) && @order.update(complete_date: Time.now)
       flash[:success] = "Your order has successfully been submitted."
       redirect_to root_page
     else
