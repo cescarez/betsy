@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  # Omniauth login route
+  get "/auth/github", as: "github_login"
+
+  # Omniauth callback route
+  get "/auth/:provider/callback", to: "users#create", as:"omniauth_callback"
+
   get 'users/create'
   get 'users/index'
   get 'users/show'
