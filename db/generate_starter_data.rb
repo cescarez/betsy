@@ -11,11 +11,17 @@ require 'csv'
 CSV.open('db/products-seeds.csv', 'w', write_headers: true,
                                        headers: %w[category name price description]) do |csv|
   25.times do
-    category = %w[star planet].sample
+    category = %w[star planet moon galaxy nebula].sample
     name = if category == 'star'
       Faker::Space.unique.star
            elsif category == 'planet'
       Faker::Space.unique.planet
+           elsif category == 'moon'
+             Faker::Space.unique.moon
+           elsif category == 'galaxy'
+             Faker::Space.unique.galaxy
+           elsif category == 'nebula'
+             Faker::Space.unique.nebula
            else
       'failure'
            end
