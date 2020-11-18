@@ -40,7 +40,7 @@ CSV.foreach(USERS_FILE, :headers => true) do |row|
   user.id = row['id']
   user.username = row['username']
   user.email = row['email']
-  user.authed = row['authed']
+  user.is_authenticated = row['is_authenticated']
   successful = user.save
   if !successful
     user_failures << user

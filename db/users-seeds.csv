@@ -1,4 +1,4 @@
-username,email,authed
+username,email,is_authenticated
 Villager,cassey_goodwin@turcotte-koss.co,true
 Mule,keenan@leffler.name,true
 Squid,elisha@smitham-stroman.co,false
