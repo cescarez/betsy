@@ -1,36 +1,13 @@
-<section class=”orders-index page-title”>
-  <h2>Orders</h2>
-</section>
-<section class="orders-index orders-table">
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Order #</th>
-        <th scope="col">Items Ordered</th>
-        <th scope="col">Order Total</th>
-        <th scope="col">Date Placed</th>
-      </tr>
-    </thead>
-    <tbody>
-      #TODO: add filter to all orders to limit view to logged in user
-      <% @orders.each do |order| %>
-        <% if order %>
-          <tr>
-            <th scope="row"><%= order.id %></th>
-            <td>
-              <ul>
-                <% order.order_items.each do |order_item| %>
-                  <% if order_item %>
-                    <li>$<%= order_item.quantity * order_item.product.price %> for <%= order_item.quantity %> of <%= order_item.product.name %></li>
-                  <% end %>
-                <% end %>
-              </ul>
-            </td>
-            <td><%= order.total_cost %></td>
-            <td><%= order.complete_date %></td>
-          </tr>
-        <% end %>
-      <% end %>
-    </tbody>
-  </table>
-</section>
+<main>
+  <h2>
+    <section class=”product-index”>
+      Products
+    </section>
+  </h2>
+  <ul> <% @products.each do |product|  %>
+      <li> <%= link_to product.name, product_path(product) %> |
+        <%= link_to "Edit", edit_product_path(product[:id]), method: :get%> |
+        <%= link_to "Delete", product_path(product[:id]), method: :delete, data: {confirm: "Are you sure?"} %> </li></li>
+    <% end %>
+  </ul>
+</main>
