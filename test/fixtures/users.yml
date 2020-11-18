@@ -1,0 +1,10 @@
+user_1:
+  uid: uid_1
+  provider: provider_1
+  username: username_1
+  email: email_1
+user_2:
+  uid: uid_2
+  provider: provider_2
+  username: username_2
+  email: email_2
