@@ -2,21 +2,34 @@
   <h2>Orders</h2>
 </section>
 <section class="orders-index orders-table">
+  <% form_with model: @order, url: order_status_path, class:"order-status-filter" do |f| %>
+    <% f.label :status %>
+    <% f.check_box_tag :status, "Incomplete", checked = false %>
+    <% f.check_box_tag :status, "Payment Pending", checked = false %>
+    <% f.check_box_tag :status, "Shipment Pending", checked = false %>
+    <% f.check_box_tag :status, "Completed", checked = false %>
+    <% f.check_box_tag :status, "Cancelled", checked = false %>
+    <% f.submit "Filter Orders" %>
+  <% end %>
   <table class="table">
     <thead>
       <tr>
         <th scope="col">Order #</th>
         <th scope="col">Items Ordered</th>
         <th scope="col">Order Total</th>
+        <th scope="col">Order Status</th>
         <th scope="col">Date Placed</th>
       </tr>
     </thead>
     <tbody>
       #TODO: add filter to all orders to limit view to logged in user
       <% @orders.each do |order| %>
-        <% if order %>
+        <% if order && order.status == status_filter %>
+          <tr class="table-active">
+            <td><em><%= status_filter %> Orders Summary</em></td>
+          </tr>
           <tr>
-            <th scope="row"><%= order.id %></th>
+            <th scope="row"><%= link_to order.id, order_path(order.id) %></th>
             <td>
               <ul>
                 <% order.order_items.each do |order_item| %>
@@ -27,6 +40,7 @@
               </ul>
             </td>
             <td><%= order.total_cost %></td>
+            <td><%= order.status %></td>
             <td><%= order.complete_date %></td>
           </tr>
         <% end %>
