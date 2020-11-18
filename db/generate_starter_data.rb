@@ -33,12 +33,12 @@ CSV.open('db/products-seeds.csv', 'w', write_headers: true,
 end
 
 CSV.open('db/users-seeds.csv', 'w', write_headers: true,
-                                    headers: %w[username email authed]) do |csv|
+                                    headers: %w[username email is_authenticated]) do |csv|
   25.times do
     username = Faker::Games::Minecraft.unique.mob
     email = Faker::Internet.unique.email
-    authed = [true, false].sample
+    is_authenticated = [true, false].sample
 
-    csv << [username, email, authed]
+    csv << [username, email, is_authenticated]
   end
 end
