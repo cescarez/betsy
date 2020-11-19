@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Betsy</title>
+    <title>Stellar</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -9,25 +9,37 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body>
-  <ul class="nav app-header__user-nav-container">
-    <% if @login_user %>
-
-      <li class="nav-item app-header__nav_item">
-        <%= link_to "Logged in as #{@login_user.username}", user_path(@login_user), class: "btn btn-primary" %>
-      </li>
-      <li class="nav-item app-header__nav_item">
-        <%= link_to "Log Out", logout_path, method: :delete, class: "btn btn-primary" %>
-      </li>
-
-    <% else %>
-
-      <li class="nav-item app-header__nav_item">
-        <%= link_to "Log in with GitHub", github_login_path, class: "btn btn-primary" %>
-      </li>
+  <header>
+    <h1><a name="top">Stellar</a></h1>
+    <ul class="nav app-header__user-nav-container">
+      <% if @login_user %>
+        <li class="nav-item app-header__nav_item">
+          <%= link_to "Logged in as #{@login_user.username}", user_path(@login_user), class: "btn btn-primary" %>
+        </li>
+        <li class="nav-item app-header__nav_item">
+          <%= link_to "Log Out", logout_path, method: :delete, class: "btn btn-primary" %>
+        </li>
+      <% else %>
+        <li class="nav-item app-header__nav_item">
+          <%= link_to "Log in with GitHub", github_login_path, class: "btn btn-primary" %>
+        </li>
+      <% end %>
+    </ul>
+  </header>
+  <main>
+    <% if flash.any? %>
+      <section class="alert__container">
+        <% flash.each do  |name, message| %>
+          <div class="<%= name.to_s == "error" ? "alert alert-danger" : "alert alert-success" %>">
+            <%= message %>
+          </div>
+        <% end %>
+      </section>
     <% end %>
-
-  </ul>
     <%= yield %>
+  </main>
   </body>
+  <footer>
+    <%= link_to "Back to Top", "#top", class:"small" %>
+  </footer>
 </html>
