@@ -63,11 +63,6 @@ class OrdersController < ApplicationController
     return
   end
 
-  def self.status_filter
-    status = params[:order][:status]
-    #call some model method that will return a filter of Order.all
-  end
-
   def complete
     if @order.update(status: "complete", complete_date: Time.now)
       flash[:success] = "Your order has successfully been submitted."
@@ -89,12 +84,18 @@ class OrdersController < ApplicationController
     return
   end
 
+  def status_filter
+    status = params[:order][:status]
+    #TODO: write filter_orders model method
+    @orders = Order.filter_orders(status)
+    #TODO: DOES THIS NEED A REDIRECTION?
+    return
+  end
 
   ###TODO: COMPLETE CHECKOUT METHOD
   def checkout
     unless @order.user.is_auth
       #ask user if they would like to log in or proceed as guest
-
     end
   end
 
