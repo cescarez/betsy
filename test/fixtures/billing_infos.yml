@@ -26,7 +26,6 @@ billing2:
   cvv: 456
 billing3:
   order: order3
-  product_id: 3
   first_name: Three
   last_name: Billing
   street: 9012 Billings Drive
