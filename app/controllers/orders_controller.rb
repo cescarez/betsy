@@ -6,20 +6,16 @@ class OrdersController < ApplicationController
     @orders = Order.all
   end
 
-  def new
-    @order = Order.new
-  end
-
   def create
     @order = Order.new(order_params)
 
     if @order.save
-      flash[:success] = "Shopping cart successfully created. Welcome to Stellar."
+      flash[:success] = "First item added to cart. Welcome to Stellar."
       redirect_to order_path(@order.id)
     else
-      #flash.now[:error] = "Error: shopping cart was not created."
-      #@order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}."
-      #flash.now[:error] << "Please try again."
+      flash.now[:error] = "Error: shopping cart was not created."
+      @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+      flash.now[:error] << "Please try again."
       render :new, status: :bad_request
     end
     return
@@ -41,9 +37,9 @@ class OrdersController < ApplicationController
       flash[:success] = "#{@order.complete_date ? "Order" : "Shopping cart" } successfully updated."
       redirect_to order_path(@order.id)
     else
-      #flash.now[:error] = "Error: #{@order.complete_date ? "order" : "shopping cart" } did not update."
-      #@order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}."
-      #flash.now[:error] << "Please try again."
+      flash.now[:error] = "Error: #{@order.complete_date ? "order" : "shopping cart" } did not update."
+      @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+      flash.now[:error] << "Please try again."
       render :edit, status: :bad_request
     end
     return
