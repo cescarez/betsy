@@ -22,15 +22,16 @@ class ProductsController < ApplicationController
   def create
     # user = User.find_by(uid: auth_hash[:uid], provider: 'github')
     if @login_user
-    @product = Product.new(product_params)
-    puts @product.inspect
-    puts @product.valid?
+      @product = Product.new(product_params)
+    else
+      flash[:error] = 'You must create and account to access this page.'
+      end
     if @product.save
       redirect_to products_path
       flash[:success] = "#{@product.title} was successfully added!"
       return
     else
-      flash.now[:error] = "You must create an account to sell a products"
+      flash.now[:error] = 'Something went wrong. Product was not added.'
       render :new, status: :bad_request
       return
     end
@@ -40,7 +41,7 @@ class ProductsController < ApplicationController
     @product = Work.find_by(id: params[:id])
     if @product.nil?
       head :not_found
-      flash[:error] = "Cannot find this product."
+      flash[:error] = 'Cannot find this product.'
       return
     end
   end
@@ -50,7 +51,7 @@ class ProductsController < ApplicationController
 
     if @product.nil?
       head :not_found
-      flash.now[:error] = "Something happened. Media not updated."
+      flash.now[:error] = 'Something happened. Media not updated.'
       return
     elsif @product.update(product_params)
       flash[:success] = "#{@product.title} was successfully updated!"
@@ -78,4 +79,4 @@ class ProductsController < ApplicationController
   def product_params
     params.require(:product).permit(:category, :name, :price, :description, :inventory, :user_id)
   end
-end
+  end
