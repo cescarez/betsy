@@ -9,14 +9,14 @@ describe ShippingInfo do
 
     end
   end
-  describe "validations" do
+    describe "validations" do
 
-  end
-  describe "relationships" do
+    end
+    describe "relationships" do
 
-  end
-  describe "custom methods" do
+    end
+    describe "custom methods" do
 
+    end
   end
-end
 end
