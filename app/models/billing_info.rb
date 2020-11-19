@@ -14,7 +14,7 @@ class BillingInfo < ShippingInfo
   validates :card_brand, presence: true
   validates_date :card_expiration, after: :today
   validates :card_number, presence: true
-  validates :cvv, presence: true
+  validates :card_cvv, presence: true
 
   def validate_card_number
     num = self.card_number.delete("\s")
@@ -41,6 +41,9 @@ class BillingInfo < ShippingInfo
   end
 
   def validate_card_brand
+    if self.brand.class == String
+      self.brand = self.brand.downcase.to_sym
+    end
     unless VALID_CARD_BRANDS.include? self.brand
       raise ArgumentError, "Invalid card company. Program exiting."
     else
