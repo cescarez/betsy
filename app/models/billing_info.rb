@@ -12,7 +12,7 @@ class BillingInfo < ShippingInfo
   validates :country, presence: true
 
   validates :card_brand, presence: true
-  validates_date :card_expiration, presence: true, on_or_before: lambda { Date.current }
+  validates_date :card_expiration, presence: true, on_or_after: lambda { Date.current }
   validates :card_number, presence: true
   validates :cvv, presence: true
 
