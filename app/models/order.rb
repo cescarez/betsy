@@ -12,7 +12,7 @@ class Order < ApplicationRecord
 
   def validate_status
     unless VALID_STATUSES.include? self.status
-      raise ArgumentError, "Invalid order status. Fatal Error. Program exiting."
+      raise ArgumentError, "Invalid order status. Fatal Error."
     else
       return self.status
     end

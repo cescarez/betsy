@@ -45,7 +45,7 @@ class BillingInfo < ShippingInfo
       self.brand = self.brand.downcase.to_sym
     end
     unless VALID_CARD_BRANDS.include? self.brand
-      raise ArgumentError, "Invalid card company. Program exiting."
+      raise ArgumentError, "Invalid card company. Fatal Error."
     else
       return self.card_brand
     end
