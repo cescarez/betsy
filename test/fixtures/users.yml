@@ -1,0 +1,12 @@
+user_1:
+  uid: uid_1
+  provider: github
+  username: username_1
+  email: email_1@gmail.com
+  name: name_1
+user_2:
+  uid: uid_2
+  provider: github
+  username: username_2
+  email: email_2@gmail.com
+  name: name_2

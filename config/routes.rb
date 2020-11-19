@@ -1,8 +1,10 @@
 Rails.application.routes.draw do
 
 
-  root "users#index"
-  
+  root to: "users#index"
+
+  get "/users/current", to: "users#current", as: "current_user"
+
   # Omniauth login route
   get "/auth/github", as: "github_login"
 
@@ -15,8 +17,10 @@ Rails.application.routes.draw do
 
   resources :products
 
+
+  post "/orders/:id/cancel", to: "orders#cancel", as: "cancel_order"
   post "/orders/status", to: "orders#status_filter", as: "order_status"
   get "orders/:id/checkout", to: "orders#checkout", as: "checkout_order"
   post "/orders/:id/complete", to: "orders#complete", as: "complete_order"
-  resources :orders
+  resources :orders, except: [:new]
 end

@@ -10,6 +10,15 @@ class UsersController < ApplicationController
      render_404 unless @user
    end
 
+   def current
+     @user = User.find_by(id: session[:user_id])
+     if @user.nil?
+       flash[:error] = "You must be logged in to view this page"
+       redirect_to root_path
+       return
+     end
+   end
+
    def create
      auth_hash = request.env["omniauth.auth"]
 
