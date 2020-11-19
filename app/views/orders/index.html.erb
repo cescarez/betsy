@@ -26,7 +26,7 @@
         <tr class="table-active">
           <td><em>Orders Summary</em></td>
           <td><%= @orders.length %></td>
-          <td><%= @orders.map{ |order| order.total_cost}.sum %></td>
+          <td><%= format_money(@orders.map{ |order| order.total_cost }.sum) %></td>
           <td colspan="2"></td> #empty cell to span last two columns
         </tr>
         <tr>
@@ -35,12 +35,12 @@
             <ul>
               <% order.order_items.each do |order_item| %>
                 <% if order_item %>
-                  <li>$<%= order_item.quantity * order_item.product.price %> for <%= order_item.quantity %> of <%= order_item.product.name %></li>
+                  <li><%= format_money(order_item.quantity * order_item.product.price) %> for <%= order_item.quantity %> of <%= order_item.product.name %></li>
                 <% end %>
               <% end %>
             </ul>
           </td>
-          <td><%= order.total_cost %></td>
+          <td><%= format_money(order.total_cost) %></td>
           <td><%= order.status %></td>
           <td><%= order.complete_date %></td>
         </tr>

@@ -22,5 +22,5 @@ Rails.application.routes.draw do
   post "/orders/status", to: "orders#status_filter", as: "order_status"
   get "orders/:id/checkout", to: "orders#checkout", as: "checkout_order"
   post "/orders/:id/complete", to: "orders#complete", as: "complete_order"
-  resources :orders
+  resources :orders, except: [:new]
 end
