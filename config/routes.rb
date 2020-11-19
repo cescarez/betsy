@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
 
-  root "users#index"
+  root to: "users#index"
 
   get "/users/current", to: "users#current", as: "current_user"
 
@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   get "/auth/github", as: "github_login"
 
   # Omniauth callback route
-  get "/auth/:provider/callback", to: "users#create", as:"omniauth_callback"
+  get "/auth/:provider/callback", to: "users#create", as: "omniauth_callback"
 
   resources :users
 
