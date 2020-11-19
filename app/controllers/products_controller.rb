@@ -20,8 +20,8 @@ class ProductsController < ApplicationController
   end
 
   def create
-    user = User.find_by(uid: auth_hash[:uid], provider: 'github')
-    if user
+    # user = User.find_by(uid: auth_hash[:uid], provider: 'github')
+    if @login_user
     @product = Product.new(product_params)
     puts @product.inspect
     puts @product.valid?
