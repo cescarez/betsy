@@ -20,15 +20,16 @@ class ProductsController < ApplicationController
   end
 
   def create
-    # user = User.find_by(uid: auth_hash[:uid], provider: 'github')
-    if @login_user
+    @user = User.find_by(id: session[:user_id])
+    if @user
       @product = Product.new(product_params)
+      @product.user_id = @user.id
     else
-      flash[:error] = 'You must create and account to access this page.'
+      flash[:error] = 'You must create an account to access this page.'
       end
     if @product.save
       redirect_to products_path
-      flash[:success] = "#{@product.title} was successfully added!"
+      flash[:success] = "#{@product.name} was successfully added!"
       return
     else
       flash.now[:error] = 'Something went wrong. Product was not added.'
@@ -38,7 +39,7 @@ class ProductsController < ApplicationController
   end
 
   def edit
-    @product = Work.find_by(id: params[:id])
+    @product = Product.find_by(id: params[:id])
     if @product.nil?
       head :not_found
       flash[:error] = 'Cannot find this product.'
@@ -54,9 +55,8 @@ class ProductsController < ApplicationController
       flash.now[:error] = 'Something happened. Media not updated.'
       return
     elsif @product.update(product_params)
-      flash[:success] = "#{@product.title} was successfully updated!"
+      flash[:success] = "#{@product.name} was successfully updated!"
       redirect_to products_path
-      render :edit
       return
     end
   end
@@ -69,7 +69,7 @@ class ProductsController < ApplicationController
       return
     else
       @product.destroy
-      flash[:success] = "#{@product.title} was deleted"
+      flash[:success] = "#{@product.name} was deleted"
       redirect_to products_path
       return
     end
