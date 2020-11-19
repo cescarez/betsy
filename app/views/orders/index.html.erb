@@ -10,7 +10,7 @@
     <%= f.check_box_tag :status, "cancelled", checked = false %>
     <%= f.submit "Filter Orders" %>
   <% end %>
-  <table class="table">
+  <table class="table table-hover">
     <thead>
       <tr>
         <th scope="col">Order #</th>
@@ -23,26 +23,27 @@
     <tbody>
       #TODO: add filter to all orders to limit view to logged in user
       <% @orders.each do |order| %>
-        <% if order && order.status == status_filter %>
-          <tr class="table-active">
-            <td><em><%= status_filter %> Orders Summary</em></td>
-          </tr>
-          <tr>
-            <th scope="row"><%= link_to order.id, order_path(order.id) %></th>
-            <td>
-              <ul>
-                <% order.order_items.each do |order_item| %>
-                  <% if order_item %>
-                    <li>$<%= order_item.quantity * order_item.product.price %> for <%= order_item.quantity %> of <%= order_item.product.name %></li>
-                  <% end %>
+        <tr class="table-active">
+          <td><em>Orders Summary</em></td>
+          <td><%= @orders.length %></td>
+          <td><%= @orders.map{ |order| order.total_cost}.sum %></td>
+          <td colspan="2"></td> #empty cell to span last two columns
+        </tr>
+        <tr>
+          <th scope="row"><%= link_to order.id, order_path(order.id) %></th>
+          <td>
+            <ul>
+              <% order.order_items.each do |order_item| %>
+                <% if order_item %>
+                  <li>$<%= order_item.quantity * order_item.product.price %> for <%= order_item.quantity %> of <%= order_item.product.name %></li>
                 <% end %>
-              </ul>
-            </td>
-            <td><%= order.total_cost %></td>
-            <td><%= order.status %></td>
-            <td><%= order.complete_date %></td>
-          </tr>
-        <% end %>
+              <% end %>
+            </ul>
+          </td>
+          <td><%= order.total_cost %></td>
+          <td><%= order.status %></td>
+          <td><%= order.complete_date %></td>
+        </tr>
       <% end %>
     </tbody>
   </table>

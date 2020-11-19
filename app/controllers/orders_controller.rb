@@ -1,5 +1,6 @@
 class OrdersController < ApplicationController
   before_action :find_order, except: [:index, :new, :create, :status_filter]
+  before_action :require_login, only: [:index]
 
   def index
     @orders = Order.all
@@ -67,14 +68,6 @@ class OrdersController < ApplicationController
     #call some model method that will return a filter of Order.all
   end
 
-  ###TODO: COMPLETE CHECKOUT METHOD
-  def checkout
-    unless @order.user.is_auth
-      #ask user if they would like to log in or proceed as guest
-
-    end
-  end
-
   def complete
     if @order.update(status: "complete", complete_date: Time.now)
       flash[:success] = "Your order has successfully been submitted."
@@ -84,6 +77,25 @@ class OrdersController < ApplicationController
       redirect_back fallback_location: order_path(@order.id), status: :bad_request
     end
     return
+  end
+
+  def cancel
+    if @order.update(status: "cancelled")
+      flash[:success] = "Order ##{@order.id} successfully cancelled."
+    else
+      flash[:error] = "Error. Order ##{@order.id} was not cancelled. Please try again."
+    end
+    redirect_back fallback_location: order_path(@order.id)
+    return
+  end
+
+
+  ###TODO: COMPLETE CHECKOUT METHOD
+  def checkout
+    unless @order.user.is_auth
+      #ask user if they would like to log in or proceed as guest
+
+    end
   end
 
   private
