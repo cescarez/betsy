@@ -1,3 +1,5 @@
+VALID_CARD_BRANDS = [:visa, :mastercard, :amex]
+
 class BillingInfo < ShippingInfo
   belongs_to :order
 
@@ -14,8 +16,8 @@ class BillingInfo < ShippingInfo
   validates :card_number, presence: true
   validates :cvv, presence: true
 
-  def validate_card(num)
-    num = num.delete("\s")
+  def validate_card_number
+    num = self.card_number.delete("\s")
 
     if !num || num.length <= 1 || num =~ /\D/
       return false
@@ -35,6 +37,14 @@ class BillingInfo < ShippingInfo
       return num
     else
       self.errors.add(:card_number, "Invalid card number. Please enter a valid card number to continue."
+    end
+  end
+
+  def validate_card_brand
+    unless VALID_CARD_BRANDS.include? self.brand
+      raise ArgumentError, "Invalid card company. Program exiting."
+    else
+      return self.card_brand
     end
   end
 end

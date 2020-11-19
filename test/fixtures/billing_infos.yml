@@ -33,7 +33,7 @@ billing3:
   state: NJ
   zipcode: 08101
   country: United States
-  card_brand: mastercard
+  card_brand: amex
   card_expiration: 06/22
   card_number: 379767782811407
   cvv: 012
