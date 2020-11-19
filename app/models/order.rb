@@ -6,8 +6,9 @@ class Order < ApplicationRecord
   has_many :shipping_info
   has_many :billing_info
 
-  validates_date :submit_date, on_or_before: lambda { Date.current }
-  validates_date :complete_date, on_or_before: lambda { Date.current }
+  validates :status, presence: true
+  validates_date :submit_date, on_or_before: :today, allow_nil: true
+  validates_date :complete_date, on_or_before: :today, allow_nil: true
 
   def validate_status
     unless VALID_STATUSES.include? self.status

@@ -4,6 +4,7 @@ describe OrderItem do
   let (:order_item1) do
     order_items(:order_item1)
   end
+
   describe "instantiation" do
     it "can instantiate an OrderItem object" do
       expect(order_item1.valid?).must_equal true
