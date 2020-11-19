@@ -2,7 +2,9 @@ Rails.application.routes.draw do
 
 
   root "users#index"
-  
+
+  get "/users/current", to: "users#current", as: "current_user"
+
   # Omniauth login route
   get "/auth/github", as: "github_login"
 
