@@ -36,7 +36,7 @@ class BillingInfo < ShippingInfo
     if (check_num.sum % 10 == 0)
       return num
     else
-      self.errors.add(:card_number, "Invalid card number. Please enter a valid card number to continue."
+      self.errors.add(:card_number, "Invalid card number. Please enter a valid card number to continue.")
     end
   end
 
