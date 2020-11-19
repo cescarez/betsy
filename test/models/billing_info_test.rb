@@ -118,6 +118,7 @@ describe BillingInfo do
 
       it "will raise an exception for an invalid card brand" do
         billing_info1.card_brand = :apple_pay
+        billing_info.save
         expect {
           billing_info1.validate_card_brand
         }.must_raise ArgumentError
