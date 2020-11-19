@@ -15,17 +15,6 @@ ActiveRecord::Schema.define(version: 2020_11_18_185304) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "products", force: :cascade do |t|
-    t.string "category"
-    t.string "name"
-    t.decimal "price"
-    t.text "description"
-    t.integer "inventory"
-    t.integer "user_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "users", force: :cascade do |t|
     t.string "uid"
     t.string "username"
