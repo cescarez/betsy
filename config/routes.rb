@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
 
-  root "users#index"
+  root to: "users#index"
 
   get "/users/current", to: "users#current", as: "current_user"
 
