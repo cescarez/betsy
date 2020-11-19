@@ -1,6 +1,7 @@
 class OrdersController < ApplicationController
   before_action :find_order, except: [:index, :new, :create, :status_filter]
   skip_before_action :require_login, except: [:index]
+  skip_before_action :require_login
 
   def index
     @orders = Order.all
