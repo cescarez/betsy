@@ -1,0 +1,9 @@
+order_item1:
+    product: product1
+    quantity: 3
+order_item2:
+    product: product2
+    quantity: 3
+order_item3:
+    product: product3
+    quantity: 3

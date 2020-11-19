@@ -1,0 +1,24 @@
+order1:
+  user: user_1
+  order_item: order_item1
+  shipping_info: shipping1
+  billing_info: billing1
+  status: "pending"
+  submit_date: 2020-11-19 11:55:03 -0800
+  complete_date: 2020-11-19 11:55:03 -0800
+order2:
+  user: user_2
+  order_item: order_item2
+  shipping_info: shipping2
+  billing_info: billing2
+  status: "paid"
+  submit_date: 2020-11-19 11:55:03 -0800
+  complete_date: 2020-11-19 11:55:03 -0800
+order3:
+  user: user_3
+  order_item: order_item3
+  shipping_info: shipping3
+  billing_info: billing3
+  status: "complete"
+  submit_date: 2020-11-19 11:55:03 -0800
+  complete_date: 2020-11-19 11:55:03 -0800
