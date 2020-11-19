@@ -1,2 +1,60 @@
-<h1>Users#show</h1>
-<p>Find me in app/views/users/show.html.erb</p>
+<h2>User: <%= @user.username %></h2>
+<h3>User information goes here</h3>
+<p>User Name: <%=@user.name %></p>
+<p>Member Since: <%= @user.created_at %></p>
+<h3>Seller reviews:</h3>
+<table>
+  <tr>
+    <th>Rating</th>
+    <th>Date</th>
+    <th>Product</th>
+    <th>Review</th>
+  </tr>
+</table>
+<% @users.products.each do |product| %>
+  <tr>
+    <td>
+      <%= vote.id %>
+    </td>
+    <td>
+      <%= vote.work_id %>
+    </td>
+    <td>
+      <%= vote.work.category %>
+    </td>
+    <td>
+      <%= vote.work.title %>
+    </td>
+  </tr>
+  <% vote_count_by_user += 1 %>
+<%end %>
+
+
+<table>
+  <tr>
+    <th>Category</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Description</th>
+    <th>Inventory</th>
+    <% vote_count_by_user = 0 %>
+  </tr>
+  <% @user.votes.each do |vote| %>
+    <tr>
+      <td>
+        <%= vote.id %>
+      </td>
+      <td>
+        <%= vote.work_id %>
+      </td>
+      <td>
+        <%= vote.work.category %>
+      </td>
+      <td>
+        <%= vote.work.title %>
+      </td>
+    </tr>
+    <% vote_count_by_user += 1 %>
+  <%end %>
+</table>
+<p>Total Number of Votes by <%= @user.username %>: <%=vote_count_by_user %></p>
