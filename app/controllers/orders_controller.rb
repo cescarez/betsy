@@ -109,7 +109,7 @@ class OrdersController < ApplicationController
 
     if @order.nil?
       flash.now[:error] = "Order not found."
-      render file: "#{Rails.root}/public/404.html", status: :not_found
+      render_404
       return
     end
   end
