@@ -49,7 +49,7 @@
         <tr class="table-active">
           <td colspan="2">Order Summary</td>
           <td><%= @order.order_items.length %></td>
-          <td><%= @order.total_cost %></td>
+          <td><%= format_money(@order.total_cost) %></td>
         </tr>
       <% end %>
     </tbody>
