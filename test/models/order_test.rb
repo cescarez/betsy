@@ -13,6 +13,7 @@ describe Order do
     it "responds to all the expected fields" do
       [:user_id, :order_item_id, :order_info_id, :billing_info_id, :status, :submit_date, :complete_date].each do |field|
         expect(order1).must_respond_to field
+      end
     end
   end
 
