@@ -11,7 +11,7 @@ describe BillingInfo do
     end
 
     it "responds to all the expected fields" do
-      [:first_name, :last_name, :street, :city, :state, :zipcode, :country, :card_brand, :card_expiration, :card_number, :card_cvv].each do |field|
+      [:order_id, :first_name, :last_name, :street, :city, :state, :zipcode, :country, :card_brand, :card_expiration, :card_number, :card_cvv].each do |field|
         expect(billing1).must_respond_to field
       end
     end
@@ -74,6 +74,7 @@ describe BillingInfo do
       billing1.card_expiration = nil
       billing1.card_number = nil
       billing1.card_cvv = nil
+      billing1.save
       [:first_name, :last_name, :street, :city, :state, :zipcode, :country, :card_brand, :card_expiration, :card_number, :card_cvv].each do |field|
         expect(billing1.errors.messages).must_include field
       end

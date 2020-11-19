@@ -11,7 +11,7 @@ describe ShippingInfo do
     end
 
     it "responds to all the expected fields" do
-      [:first_name, :last_name, :street, :city, :state, :zipcode, :country].each do |field|
+      [:order_id,:first_name, :last_name, :street, :city, :state, :zipcode, :country].each do |field|
         expect(shipping1).must_respond_to field
       end
     end
@@ -54,6 +54,7 @@ describe ShippingInfo do
       shipping1.state = nil
       shipping1.zipcode = nil
       shipping1.country = nil
+      shipping1.save
       [:first_name, :last_name, :street, :city, :state, :zipcode, :country].each do |field|
         expect(shipping1.errors.messages).must_include field
       end
