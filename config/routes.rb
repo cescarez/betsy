@@ -1,6 +1,22 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+
+  root "users#index"
+  
+  # Omniauth login route
+  get "/auth/github", as: "github_login"
+
+  # Omniauth callback route
+  get "/auth/:provider/callback", to: "users#create", as:"omniauth_callback"
+
+  resources :users
+
+  delete "/logout", to: "users#destroy", as: "logout"
 
   resources :products
 
+  post "/orders/status", to: "orders#status_filter", as: "order_status"
+  get "orders/:id/checkout", to: "orders#checkout", as: "checkout_order"
+  post "/orders/:id/complete", to: "orders#complete", as: "complete_order"
+  resources :orders
 end
