@@ -20,6 +20,8 @@ class ProductsController < ApplicationController
   end
 
   def create
+    user = User.find_by(uid: auth_hash[:uid], provider: 'github')
+    if user
     @product = Product.new(product_params)
     puts @product.inspect
     puts @product.valid?
@@ -28,7 +30,7 @@ class ProductsController < ApplicationController
       flash[:success] = "#{@product.title} was successfully added!"
       return
     else
-      flash.now[:error] = "Something happened. Product not added."
+      flash.now[:error] = "You must create an account to sell a products"
       render :new, status: :bad_request
       return
     end
