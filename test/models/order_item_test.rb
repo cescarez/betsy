@@ -36,38 +36,36 @@ describe OrderItem do
     it "missing attribute will be listed in validation errors" do
       order_item1.quantity = nil
       order_item1.save
-      expect(order.errors.messages).must_include :quantity
+      expect(order_item1.errors.messages).must_include :quantity
     end
   end
 
   describe "relationships" do
     it "belongs to a product" do
       expect(order_item1.product).must_be_instance_of Product
-      #TODO:to hard code expect, need Product model
       expect(order_item1.product).must_equal product1
     end
   end
 
   describe "custom methods" do
-    #TODO:need Product model
     describe "validate quantity" do
       it "will generate a validation error for a quantity that exceeds product inventory" do
-        product1.update(inventory: 2)
-        order1.update(quantity: 4)
+        order_item1.product.update(inventory: 2)
+        order_item1.update(quantity: 3)
 
-        expect(order1.errors.messages).must_include :quantity
+        expect(order_item1.errors.messages).must_include :quantity
       end
       it "will return the quantity if less than product inventory" do
         product1.update(inventory: 5)
-        order1.update(quantity: 4)
+        order_item1.update(quantity: 4)
 
-        expect(order1.validate_quantity).must_equal order1.quantity
+        expect(order_item1.validate_quantity).must_equal order_item1.quantity
       end
       it "will return the quantity if equal to product inventory" do
         product1.update(inventory: 4)
-        order1.update(quantity: 4)
+        order_item1.update(quantity: 4)
 
-        expect(order1.validate_quantity).must_equal order1.quantity
+        expect(order_item1.validate_quantity).must_equal order_item1.quantity
       end
     end
 
