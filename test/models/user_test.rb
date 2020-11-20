@@ -53,11 +53,11 @@ describe User do
       expect(result).must_equal false
       expect(user_copy.errors.messages).must_include :username
     end
-    it "must have a unique uid" do
+    it "must have a unique uid through provider" do
       uid = "12345"
-      user = User.new(uid: uid)
+      user = User.new(uid: uid, provider: "github")
       user.save!
-      user_copy = User.new(uid: uid)
+      user_copy = User.new(uid: uid, provider: "github")
       result = user_copy.save
       expect(result).must_equal false
       expect(user_copy.errors.messages).must_include :uid
