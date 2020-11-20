@@ -57,6 +57,10 @@
       <th>Price</th>
       <th>Description</th>
       <th>Inventory</th>
+      <% if @user.id == session[:user_id]%>
+        <th>Edit</th>
+        <th>Retire</th>
+      <%end %>
     </tr>
     <% @user.products.each do |product| %>
       <tr>
@@ -75,6 +79,10 @@
         <td>
           <%= product.inventory %>
         </td>
+        <% if @user.id == session[:user_id]%>
+          <td>Edit</td>
+          <td>Retire</td>
+        <%end %>
       </tr>
     <% end %>
   </table>
