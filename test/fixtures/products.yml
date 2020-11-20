@@ -8,8 +8,8 @@ product_1:
 
 product_2:
   category: star
-    name: Sirius
-    price: 23.00
-    description: Doggy doggy what now?
-    inventory: 3
-    user: user_2
+  name: Sirius
+  price: 23.00
+  description: Doggy doggy what now?
+  inventory: 3
+  user: user_2
