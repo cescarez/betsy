@@ -10,4 +10,5 @@ class OrderItem < ApplicationRecord
       return self.card_brand
     end
   end
+
 end
