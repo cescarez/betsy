@@ -1,9 +1,10 @@
 class OrdersController < ApplicationController
   before_action :find_order, except: [:index, :new, :create, :status_filter]
-  # before_action :require_login, only: [:index]
+  before_action :require_login, only: [:index]
 
   def index
-    @orders = Order.all
+    current_user = User.find_by(id: session[:user_id])
+    @orders = Order.all.filter { |order| order.user == current_user }
   end
 
   def create

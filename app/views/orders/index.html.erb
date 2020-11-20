@@ -2,14 +2,14 @@
   <h2>Orders</h2>
 </section>
 <section class="orders-index orders-table">
-  <%= form_with model: @order, url: order_filter_status_path, class:"order-status-filter" do |f| %>
-    <%= f.label :status %>
-    <%= f.check_box_tag :status, "pending", checked = false %>
-    <%= f.check_box_tag :status, "paid", checked = false %>
-    <%= f.check_box_tag :status, "complete", checked = false %>
-    <%= f.check_box_tag :status, "cancelled", checked = false %>
-    <%= f.submit "Filter Orders" %>
-  <% end %>
+  <%#= form_with model: @order, url: order_filter_status_path, class:"order-status-filter" do |f| %>
+    <%#= f.label :status %>
+    <%#= f.check_box_tag :status, "pending", checked = false %>
+    <%#= f.check_box_tag :status, "paid", checked = false %>
+    <%#= f.check_box_tag :status, "complete", checked = false %>
+    <%#= f.check_box_tag :status, "cancelled", checked = false %>
+    <%#= f.submit "Filter Orders" %>
+  <%# end %>
   <table class="table table-hover">
     <thead>
       <tr>
@@ -21,12 +21,11 @@
       </tr>
     </thead>
     <tbody>
-      #TODO: add filter to all orders to limit view to logged in user
       <% @orders.each do |order| %>
         <tr class="table-active">
           <td><em>Orders Summary</em></td>
           <td><%= @orders.length %></td>
-          <td><%= format_money(@orders.sum{ |order| order.total_cost }) %></td>
+          <td><%= format_money(@orders.sum { |order| order.total_cost }) %></td>
           <td colspan="2"></td> #empty cell to span last two columns
         </tr>
         <tr>
