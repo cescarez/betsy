@@ -11,7 +11,7 @@ describe Order do
     end
 
     it "responds to all the expected fields" do
-      [:user_id, :order_item_id, :order_info_id, :billing_info_id, :status, :submit_date, :complete_date].each do |field|
+      [:user_id, :status, :submit_date, :complete_date].each do |field|
         expect(order1).must_respond_to field
       end
     end
@@ -38,6 +38,7 @@ describe Order do
       expect(order1.valid?).must_equal true
     end
     it "has many order_items" do
+      order1.order_items << order_items(:order_item1)
       order1.order_items << order_items(:order_item2)
       order1.order_items << order_items(:order_item3)
       expect(order1.order_items.count).must_equal 3
@@ -46,16 +47,18 @@ describe Order do
       end
     end
     it "has many shipping_infos" do
-      order1.order_items << shipping_infos(:shipping_info2)
-      order1.order_items << shipping_infos(:shipping_info3)
+      order1.shipping_infos << shipping_infos(:shipping1)
+      order1.shipping_infos << shipping_infos(:shipping2)
+      order1.shipping_infos << shipping_infos(:shipping3)
       expect(order1.shipping_infos.count).must_equal 3
       order1.shipping_infos.each do |shipping_info|
         expect(shipping_info).must_be_instance_of ShippingInfo
       end
     end
     it "has many billing_infos" do
-      order1.order_items << billing_infos(:billing_info2)
-      order1.order_items << billing_infos(:billing_info3)
+      order1.billing_infos << billing_infos(:billing1)
+      order1.billing_infos << billing_infos(:billing2)
+      order1.billing_infos << billing_infos(:billing3)
       expect(order1.billing_infos.count).must_equal 3
       order1.billing_infos.each do |billing_info|
         expect(billing_info).must_be_instance_of BillingInfo
