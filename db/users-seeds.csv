@@ -1,26 +1,26 @@
-username,email,is_authenticated
-Villager,cassey_goodwin@turcotte-koss.co,true
-Mule,keenan@leffler.name,true
-Squid,elisha@smitham-stroman.co,false
-Cat,halina.kuhic@fahey.biz,false
-Skeleton,nora@marquardt.com,false
-Evoker,maria_swaniawski@gorczany.name,true
-Cod,marcel.hintz@ondricka.info,true
-Husk,les_koepp@mosciski.net,true
-Creeper,teodoro@legros.biz,true
-Salmon,lorenzo@kerluke-toy.com,false
-Rabbit,wilber_rowe@lang.net,true
-Enderman,kathrin_leannon@mcclure.org,false
-Panda,hilton.krajcik@kertzmann.org,false
-Wandering trader,jarrod_nienow@jaskolski.name,true
-Cow,magda_cassin@quitzon.com,true
-Vex,frederick@brown-oconner.name,false
-Bee,clinton_rippin@quigley.co,false
-Zombie Pigman,angeles.kuhic@vandervort.name,true
-Pig,chante.bergnaum@donnelly.info,false
-Guardian,jeanine.nitzsche@kub.biz,false
-Stray,eliseo.gerhold@baumbach.info,true
-Wither Skeleton,jill@kovacek-greenfelder.io,true
-Turtle,randy@hickle.com,false
-Pillager,jean@cassin.org,false
-Witch,kim.schmidt@bradtke.net,false
+username,name,provider,email,is_authenticated,created_at
+Ravager,Barry Mueller I,github,matthew_lynch@green.com,false,2020-04-19
+Pig,Norine Roob I,github,ricky_lehner@ortiz.info,true,2020-04-14
+Endermite,Kylie Homenick,github,shavon.hane@christiansen.co,true,2020-09-01
+Blaze,Ora VonRueden,github,maile@hirthe.biz,false,2019-12-07
+Cow,Luke Cronin,github,lan_wilkinson@prosacco-macgyver.net,false,2020-04-11
+Squid,Jackson Heidenreich,github,issac.schiller@effertz.info,true,2019-12-15
+Villager,Brock Dickens,github,archie@lynch.com,false,2019-12-20
+Cat,Norberto Muller,github,von@herman.com,false,2019-11-30
+Magma Cube,Earl Russel,github,myles.price@kling.io,true,2020-03-01
+Rabbit,Estefana Nader,github,tammy_beahan@schuster.com,true,2020-01-25
+Husk,Clora Wuckert,github,kendall@schmeler.com,false,2020-09-13
+Cod,Lavina Kerluke LLD,github,christia.denesik@schimmel.info,true,2020-04-27
+Slime,Harry Walker,github,jefferson_aufderhar@von.biz,false,2020-01-19
+Dolphin,Josiah Trantow Ret.,github,lonny_lindgren@gutmann.com,false,2020-07-28
+Spider Jockey,Raphael Heller,github,kelli@gibson.biz,false,2020-08-04
+Elder Guardian,Rosaria Runolfsdottir,github,lindy@robel-streich.com,false,2019-11-17
+Ghast,Lashawna Fay V,github,andrea@dach.com,true,2019-11-21
+Cave Spider,Jacqulyn Feest,github,harris_robel@denesik.io,true,2020-05-18
+Skeleton Horseman,Kenna Littel DC,github,edie.kautzer@kuhn.org,false,2020-01-10
+Ocelot,Jason Grimes,github,regan@larkin.net,true,2020-02-22
+Polar bear,Charlie Ratke,github,madeleine@gerhold.org,false,2020-11-19
+Wandering trader,Cindy Zieme,github,roberta@wiegand.info,false,2020-03-20
+Sheep,Denise Emard Sr.,github,florinda@ryan.name,true,2019-12-28
+Horse,Francene Murray,github,dante.schmidt@zieme.info,false,2019-09-28
+Wolf,Fr. Julian Rogahn,github,judson.bechtelar@kerluke.name,true,2020-03-04

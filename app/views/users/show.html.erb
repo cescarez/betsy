@@ -1,60 +1,76 @@
-<h2>User: <%= @user.username %></h2>
-<h3>User information goes here</h3>
-<p>User Name: <%=@user.name %></p>
+<h2>Seller: <%= @user.username %></h2>
+<h3>Seller information goes here</h3>
+<p>Name: <%=@user.name %></p>
 <p>Member Since: <%= @user.created_at %></p>
-<h3>Seller reviews:</h3>
-<table>
-  <tr>
-    <th>Rating</th>
-    <th>Date</th>
-    <th>Product</th>
-    <th>Review</th>
-  </tr>
-</table>
-<% @users.products.each do |product| %>
-  <tr>
-    <td>
-      <%= vote.id %>
-    </td>
-    <td>
-      <%= vote.work_id %>
-    </td>
-    <td>
-      <%= vote.work.category %>
-    </td>
-    <td>
-      <%= vote.work.title %>
-    </td>
-  </tr>
-  <% vote_count_by_user += 1 %>
-<%end %>
+<!-- if user product reviews don't exist:-->
+<%# if @user.ratings.nil? %>
+<!--  <h3>-->
+    <%#= "#{@user.name} has not been rated" %>
+<!--  </h3>-->
+<!-- if user product reviews exist:-->
+<%# else %>
+<!--  <h3>Seller reviews:</h3>-->
+<!--  <table>-->
+<!--    <tr>-->
+<!--      <th>Rating</th>-->
+<!--      <th>Date</th>-->
+<!--      <th>Product</th>-->
+<!--      <th>Review</th>-->
+<!--    </tr>-->
+<!--  </table>-->
+  <%# @users.ratings.each do |rating| %>
+<!--    <tr>-->
+<!--      <td>-->
+        <%#= rating.rank #what's this called? %>
+<!--      </td>-->
+<!--      <td>-->
+        <%#= rating.created_at %>
+<!--      </td>-->
+<!--      <td>-->
+        <%#= # how to get the product the rating is for? %>
+<!--      </td>-->
+<!--      <td>-->
+        <%#= # how to get the review? %>
+<!--      </td>-->
+<!--    </tr>-->
+  <%# end %>
+<%# end %>
 
-
-<table>
-  <tr>
-    <th>Category</th>
-    <th>Name</th>
-    <th>Price</th>
-    <th>Description</th>
-    <th>Inventory</th>
-    <% vote_count_by_user = 0 %>
-  </tr>
-  <% @user.votes.each do |vote| %>
-    <tr>
-      <td>
-        <%= vote.id %>
-      </td>
-      <td>
-        <%= vote.work_id %>
-      </td>
-      <td>
-        <%= vote.work.category %>
-      </td>
-      <td>
-        <%= vote.work.title %>
-      </td>
-    </tr>
-    <% vote_count_by_user += 1 %>
-  <%end %>
-</table>
-<p>Total Number of Votes by <%= @user.username %>: <%=vote_count_by_user %></p>
+<%# if @user.products.nil? %>
+<!--  <h3>-->
+    <%#= "#{@user.name} does not currently have celestial bodies for sale" %>
+<!--  </h3>-->
+  <!-- if user product reviews exist:-->
+<%# else %>
+<!--  <h2>-->
+  <%#= "#{@user.name} is currently selling:" %>
+<!--  </h2>-->
+<!--  <table>-->
+<!--    <tr>-->
+<!--      <th>Category</th>-->
+<!--      <th>Name</th>-->
+<!--      <th>Price</th>-->
+<!--      <th>Description</th>-->
+<!--      <th>Inventory</th>-->
+<!--    </tr>-->
+    <%# @user.products.each do |product| %>
+<!--      <tr>-->
+<!--        <td>-->
+          <%#= product.category %>
+<!--        </td>-->
+<!--        <td>-->
+          <%#= product.name %>
+<!--        </td>-->
+<!--        <td>-->
+          <%#= product.price %>
+<!--        </td>-->
+<!--        <td>-->
+          <%#= product.description %>
+<!--        </td>-->
+<!--        <td>-->
+          <%#= product.inventory %>
+<!--        </td>-->
+<!--      </tr>-->
+    <%# end %>
+<!--  </table>-->
+<%# end %>
