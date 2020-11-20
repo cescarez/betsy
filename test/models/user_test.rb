@@ -38,6 +38,16 @@ describe User do
       expect(user.valid?).must_equal false
       expect(user.errors.messages).must_include :email
     end
+    it "must have a unique username" do
+      username = "Username"
+      user = User.new(username: username)
+      user.save!
+      user_copy = User.new(username: username)
+      result = user_copy.save
+      expect(result).must_equal false
+      expect(user_copy.errors.messages).must_include :username
+    end
+
 
   end
 
