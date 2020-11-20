@@ -1,15 +1,15 @@
 class ReviewsController < ApplicationController
-  #need to find product to do this?
 
   def create
-    unless @product.nil?
-      if @product.user_id == session[:user_id]
-        flash[:error] = "beep boop bop...you can't leave a review for yourself...¯\\(°_o)/¯"
-      else
-        @review = Review.new(review_params)
-        @review.product_id = @product.id
-      end
+    @product = Product.find_by(id: params[:product_id])
+    @user = User.find_by(id: session[:user_id])
+    if @product.user_id == @user.id
+      flash[:error] = "beep boop bop...you can't leave a review for yourself...(°_o)"
+    else
+      @review = Review.new(review_params)
+      @review.product_id = @product.id
     end
+
 
     result = @review.save
     if result
@@ -27,7 +27,4 @@ end
     params.require(:review).permit(:rating, :description)
   end
 
-  # def find_product
-  #   @product = Product.find_by(id: params.require(:product_id))
-  # end
 end
