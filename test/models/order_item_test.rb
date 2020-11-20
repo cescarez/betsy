@@ -50,8 +50,9 @@ describe OrderItem do
   describe "custom methods" do
     describe "validate quantity" do
       it "will generate a validation error for a quantity that exceeds product inventory" do
-        order_item1.product.update(inventory: 2)
-        order_item1.update(quantity: 3)
+        product1.update(inventory: 4)
+        order_item1.update(quantity: 6)
+        order_item1.validate_quantity
 
         expect(order_item1.errors.messages).must_include :quantity
       end
@@ -61,6 +62,7 @@ describe OrderItem do
 
         expect(order_item1.validate_quantity).must_equal order_item1.quantity
       end
+
       it "will return the quantity if equal to product inventory" do
         product1.update(inventory: 4)
         order_item1.update(quantity: 4)
