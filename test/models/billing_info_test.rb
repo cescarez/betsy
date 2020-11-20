@@ -82,8 +82,36 @@ describe BillingInfo do
   end
 
   describe "relationships" do
+    let (:shipping1) { shipping_infos(:shipping1) }
+    let (:shipping2) { shipping_infos(:shipping2) }
+    let (:shipping3) { shipping_infos(:shipping3) }
+
     it "belongs to an order" do
       expect(billing1.order).must_equal orders(:order1)
+    end
+
+    it "can belong to many billing infos" do
+      shipping1.billing_infos.delete_all
+      shipping2.billing_infos.delete_all
+      shipping3.billing_infos.delete_all
+
+      shipping1.billing_infos << billing1
+      shipping2.billing_infos << billing1
+      shipping3.billing_infos << billing1
+      expect(shipping1.billing_infos).must_include billing1
+      expect(shipping2.billing_infos).must_include billing1
+      expect(shipping3.billing_infos).must_include billing1
+    end
+
+    it "can have many shipping infos" do
+      billing1.shipping_infos.delete_all
+      billing1.shipping_infos << shipping1
+      billing1.shipping_infos << shipping2
+      billing1.shipping_infos << shipping3
+      expect(billing1.shipping_infos.length).must_equal 3
+      billing1.shipping_infos.each do |billing|
+        expect(billing).must_be_instance_of ShippingInfo
+      end
     end
   end
 
