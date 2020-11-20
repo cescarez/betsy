@@ -59,6 +59,17 @@ ActiveRecord::Schema.define(version: 2020_11_20_004314) do
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
+  create_table "products", force: :cascade do |t|
+    t.string "category"
+    t.string "name"
+    t.decimal "price"
+    t.text "description"
+    t.integer "inventory"
+    t.integer "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "shipping_infos", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"

@@ -4,7 +4,7 @@ describe OrderItem do
   let (:order_item1) { order_items(:order_item1) }
   let (:order_item2) { order_items(:order_item2) }
   let (:order_item3) { order_items(:order_item3) }
-  let (:product1) { products(:product1) }
+  let (:product1) { products(:product_1) }
 
   describe "instantiation" do
     it "can instantiate an OrderItem object" do
