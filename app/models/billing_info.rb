@@ -1,4 +1,4 @@
-VALID_CARD_BRANDS = [:visa, :mastercard, :amex]
+VALID_CARD_BRANDS = ["visa", "mastercard", "amex"]
 
 class BillingInfo < ApplicationRecord
   belongs_to :order
@@ -34,10 +34,7 @@ class BillingInfo < ApplicationRecord
   end
 
   def validate_card_brand
-    if self.brand.class == String
-      self.brand = self.brand.downcase.to_sym
-    end
-    unless VALID_CARD_BRANDS.include? self.brand
+    unless VALID_CARD_BRANDS.include? self.card_brand
       raise ArgumentError, "Invalid card company. Fatal Error."
     else
       return self.card_brand
