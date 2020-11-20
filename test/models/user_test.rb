@@ -62,7 +62,7 @@ describe User do
       expect(result).must_equal false
       expect(user_copy.errors.messages).must_include :uid
     end
-    it "is valid for a user created with all the required fields" do
+    it "must be valid when created with all the required fields" do
       user = User.new(username: "Username", uid: "12345", provider: "github", email: "email@address.com")
       expect(user.valid?).must_equal true
     end
@@ -70,10 +70,28 @@ describe User do
   end
 
   describe "build_from_github class method" do
+    it "builds a valid user with a valid auth hash" do
+      auth_hash = {
+          uid: 12345,
+          provider: "github",
+          info: {
+              name: "Name",
+              email: "email@address.com",
+              #avatar:
+          }
+      }
+
+      user = User.build_from_github(auth_hash)
+      user.save!
+      expect(User.count).must_equal 1
+      expect(user.uid).must_equal auth_hash[:uid]
+      expect(user.provider).must_equal auth_hash[:provider]
+      expect(user.username).must_equal auth_hash[:info][:name]
+      expect(user.email).must_equal auth_hash[:info][:email]
+    end
 
 
-
-  end
+    end
 
   describe "total_probable_earnings" do
 
