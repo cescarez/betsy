@@ -1,4 +1,4 @@
-t class Product < ApplicationRecord
+class Product < ApplicationRecord
   belongs_to :user
 
   validates :category, presence: true
