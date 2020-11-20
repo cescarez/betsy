@@ -1,5 +1,6 @@
 shipping1:
   order: order1
+  billing_infos: billing1
   first_name: One
   last_name: Billing
   street: 1234 Billings Drive
@@ -9,6 +10,7 @@ shipping1:
   country: United States
 shipping2:
   order: order2
+  billing_infos: billing2
   first_name: Two
   last_name: Billing
   street: 5678 Billings Drive
@@ -18,6 +20,7 @@ shipping2:
   country: United States
 shipping3:
   order: order3
+  billing_infos: billing3
   first_name: Three
   last_name: Billing
   street: 9012 Billings Drive

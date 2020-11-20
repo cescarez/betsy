@@ -1,5 +1,6 @@
 billing1:
   order: order1
+  shipping_infos: shipping1
   first_name: One
   last_name: Billing
   street: 1234 Billings Drive
@@ -13,6 +14,7 @@ billing1:
   card_cvv: 123
 billing2:
   order: order2
+  shipping_infos: shipping2
   first_name: Two
   last_name: Billing
   street: 5678 Billings Drive
@@ -26,6 +28,7 @@ billing2:
   card_cvv: 456
 billing3:
   order: order3
+  shipping_infos: shipping3
   first_name: Three
   last_name: Billing
   street: 9012 Billings Drive
