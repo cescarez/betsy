@@ -28,6 +28,11 @@ describe User do
       expect(user.valid?).must_equal false
       expect(user.errors.messages).must_include :username
     end
+    it "must have a uid" do
+      user = User.new
+      expect(user.valid?).must_equal false
+      expect(user.errors.messages).must_include :uid
+    end
 
 
   end
