@@ -1,4 +1,9 @@
-<h2>Seller: <%= @user.username %></h2>
+<% if @user.id == session[:user_id]%>
+  <h2>Sellar: <%= @user.username %></h2>
+  <h2> <%= link_to "View my dashboard", current_user_path %> </h2>
+<% else %>
+  <h2>Seller: <%= @user.username %></h2>
+<% end %>
 <h3>Seller information goes here</h3>
 <p>Name: <%=@user.name %></p>
 <p>Member Since: <%= @user.created_at %></p>
