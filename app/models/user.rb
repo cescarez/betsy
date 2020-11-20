@@ -1,7 +1,9 @@
 class User < ApplicationRecord
   has_many :products # add scope so just logged in user has products
+  has_many :order_items, through: :products #should be through :orders instead of :products?
   validates :username, uniqueness: true, presence: true
-  validates :uid, uniqueness: {scope: :provider}
+  validates :uid, uniqueness: {scope: :provider}, presence: false
+  validates :email, :provider, presence: :true
 
   def self.build_from_github(auth_hash)
     user = User.new
@@ -12,4 +14,29 @@ class User < ApplicationRecord
     user.avatar = auth_hash["info"]["image"]
     return user
   end
+
+  def total_probable_earnings
+    total_earnings = 0
+    sold_products = self.order_items
+    if sold_products.length > 0
+      sold_products.each do |sold_product|
+          total_earnings += sold_product.quantity * sold_product.price
+      end
+    end
+      return total_earnings
+  end
+
+  def total_actual_earnings
+    status = %w[cancelled pending]
+    total_earnings = 0
+    sold_products = self.order_items
+    if sold_products.length > 0
+      sold_products.each do |sold_product|
+        total_earnings += sold_product.quantity * sold_product.price unless sold_product.status.include?(status)
+      end
+    end
+      return total_earnings
+  end
+
+
 end

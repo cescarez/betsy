@@ -222,7 +222,7 @@ As a guest I **cannot**:
 
 - Add products to the cart that are out of stock
 - View any link or page to manage any products
-- View any merchant dashboard page
+- View any (my?-AAO) merchant dashboard page
 
 #### Merchants (Authenticated Users)
 

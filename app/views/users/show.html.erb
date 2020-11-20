@@ -1,2 +1,81 @@
-<h1>Users#show</h1>
-<p>Find me in app/views/users/show.html.erb</p>
+<% if @user.id == session[:user_id]%>
+  <h2>Sellar: <%= @user.username %></h2>
+  <h2> <%= link_to "View my dashboard", current_user_path %> </h2>
+<% else %>
+  <h2>Seller: <%= @user.username %></h2>
+<% end %>
+<h3>Seller information goes here</h3>
+<p>Name: <%=@user.name %></p>
+<p>Member Since: <%= @user.created_at %></p>
+<!-- if user product reviews don't exist:-->
+<%# if @user.ratings.nil? %>
+<!--  <h3>-->
+    <%#= "#{@user.name} has not been rated" %>
+<!--  </h3>-->
+<!-- if user product reviews exist:-->
+<%# else %>
+<!--  <h3>Seller reviews:</h3>-->
+<!--  <table>-->
+<!--    <tr>-->
+<!--      <th>Rating</th>-->
+<!--      <th>Date</th>-->
+<!--      <th>Product</th>-->
+<!--      <th>Review</th>-->
+<!--    </tr>-->
+<!--  </table>-->
+  <%# @users.ratings.each do |rating| %>
+<!--    <tr>-->
+<!--      <td>-->
+        <%#= rating.rank #what's this called? %>
+<!--      </td>-->
+<!--      <td>-->
+        <%#= rating.created_at %>
+<!--      </td>-->
+<!--      <td>-->
+        <%#= # how to get the product the rating is for? %>
+<!--      </td>-->
+<!--      <td>-->
+        <%#= # how to get the review? %>
+<!--      </td>-->
+<!--    </tr>-->
+  <%# end %>
+<%# end %>
+
+<%# if @user.products.nil? %>
+<!--  <h3>-->
+    <%#= "#{@user.name} does not currently have celestial bodies for sale" %>
+<!--  </h3>-->
+  <!-- if user product reviews exist:-->
+<%# else %>
+<!--  <h2>-->
+  <%#= "#{@user.name} is currently selling:" %>
+<!--  </h2>-->
+<!--  <table>-->
+<!--    <tr>-->
+<!--      <th>Category</th>-->
+<!--      <th>Name</th>-->
+<!--      <th>Price</th>-->
+<!--      <th>Description</th>-->
+<!--      <th>Inventory</th>-->
+<!--    </tr>-->
+    <%# @user.products.each do |product| %>
+<!--      <tr>-->
+<!--        <td>-->
+          <%#= product.category %>
+<!--        </td>-->
+<!--        <td>-->
+          <%#= product.name %>
+<!--        </td>-->
+<!--        <td>-->
+          <%#= product.price %>
+<!--        </td>-->
+<!--        <td>-->
+          <%#= product.description %>
+<!--        </td>-->
+<!--        <td>-->
+          <%#= product.inventory %>
+<!--        </td>-->
+<!--      </tr>-->
+    <%# end %>
+<!--  </table>-->
+<%# end %>
