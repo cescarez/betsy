@@ -33,7 +33,11 @@ describe User do
       expect(user.valid?).must_equal false
       expect(user.errors.messages).must_include :uid
     end
-
+    it "must have an email" do
+      user = User.new
+      expect(user.valid?).must_equal false
+      expect(user.errors.messages).must_include :email
+    end
 
   end
 
