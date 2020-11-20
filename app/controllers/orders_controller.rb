@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_action :find_order, except: [:index, :new, :create, :status_filter]
+  before_action :find_order, except: [:index, :create, :status_filter]
   before_action :require_login, only: [:index]
 
   def index
@@ -12,6 +12,7 @@ class OrdersController < ApplicationController
 
     if @order.save
       flash[:success] = "First item added to cart. Welcome to Stellar."
+      session[:order_id] = @order.id
       redirect_to order_path(@order.id)
     else
       flash.now[:error] = "Error: shopping cart was not created."
@@ -25,8 +26,8 @@ class OrdersController < ApplicationController
   def show
   end
 
-  def edit
-  end
+  # def edit
+  # end
 
   def update
     if @order.complete_date
@@ -91,8 +92,10 @@ class OrdersController < ApplicationController
 
   ###TODO: COMPLETE CHECKOUT METHOD
   def checkout
-    unless @order.user.is_auth
-      #ask user if they would like to log in or proceed as guest
+    if session[:user_id].nil?
+      flash.now[:notice] = "Please note, you are completing this order as a guest user. Please log in if you would like to associate this purchase with your account."
+    else
+
     end
   end
 
@@ -103,11 +106,11 @@ class OrdersController < ApplicationController
   end
 
   def find_order
-    @order = Order.find_by(id: params[:id])
+    @order = session[:order_id]
 
     if @order.nil?
-      flash.now[:error] = "Order not found."
-      render_404
+      flash.now[:error] = "There was a problem with your cart. Please clear your cookies or close your browser and revisit Stellar."
+      redirect_to root_path
       return
     end
   end
