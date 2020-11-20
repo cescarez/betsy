@@ -62,9 +62,30 @@ describe User do
       expect(result).must_equal false
       expect(user_copy.errors.messages).must_include :uid
     end
+    it "is valid for a user created with all the required fields" do
+      user = User.new(username: "Username", uid: "12345", provider: "github", email: "email@address.com")
+      expect(user.valid?).must_equal true
+    end
 
   end
 
+  describe "build_from_github class method" do
+
+
+
+  end
+
+  describe "total_probable_earnings" do
+
+
+
+  end
+
+  describe "total_actual_earnings" do
+
+
+
+  end
 
 
 end
