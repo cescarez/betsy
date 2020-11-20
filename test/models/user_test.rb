@@ -47,7 +47,15 @@ describe User do
       expect(result).must_equal false
       expect(user_copy.errors.messages).must_include :username
     end
-
+    it "must have a unique uid" do
+      uid = "12345"
+      user = User.new(uid: uid)
+      user.save!
+      user_copy = User.new(uid: uid)
+      result = user_copy.save
+      expect(result).must_equal false
+      expect(user_copy.errors.messages).must_include :uid
+    end
 
   end
 
