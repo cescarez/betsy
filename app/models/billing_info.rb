@@ -1,15 +1,8 @@
 VALID_CARD_BRANDS = [:visa, :mastercard, :amex]
 
-class BillingInfo < ShippingInfo
+class BillingInfo < ApplicationRecord
   belongs_to :order
-
-  validates :first_name, presence: true
-  validates :last_name, presence: true
-  validates :street, presence: true
-  validates :city, presence: true
-  validates :state, presence: true
-  validates :zipcode, presence: true
-  validates :country, presence: true
+  has_and_belongs_to_many :shipping_infos
 
   validates :card_brand, presence: true
   validates_date :card_expiration, after: :today
