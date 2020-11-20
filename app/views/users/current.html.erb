@@ -1,11 +1,8 @@
 <h2>My Dashboard</h2>
 
 <p>Create new categories</p>
-<p>Create a new product <!-- this should link to the products page?--></p>
 <p> <%= link_to "Create a new product", new_product_path %> </p>
-
-<p>Retire a product</p>
-<p> <%= link_to "Retire a product", _product_path %> </p>
+<p> <%= link_to "Retire a product", user_path(@user.id) %> </p>
 
 
 <!--<p>Assign product to a category</p>-->
