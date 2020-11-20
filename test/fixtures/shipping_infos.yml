@@ -1,0 +1,30 @@
+shipping1:
+  order: order1
+  billing_infos: billing1
+  first_name: One
+  last_name: Billing
+  street: 1234 Billings Drive
+  city: Vancouver
+  state: WA
+  zipcode: 98660
+  country: United States
+shipping2:
+  order: order2
+  billing_infos: billing2
+  first_name: Two
+  last_name: Billing
+  street: 5678 Billings Drive
+  city: Austin
+  state: TX
+  zipcode: 73301
+  country: United States
+shipping3:
+  order: order3
+  billing_infos: billing3
+  first_name: Three
+  last_name: Billing
+  street: 9012 Billings Drive
+  city: Camden
+  state: NJ
+  zipcode: 08101
+  country: United States

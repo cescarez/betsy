@@ -1,3 +1,9 @@
 order_item1:
-  product_id: 1
-  quantity: 2
+    product: product_1
+    quantity: 1
+order_item2:
+    product: product_2
+    quantity: 20
+order_item3:
+    product: product_1
+    quantity: 300
