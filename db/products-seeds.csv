@@ -1,26 +1,26 @@
-category,name,price,description
-galaxy,Sunflower,947548,Chuck Norris's first program was kill -9.
-star,Sirius A,405184,"When Chuck Norris presses Ctrl+Alt+Delete, worldwide computer restart is initiated."
-moon,Umbriel,526101,Chuck Norris doesn't use a computer because a computer does everything slower than Chuck Norris.
-galaxy,Blackeye,775915,Chuck Norris burst the dot com bubble.
-nebula,Bodes Nebula,29051,"Chuck Norris doesn't bug hunt, as that signifies a probability of failure. He goes bug killing."
-planet,Mars,356996,Chuck Norris solved the Travelling Salesman problem in O(1) time.
-galaxy,Centaurus A,480444,"For Chuck Norris, NP-Hard = O(1)."
-planet,Saturn,980435,Chuck Norris can unit test an entire application with a single assert.
-moon,Titan,318043,"Chuck Norris doesn't need garbage collection because he doesn't call .Dispose(), he calls .DropKick()."
-moon,Ariel,373017,Chuck Norris doesn't have performance bottlenecks. He just makes the universe wait its turn.
-star,Luyten 726-8B,108906,Chuck Norris programs do not accept input.
-galaxy,Whirlpool,849375,Chuck Norris can write infinite recursion functions... and have them return.
-nebula,Dumbell Nebula,788226,Chuck Norris went out of an infinite loop.
-star,Betelgeuse,711686,"There is no Esc key on Chuck Norris' keyboard, because no one escapes Chuck Norris."
-planet,Venus,46926,Chuck Norris doesn't have disk latency because the hard drive knows to hurry the hell up.
-planet,Jupiter,206423,Chuck Norris's keyboard doesn't have a Ctrl key because nothing controls Chuck Norris.
-galaxy,Milky Way,695492,Chuck Norris can instantiate an abstract class.
-star,Sun,372039,Chuck Norris can use GOTO as much as he wants to. Telling him otherwise is considered harmful.
-star,Sirius B,360346,Chuck Norris can spawn threads that complete before they are started.
-galaxy,Messier 83,444314,"Chuck Norris doesn't get compiler errors, the language changes itself to accommodate Chuck Norris."
-planet,Neptune,553461,"Chuck Norris' protocol design method has no status, requests or responses, only commands."
-planet,Earth,471640,Chuck Norris can write multi-threaded applications with a single thread.
-star,Rigel,325609,"You don't disable the Chuck Norris plug-in, it disables you."
-nebula,Orion Nebula,212777,Project managers never ask Chuck Norris for estimations... ever.
-planet,Uranus,51207,The only pattern Chuck Norris knows is God Object.
+category,name,price,description,inventory,user_id,order_id
+moon,Puck,947644.384462295,Chuck Norris doesn't have disk latency because the hard drive knows to hurry the hell up.,5,1,1
+star,Ross 248,400343.52652657795,Chuck Norris' addition operator doesn't commute; it teleports to where he needs it to be.,7,2,2
+star,Rigel,144863.60683000434,Chuck Norris doesn't need to know about class factory pattern. He can instantiate interfaces.,5,3,3
+moon,Dione,832827.056925512,Chuck Norris doesn't program with a keyboard. He stares the computer down until it does what he wants.,9,4,4
+moon,Europa,948473.5060462033,The programs that Chuck Norris writes don't have version numbers because he only writes them once. If a user reports a bug or has a feature request they don't live to see the sun set.,5,5,5
+star,Wolf 359,533761.7320008025,"Chuck Norris doesn't get compiler errors, the language changes itself to accommodate Chuck Norris.",6,6,6
+planet,Venus,666061.043811403,Quantum cryptography does not work on Chuck Norris. When something is being observed by Chuck it stays in the same state until he's finished.,9,7,7
+nebula,Triffid Nebula,406982.4439645947,Chuck Norris doesn't need an OS.,3,8,8
+galaxy,Pinwheel,44003.82483150038,Chuck Norris does not use revision control software. None of his code has ever needed revision.,8,9,9
+nebula,Orion Nebula,647211.6673942988,Chuck Norris compresses his files by doing a flying round house kick to the hard drive.,3,10,10
+nebula,Dumbell Nebula,956291.6040510527,No statement can catch the ChuckNorrisException.,1,11,11
+moon,Callisto,47304.694179988415,"Chuck Norris never gets a syntax error. Instead, the language gets a DoesNotConformToChuck error.",8,12,12
+galaxy,Blackeye,56751.93882965636,Chuck Norris's first program was kill -9.,5,13,13
+moon,Moon,524736.9854625524,Chuck Norris writes code that optimizes itself.,3,14,14
+star,Polaris,634824.17229108,"All arrays Chuck Norris declares are of infinite size, because Chuck Norris knows no bounds.",3,15,15
+planet,Mercury,142614.90793742973,Chuck Norris can spawn threads that complete before they are started.,3,16,16
+planet,Saturn,895446.3837284578,Chuck Norris can instantiate an abstract class.,4,17,17
+moon,Luna,831374.3713972585,All browsers support the hex definitions #chuck and #norris for the colors black and blue.,6,18,18
+star,Luyten 726-8B,666212.9511186185,Chuck Norris's keyboard doesn't have a Ctrl key because nothing controls Chuck Norris.,6,19,19
+planet,Mars,222454.2522545375,Chuck Norris hosting is 101% uptime guaranteed.,7,20,20
+galaxy,Messier 83,939883.2905367216,Chuck Norris can use GOTO as much as he wants to. Telling him otherwise is considered harmful.,1,21,21
+moon,Proteus,613436.8145414075,Anonymous methods and anonymous types are really all called Chuck Norris. They just don't like to boast.,5,22,22
+galaxy,Centaurus A,707493.552393786,When Chuck Norris' code fails to compile the compiler apologises.,3,23,23
+planet,Uranus,902840.0398491091,"Chuck Norris doesn't bug hunt, as that signifies a probability of failure. He goes bug killing.",1,24,24
+nebula,Ring Nebula,874286.598629339,"""It works on my machine"" always holds true for Chuck Norris.",10,25,25
