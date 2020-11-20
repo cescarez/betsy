@@ -12,6 +12,13 @@ describe User do
       end
       end
 
+    it "has order items" do
+      user_1 = users(:user_1)
+      expect(user_1).must_respond_to :order_items
+      user_1.order_items.each do |order_item|
+        expect(order_item).must_be_kind_of OrderItem
+      end
+    end
 
   end
 
