@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   get "/auth/github", as: "github_login"
 
   # Omniauth callback route
-  get "/auth/:provider/callback", to: "users#create", as:"omniauth_callback"
+  get "/auth/:provider/callback", to: "users#create", as: "omniauth_callback"
 
   resources :users
 
