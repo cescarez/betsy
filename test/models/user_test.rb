@@ -1,7 +1,20 @@
 require "test_helper"
 
 describe User do
-  # it "does a thing" do
-  #   value(1+1).must_equal 2
-  # end
+
+  describe "relations" do
+
+    it "has products" do
+      user_1 = users(:user_1)
+      expect(user_1).must_respond_to :products
+      user_1.products.each do |product|
+        expect(product).must_be_kind_of Product
+      end
+      end
+
+
+  end
+
+
+
 end
