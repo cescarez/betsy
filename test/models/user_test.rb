@@ -21,6 +21,7 @@ describe User do
     end
 
   end
+
   describe "validations" do
 
     it "must have a username" do
@@ -37,6 +38,11 @@ describe User do
       user = User.new
       expect(user.valid?).must_equal false
       expect(user.errors.messages).must_include :email
+      end
+    it "must have a provider" do
+      user = User.new
+      expect(user.valid?).must_equal false
+      expect(user.errors.messages).must_include :provider
     end
     it "must have a unique username" do
       username = "Username"
