@@ -97,8 +97,8 @@ describe User do
     before do
       @user = User.new(uid: 12345, username: "Username", provider: "github", email: "email@address.com")
       @user.save!
-      uid = @user.uid
-      @product = Product.new(category: "category", name: "name", price: 100, inventory: 5, user_id: uid)
+      user_id = @user.id
+      @product = Product.new(category: "category", name: "name", price: 100, inventory: 5, user_id: user_id)
       @product.save!
       @order_item = OrderItem.new(quantity: 1)
       @order_item.product_id = @product.id
