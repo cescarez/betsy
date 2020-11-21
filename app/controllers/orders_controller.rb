@@ -15,12 +15,12 @@ class OrdersController < ApplicationController
     if @order.save
       flash[:success] = "First item added to cart. Welcome to Stellar."
       session[:order_id] = @order.id
-      redirect_to order_path(@order.id)
+      redirect_back fallback_location: order_path(@order.id)
     else
-      flash.now[:error] = "Error: shopping cart was not created."
-      @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
-      flash.now[:error] << "Please try again."
-      render :new, status: :bad_request
+      flash[:error] = "Error: shopping cart was not created."
+      @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+      flash[:error] << "Please try again."
+      redirect_back fallback_location: root_path, status: :bad_request
     end
     return
   end
@@ -117,7 +117,7 @@ class OrdersController < ApplicationController
   private
 
   def order_params
-    return require(:order).permit(:user_id, :order_item_id, :shipping_info_id, :billing_info_id, :status, :submit_date, :complete_date)
+    return params.require(:order).permit(:user_id, :status, :submit_date, :complete_date)
   end
 
   def find_order
