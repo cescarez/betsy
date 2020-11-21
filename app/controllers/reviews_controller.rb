@@ -3,12 +3,14 @@ class ReviewsController < ApplicationController
   def create
     @product = Product.find_by(id: params[:product_id])
     @user = User.find_by(id: session[:user_id])
-    if @product.user_id == @user.id
-      flash[:notice] = "beep boop bop...you can't leave a review for yourself...`\(°_o)/`"
-      reviewed_self = true
-    else
+    if @user.nil?
       @review = Review.new(review_params)
       @review.product_id = @product.id
+    elsif @product.user_id == @user.id
+      flash[:notice] = "beep boop bop...you can't leave a review for yourself...(°_o)"
+      reviewed_self = true
+    else
+      flash[:error] = "💦👾🔥💦👾🔥💦👾🔥💦👾🔥 - we're not sure what's going on either"
     end
 
     if !@review.nil?
