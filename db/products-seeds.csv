@@ -1,26 +1,26 @@
 name,price,description,inventory,user_id,order_id
-Arcturus,294982.9474043662,"""It works on my machine"" always holds true for Chuck Norris.",9,1,1
-Rigil Kentaurus,970405.7522761726,Chuck Norris' preferred IDE is hexedit.,2,2,2
-Polaris,523261.90405146655,Chuck Norris writes code that optimizes itself.,7,3,3
-Luyten 726-8B,447577.8611766478,No statement can catch the ChuckNorrisException.,4,4,4
-Vega,17671.495969387455,Chuck Norris doesn't have performance bottlenecks. He just makes the universe wait its turn.,2,5,5
-Ross 248,866263.854060596,Chuck Norris hosting is 101% uptime guaranteed.,7,6,6
-Procyon A,848687.0380829405,"Chuck Norris doesn't need garbage collection because he doesn't call .Dispose(), he calls .DropKick().",10,7,7
-Luyten 726-8A,770207.4524382815,Chuck Norris can unit test an entire application with a single assert.,1,8,8
-Mahasim,608467.5966306373,"All arrays Chuck Norris declares are of infinite size, because Chuck Norris knows no bounds.",1,9,9
-Sirius B,345492.4101562926,"Chuck Norris doesn't bug hunt, as that signifies a probability of failure. He goes bug killing.",9,10,10
-Umbriel,98893.01820396968,"There is no Esc key on Chuck Norris' keyboard, because no one escapes Chuck Norris.",8,1,1
-Rhea,801759.9377265587,Chuck Norris finished World of Warcraft.,5,2,2
-Io,453147.56292270636,Chuck Norris rewrote the Google search engine from scratch.,1,3,3
-Phobos,875529.0926364446,Chuck Norris programs do not accept input.,8,4,4
-Moon,586550.094432212,Chuck Norris can solve the Towers of Hanoi in one move.,9,5,5
-Proteus,377250.8343009419,Chuck Norris can't test for equality because he has no equal.,9,6,6
-Ganymede,9528.342616186399,There is nothing regular about Chuck Norris' expressions.,9,7,7
-Dione,766882.4423239968,"For Chuck Norris, NP-Hard = O(1).",8,8,8
-Europa,489583.9508622204,"Chuck Norris doesn't need a java compiler, he goes straight to .war",5,9,9
-Callisto,987109.9196160597,Chuck Norris can binary search unsorted data.,8,10,10
-Oberon,62514.324999553464,Chuck Norris breaks RSA 128-bit encrypted codes in milliseconds.,8,11,11
-Tethys,869887.1352957656,Chuck Norris' beard is immutable.,5,12,12
-Ariel,45830.94337787461,Chuck Norris compresses his files by doing a flying round house kick to the hard drive.,7,13,13
-Deimos,272345.9762591873,The class object inherits from Chuck Norris.,10,14,14
-Hyperion,413679.41837889625,Chuck Norris can recite π. Backwards.,1,15,15
+Ross 154,621909.0669454627,Chuck Norris can use GOTO as much as he wants to. Telling him otherwise is considered harmful.,10,1,1
+Sun,268365.60378978885,Chuck Norris doesn't pair program.,4,2,2
+Arcturus,983043.9558281298,When Chuck Norris' code fails to compile the compiler apologises.,9,3,3
+Procyon B,27162.07390987159,"""It works on my machine"" always holds true for Chuck Norris.",6,4,4
+Proxima Centauri,234638.78489732105,Chuck Norris doesn't need to know about class factory pattern. He can instantiate interfaces.,2,5,5
+Procyon A,559945.7301843116,Chuck Norris doesn't need an OS.,7,6,6
+Wolf 359,508763.36604368465,Chuck Norris burst the dot com bubble.,9,7,7
+Ross 248,47516.46080187312,"When Chuck Norris points to null, null quakes in fear.",2,8,8
+Betelgeuse,294037.5979207025,The only pattern Chuck Norris knows is God Object.,5,9,9
+Sirius A,952112.9248334988,Chuck Norris hosting is 101% uptime guaranteed.,5,10,10
+Moon,672395.9239352428,Chuck Norris doesn't program with a keyboard. He stares the computer down until it does what he wants.,10,1,1
+Ganymede,457899.19633570674,"Chuck Norris doesn't need a java compiler, he goes straight to .war",3,2,2
+Titan,725707.172885062,Chuck Norris' preferred IDE is hexedit.,4,3,3
+Deimos,796013.8237978902,Chuck Norris does not use exceptions when programming. He has not been able to identify any of his code that is not exceptional.,3,4,4
+Triton,640232.4342082735,Chuck Norris' addition operator doesn't commute; it teleports to where he needs it to be.,7,5,5
+Callisto,442469.45469444164,"Chuck Norris is immutable. If something's going to change, it's going to have to be the rest of the universe.",3,6,6
+Proteus,440764.126698616,"Chuck Norris can read all encrypted data, because nothing can hide from Chuck Norris.",10,7,7
+Oberon,603572.4583094573,Chuck Norris breaks RSA 128-bit encrypted codes in milliseconds.,4,8,8
+Rhea,710289.0408070164,Chuck Norris can write infinite recursion functions... and have them return.,7,9,9
+Dione,233664.18952951525,"You don't disable the Chuck Norris plug-in, it disables you.",1,10,10
+Ariel,978817.2753154295,Chuck Norris's first program was kill -9.,4,11,11
+Europa,723642.8377911684,"For Chuck Norris, NP-Hard = O(1).",8,12,12
+Hyperion,554384.733810913,Chuck Norris went out of an infinite loop.,5,13,13
+Luna,928223.002287784,Project managers never ask Chuck Norris for estimations... ever.,4,14,14
+Puck,415880.05713175214,Chuck Norris can recite π. Backwards.,7,15,15

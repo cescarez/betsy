@@ -12,8 +12,9 @@ require 'csv'
 
 CSV.open('db/categories-seeds.csv', 'w', write_headers: true,
          headers: %w[name description]) do |csv|
-  25.times do |num|
-    name = %w[star planet moon galaxy nebula].sample
+  categories = %w[star planet moon galaxy nebula]
+  5.times do |num|
+    name = categories[num]
     description = Faker::ChuckNorris.unique.fact
     csv << [name, description]
   end
