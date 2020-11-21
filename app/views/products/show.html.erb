@@ -6,7 +6,7 @@
   </h2>
   <section>
     <ul>
-      <li> <%= "Merchant: #{@product.user_id.name}" %></li>
+      <li> <%= "Merchant: #{@product.user.name}" %></li>
       <li>
         <ul>
           <% @product.categories.each do |category| %>

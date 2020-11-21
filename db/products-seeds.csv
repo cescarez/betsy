@@ -1,26 +1,26 @@
-category,name,price,description,inventory,user_id,order_id
-moon,Puck,947644.384462295,Chuck Norris doesn't have disk latency because the hard drive knows to hurry the hell up.,5,1,1
-star,Ross 248,400343.52652657795,Chuck Norris' addition operator doesn't commute; it teleports to where he needs it to be.,7,2,2
-star,Rigel,144863.60683000434,Chuck Norris doesn't need to know about class factory pattern. He can instantiate interfaces.,5,3,3
-moon,Dione,832827.056925512,Chuck Norris doesn't program with a keyboard. He stares the computer down until it does what he wants.,9,4,4
-moon,Europa,948473.5060462033,The programs that Chuck Norris writes don't have version numbers because he only writes them once. If a user reports a bug or has a feature request they don't live to see the sun set.,5,5,5
-star,Wolf 359,533761.7320008025,"Chuck Norris doesn't get compiler errors, the language changes itself to accommodate Chuck Norris.",6,6,6
-planet,Venus,666061.043811403,Quantum cryptography does not work on Chuck Norris. When something is being observed by Chuck it stays in the same state until he's finished.,9,7,7
-nebula,Triffid Nebula,406982.4439645947,Chuck Norris doesn't need an OS.,3,8,8
-galaxy,Pinwheel,44003.82483150038,Chuck Norris does not use revision control software. None of his code has ever needed revision.,8,9,9
-nebula,Orion Nebula,647211.6673942988,Chuck Norris compresses his files by doing a flying round house kick to the hard drive.,3,10,10
-nebula,Dumbell Nebula,956291.6040510527,No statement can catch the ChuckNorrisException.,1,11,11
-moon,Callisto,47304.694179988415,"Chuck Norris never gets a syntax error. Instead, the language gets a DoesNotConformToChuck error.",8,12,12
-galaxy,Blackeye,56751.93882965636,Chuck Norris's first program was kill -9.,5,13,13
-moon,Moon,524736.9854625524,Chuck Norris writes code that optimizes itself.,3,14,14
-star,Polaris,634824.17229108,"All arrays Chuck Norris declares are of infinite size, because Chuck Norris knows no bounds.",3,15,15
-planet,Mercury,142614.90793742973,Chuck Norris can spawn threads that complete before they are started.,3,16,16
-planet,Saturn,895446.3837284578,Chuck Norris can instantiate an abstract class.,4,17,17
-moon,Luna,831374.3713972585,All browsers support the hex definitions #chuck and #norris for the colors black and blue.,6,18,18
-star,Luyten 726-8B,666212.9511186185,Chuck Norris's keyboard doesn't have a Ctrl key because nothing controls Chuck Norris.,6,19,19
-planet,Mars,222454.2522545375,Chuck Norris hosting is 101% uptime guaranteed.,7,20,20
-galaxy,Messier 83,939883.2905367216,Chuck Norris can use GOTO as much as he wants to. Telling him otherwise is considered harmful.,1,21,21
-moon,Proteus,613436.8145414075,Anonymous methods and anonymous types are really all called Chuck Norris. They just don't like to boast.,5,22,22
-galaxy,Centaurus A,707493.552393786,When Chuck Norris' code fails to compile the compiler apologises.,3,23,23
-planet,Uranus,902840.0398491091,"Chuck Norris doesn't bug hunt, as that signifies a probability of failure. He goes bug killing.",1,24,24
-nebula,Ring Nebula,874286.598629339,"""It works on my machine"" always holds true for Chuck Norris.",10,25,25
+name,price,description,inventory,user_id,order_id
+Arcturus,294982.9474043662,"""It works on my machine"" always holds true for Chuck Norris.",9,1,1
+Rigil Kentaurus,970405.7522761726,Chuck Norris' preferred IDE is hexedit.,2,2,2
+Polaris,523261.90405146655,Chuck Norris writes code that optimizes itself.,7,3,3
+Luyten 726-8B,447577.8611766478,No statement can catch the ChuckNorrisException.,4,4,4
+Vega,17671.495969387455,Chuck Norris doesn't have performance bottlenecks. He just makes the universe wait its turn.,2,5,5
+Ross 248,866263.854060596,Chuck Norris hosting is 101% uptime guaranteed.,7,6,6
+Procyon A,848687.0380829405,"Chuck Norris doesn't need garbage collection because he doesn't call .Dispose(), he calls .DropKick().",10,7,7
+Luyten 726-8A,770207.4524382815,Chuck Norris can unit test an entire application with a single assert.,1,8,8
+Mahasim,608467.5966306373,"All arrays Chuck Norris declares are of infinite size, because Chuck Norris knows no bounds.",1,9,9
+Sirius B,345492.4101562926,"Chuck Norris doesn't bug hunt, as that signifies a probability of failure. He goes bug killing.",9,10,10
+Umbriel,98893.01820396968,"There is no Esc key on Chuck Norris' keyboard, because no one escapes Chuck Norris.",8,1,1
+Rhea,801759.9377265587,Chuck Norris finished World of Warcraft.,5,2,2
+Io,453147.56292270636,Chuck Norris rewrote the Google search engine from scratch.,1,3,3
+Phobos,875529.0926364446,Chuck Norris programs do not accept input.,8,4,4
+Moon,586550.094432212,Chuck Norris can solve the Towers of Hanoi in one move.,9,5,5
+Proteus,377250.8343009419,Chuck Norris can't test for equality because he has no equal.,9,6,6
+Ganymede,9528.342616186399,There is nothing regular about Chuck Norris' expressions.,9,7,7
+Dione,766882.4423239968,"For Chuck Norris, NP-Hard = O(1).",8,8,8
+Europa,489583.9508622204,"Chuck Norris doesn't need a java compiler, he goes straight to .war",5,9,9
+Callisto,987109.9196160597,Chuck Norris can binary search unsorted data.,8,10,10
+Oberon,62514.324999553464,Chuck Norris breaks RSA 128-bit encrypted codes in milliseconds.,8,11,11
+Tethys,869887.1352957656,Chuck Norris' beard is immutable.,5,12,12
+Ariel,45830.94337787461,Chuck Norris compresses his files by doing a flying round house kick to the hard drive.,7,13,13
+Deimos,272345.9762591873,The class object inherits from Chuck Norris.,10,14,14
+Hyperion,413679.41837889625,Chuck Norris can recite π. Backwards.,1,15,15

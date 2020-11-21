@@ -21,8 +21,17 @@ end
 
 CSV.open('db/products-seeds.csv', 'w', write_headers: true,
                                        headers: %w[name price description inventory user_id order_id]) do |csv|
-  25.times do |num|
-    name = Faker::Space.unique
+  10.times do |num|
+    name = Faker::Space.unique.star
+    price = rand(100.0..1_000_000.0)
+    description = Faker::ChuckNorris.unique.fact
+    inventory = rand(1..10)
+    user_id = num + 1
+    order_id = num + 1
+    csv << [name, price, description, inventory, user_id, order_id]
+  end
+  15.times do |num|
+    name = Faker::Space.unique.moon
     price = rand(100.0..1_000_000.0)
     description = Faker::ChuckNorris.unique.fact
     inventory = rand(1..10)
