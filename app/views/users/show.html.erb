@@ -57,6 +57,9 @@
       <th>Price</th>
       <th>Description</th>
       <th>Inventory</th>
+      <%# if @user.products.image.nil? %>
+<!--        <th>Photo💣</th>-->
+      <%# end %>
       <% if @user.id == session[:user_id]%>
         <th>Edit</th>
         <th>Retire</th>
@@ -68,10 +71,10 @@
           <%= product.category %>
         </td>
         <td>
-          <%= product.name %>
+          <%= link_to "#{product.name}", product_path(product.id)  %>
         </td>
         <td>
-          <%= product.price %>
+          <%= number_to_currency(product.price) %>
         </td>
         <td>
           <%= product.description %>
@@ -79,6 +82,11 @@
         <td>
           <%= product.inventory %>
         </td>
+        <% unless product.image.attached? %>
+          <td>
+            <%= image_tag "#{product.image}", class: "product-image" %>
+          </td>
+        <% end %>
         <% if @user.id == session[:user_id]%>
           <td> <%= button_to "Edit", edit_product_path(product.id) %></td>
           <td> <%= button_to "Delete", product_path(product.id), method: :delete, data:{confirm: 'Please confirm you would like to delete this product.'} %></td>
