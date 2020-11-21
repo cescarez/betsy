@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   resources :products
 
 
-  post "/orders/status", to: "orders#status_filter", as: "order_status"
+  post "/orders/status", to: "orders#status_filter", as: "order_status_filter"
 
   get "/orders/:id/checkout", to: "orders#checkout", as: "checkout_order"
   post "/orders/:id/checkout", to: "orders#submit"

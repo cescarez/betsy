@@ -18,7 +18,7 @@ class Order < ApplicationRecord
 
   def self.filter_orders(status)
     if status.nil? || status.empty?
-      return []
+      return Order.all
     end
     status = validate_status(status)
 

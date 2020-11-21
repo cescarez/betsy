@@ -115,11 +115,10 @@ describe Order do
         expect(cancelled_orders.length).must_equal 2
       end
 
-      it "returns an empty array if no status is given (even though an inprogress cart has a nil status)" do
-        expect(Order.filter_orders("")).must_be_empty
-        expect(Order.filter_orders("")).must_be_kind_of Array
-        expect(Order.filter_orders(nil)).must_be_empty
-        expect(Order.filter_orders(nil)).must_be_kind_of Array
+      it "returns all orders if no status is given (even though an inprogress cart has a nil status)" do
+        all_orders = Order.all
+        expect(Order.filter_orders("")).must_equal all_orders
+        expect(Order.filter_orders(nil)).must_equal all_orders
       end
 
       it "will raise an exception for an invalid order status" do

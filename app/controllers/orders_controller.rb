@@ -83,9 +83,9 @@ class OrdersController < ApplicationController
   end
 
   def status_filter
-    status = params[:order][:status]
+    status = params[:status]
     @orders = Order.filter_orders(status)
-    render orders_path
+    # render orders_path
     return
   end
 
