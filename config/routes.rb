@@ -14,7 +14,9 @@ Rails.application.routes.draw do
 
   delete "/logout", to: "users#destroy", as: "logout"
 
-  resources :products
+  resources :products do
+    resources :reviews, only: [:create]
+  end
 
 
   post "/orders/status", to: "orders#status_filter", as: "order_status_filter"
