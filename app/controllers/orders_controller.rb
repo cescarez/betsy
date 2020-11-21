@@ -50,9 +50,6 @@ class OrdersController < ApplicationController
   end
 
   def destroy
-    ##can do this in model with dependent: destroy
-    # @order.order_items.destroy_all
-
     if @order.destroy
       flash[:success] = "#{@order.complete_date ? "Order successfully deleted" : "Shopping cart successfully cancelled" }."
       redirect_back fallback_location: orders_path
