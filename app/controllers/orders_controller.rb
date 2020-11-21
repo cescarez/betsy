@@ -94,15 +94,23 @@ class OrdersController < ApplicationController
       flash.now[:notice] = "Please note, you are completing this order as a guest user. Please log in if you would like to associate this purchase with your account."
     end
 
-    @order.update(submit_date: Time.now)
-    @order.update(status: "paid") if @order.billing_info
-    @order.order_items.each do |order_item|
-      order_item.product.inventory -= order_item.quantity
+    if @order.billing_info.validate_card && @order.billing_info.validate_card
+      @order.update(submit_date: Time.now)
+      @order.update(status: "paid")
+      #TODO do this is add_product to cart stage? or here?
+      @order.order_items.each do |order_item|
+        order_item.product.inventory -= order_item.quantity
+      end
+      flash[:success] = "Thank you for shopping with Stellar!"
+      session[:order_id] = nil
+      redirect_to order_path(@order.id)
+    else
+      flash.now[:error] = "Error: shopping cart was not created."
+      @order.billing_info.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+      flash.now[:error] << "Please try again."
+      render :checkout
     end
-    flash[:success] = "Thank you for shopping with Stellar!"
 
-    session[:order_id] = nil
-    redirect_to order_path(@order.id)
     return
   end
 
