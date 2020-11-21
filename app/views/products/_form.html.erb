@@ -1,8 +1,11 @@
 <%= form_with model: @product, class: 'product_form' do |f| %>
 
 
-  <%= f.label :category %>
-  <%= f.text_field :category %>
+  <div>
+    <%= f.label :categories %>
+    <%= collection_check_boxes(:product, :category_ids, Category.all, :id, :name) %>
+  </div>
+
 
   <%= f.label :name %>
   <%= f.text_field :name %>

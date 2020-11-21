@@ -16,7 +16,7 @@
           <% end %>
       </ul>
          </li>
-      <li> <%= "Price: #{format_money(@product.price)}" %> </li>
+      <li> <%= "Price: $#{format_money(@product.price).round(2)}" %> </li>
     </ul>
   </section>
   <section>
