@@ -151,5 +151,45 @@ describe Order do
       end
 
     end
+
+    describe "validate_billing_info" do
+      it "returns true if one billing_info has valid card numbers and brands" do
+        order1.billing_infos << billing_infos(:billing1)
+        expect(order1.validate_billing_infos).must_equal true
+      end
+
+      it "returns true if all billing_infos have valid card numbers and brands" do
+        order1.billing_infos << billing_infos(:billing1)
+        order1.billing_infos << billing_infos(:billing2)
+        order1.billing_infos << billing_infos(:billing3)
+        expect(order1.validate_billing_infos).must_equal true
+      end
+
+      it "returns false for invalid card number" do
+        billing1 = billing_infos(:billing1)
+        billing1.update(card_number: "1000000001")
+        order1.billing_infos << billing1
+        order1.billing_infos << billing_infos(:billing2)
+        order1.billing_infos << billing_infos(:billing3)
+        expect(order1.validate_billing_infos).must_equal false
+      end
+
+      it "returns false for an invalid card brand" do
+        billing1 = billing_infos(:billing1)
+        billing1.update(card_brand: "fake_company")
+        order1.billing_infos << billing1
+        order1.billing_infos << billing_infos(:billing2)
+        order1.billing_infos << billing_infos(:billing3)
+        expect(order1.validate_billing_infos).must_equal false
+      end
+
+      it "raises an argument error if there is no billing info attached to the order" do
+        order1.billing_infos.delete_all
+        expect {
+          order1.validate_billing_infos
+        }.must_raise ArgumentError
+      end
+
+    end
   end
 end
