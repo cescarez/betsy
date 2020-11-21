@@ -28,9 +28,6 @@ class OrdersController < ApplicationController
   def show
   end
 
-  # def edit
-  # end
-
   def update
     if @order.complete_date
       flash[:error] = "Your order has already been submitted for fulfillment. Please contact customer service for assistance."
@@ -38,13 +35,13 @@ class OrdersController < ApplicationController
     end
 
     if @order.update(order_params)
-      flash[:success] = "#{@order.complete_date ? "Order" : "Shopping cart" } successfully updated."
-      redirect_to order_path(@order.id)
+      flash[:success] = "Order successfully updated."
+      redirect_back fallback_location: order_path(@order.id)
     else
-      flash.now[:error] = "Error: #{@order.complete_date ? "order" : "shopping cart" } did not update."
+      flash.now[:error] = "Error: order did not update."
       @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
       flash.now[:error] << "Please try again."
-      render :edit, status: :bad_request
+      render :show, status: :bad_request
     end
     return
   end
@@ -121,11 +118,11 @@ class OrdersController < ApplicationController
   end
 
   def find_order
-    @order = session[:order_id]
+    @order = Order.find_by(id: session[:order_id])
 
     if @order.nil?
       flash.now[:error] = "There was a problem with your cart. Please clear your cookies or close your browser and revisit Stellar."
-      redirect_to root_path
+      redirect_to root_path, status: :not_found
       return
     end
   end

@@ -47,5 +47,11 @@ class ActiveSupport::TestCase
     expect(session[:user_id]).must_equal user.id
   end
   # Add more helper methods to be used by all tests here...
+
+  def start_cart
+    post orders_path, params: {order: {status: "pending"}}
+    expect(session[:order_id]).wont_be_nil
+  end
+
 end
 

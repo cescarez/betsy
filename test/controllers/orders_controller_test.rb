@@ -3,11 +3,13 @@ require "test_helper"
 describe OrdersController do
   let (:user1) { users(:user_1) }
   let (:order1) { orders(:order1) }
+  let (:order2) { orders(:order2) }
+  let (:order3) { orders(:order3) }
 
   let (:order_hash) do
     {
       order: {
-        status: "pending",
+        status: "cancelled",
       }
     }
   end
@@ -48,17 +50,64 @@ describe OrdersController do
   end
 
   describe "show" do
-
+    it "responds with a success code" do
+      get order_path(order1.id)
+      must_respond_with :success
+    end
   end
-  describe "edit" do
 
-  end
   describe "update" do
+    it "can update current order with valid params" do
+      start_cart
+      order = Order.find_by(id: session[:order_id])
 
+      expect {
+        patch order_path(order.id), params: order_hash
+      }.wont_change "Order.count"
+
+      must_respond_with :redirect
+
+      order.reload
+
+      expect(order.status).must_equal order_hash[:order][:status]
+    end
+
+    it "responds with a redirect and bad_request code when updating a completed order" do
+      start_cart
+      order = Order.find_by(id: session[:order_id])
+      order.update(complete_date: Time.now)
+
+      expect {
+        patch order_path(order.id), params: order_hash
+      }.wont_change "Order.count"
+
+      must_respond_with :redirect
+    end
+
+    it "responds with bad_request when attempting to update an existing order with invalid params" do
+      start_cart
+      order = Order.find_by(id: session[:order_id])
+
+      expect {
+        patch order_path(order.id), params: {order: {status: nil, }}
+      }.wont_change "Order.count"
+
+      must_respond_with :bad_request
+    end
+
+    it "responds with not_found when attempting to update an invalid order with valid params" do
+      expect {
+        patch order_path(-1), params: order_hash
+      }.wont_change "Order.count"
+
+      must_respond_with :not_found
+    end
   end
+
   describe "destroy" do
 
   end
+
   describe "complete" do
 
   end
