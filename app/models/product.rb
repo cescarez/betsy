@@ -1,6 +1,8 @@
 class Product < ApplicationRecord
-  belongs_to :user #scope needed so only logged in users?
   has_and_belongs_to_many :categories
+  belongs_to :user
+  has_one_attached :image
+
 
   # validates :category, presence: true
   validates :name, presence: true

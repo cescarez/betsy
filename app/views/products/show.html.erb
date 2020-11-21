@@ -6,6 +6,7 @@
   </h2>
   <section>
     <ul>
+
       <li> <%= "Merchant: #{@product.user.name}" %></li>
       <li>
         <ul>
@@ -15,14 +16,21 @@
           </li>
           <% end %>
       </ul>
-         </li>
-      <li> <%= "Price: $#{format_money(@product.price).round(2)}" %> </li>
+    <li> <%= "Price: #{number_to_currency(@product.price)}" %> </li>
     </ul>
   </section>
   <section>
     <p>
       <%= @product.description %>
     </p>
+    <% if @product.image.attached? %>
+      <image src="<%=(url_for(@product.image)) %>" alt="black hole">
+      </image>
+    <% end %>
+  </section>
+  <section>
+    <h2>Throw some sound in the void:</h2>
+    <%= render partial: "reviews/review_form", locals: { action_name: "Leave your Mark", product: @product } %>
   </section>
 
 </main>

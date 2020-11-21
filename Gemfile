@@ -86,3 +86,7 @@ gem "omniauth-github"
 gem 'faker'
 
 #ENV['GITHUB_CLIENT_ID']
+
+gem 'carrierwave', '~> 0.9'
+gem 'bootstrap-sass', '~> 2.3.2'
+
