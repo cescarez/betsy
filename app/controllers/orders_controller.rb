@@ -102,7 +102,7 @@ class OrdersController < ApplicationController
     flash[:success] = "Thank you for shopping with Stellar!"
 
     session[:order_id] = nil
-    redirect_to root_path
+    redirect_to order_path(@order.id)
     return
   end
 
