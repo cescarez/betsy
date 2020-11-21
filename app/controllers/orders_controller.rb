@@ -32,17 +32,18 @@ class OrdersController < ApplicationController
     if @order.complete_date
       flash[:error] = "Your order has already been submitted for fulfillment. Please contact customer service for assistance."
       redirect_back fallback_location: order_path(@order.id)
+    else
+      if @order.update(order_params)
+        flash[:success] = "Order successfully updated."
+        redirect_back fallback_location: order_path(@order.id)
+      else
+        flash.now[:error] = "Error: order did not update."
+        @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+        flash.now[:error] << "Please try again."
+        render :show, status: :bad_request
+      end
     end
 
-    if @order.update(order_params)
-      flash[:success] = "Order successfully updated."
-      redirect_back fallback_location: order_path(@order.id)
-    else
-      flash.now[:error] = "Error: order did not update."
-      @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
-      flash.now[:error] << "Please try again."
-      render :show, status: :bad_request
-    end
     return
   end
 
@@ -91,21 +92,23 @@ class OrdersController < ApplicationController
       flash.now[:notice] = "Please note, you are completing this order as a guest user. Please log in if you would like to associate this purchase with your account."
     end
 
-    if @order.billing_info.validate_card && @order.billing_info.validate_card
-      @order.update(submit_date: Time.now)
-      @order.update(status: "paid")
+    if @order.validate_billing_infos
+      @order.update(submit_date: Time.now, status: "paid")
+
       #TODO do this is add_product to cart stage? or here?
-      @order.order_items.each do |order_item|
-        order_item.product.inventory -= order_item.quantity
-      end
+      # @order.order_items.each do |order_item|
+      #   order_item.product.inventory -= order_item.quantity
+      # end
+
       flash[:success] = "Thank you for shopping with Stellar!"
       session[:order_id] = nil
-      redirect_to order_path(@order.id)
+      render :show #sends user to order summary page after purchase, but needs to be render since session has been set to nil
     else
-      flash.now[:error] = "Error: shopping cart was not created."
-      @order.billing_info.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+      flash.now[:error] = "Error: order was not submitted."
+      @order.billing_infos.each { |billing_info| flash.now[:error] << billing_info.errors.full_messages.join(" ") }
       flash.now[:error] << "Please try again."
-      render :checkout
+
+      render :checkout, status: :bad_request
     end
 
     return
@@ -118,6 +121,7 @@ class OrdersController < ApplicationController
   end
 
   def find_order
+    #should this also be creating a session if no order is found?
     @order = Order.find_by(id: session[:order_id])
 
     if @order.nil?

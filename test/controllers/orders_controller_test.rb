@@ -39,20 +39,19 @@ describe OrdersController do
 
       expect(latest.status).must_equal order_hash[:order][:status]
     end
-
-    it "does not post an invalid and responds with bad_request" do
-      expect {
-        post orders_path, params: {order:{status: nil}}
-      }.wont_change "Order.count"
-
-      must_respond_with :bad_request
-    end
   end
 
   describe "show" do
-    it "responds with a success code" do
-      get order_path(order1.id)
+    it "responds with a success code if there is a current shopping cart" do
+      start_cart
+      order = Order.find_by(id: session[:order_id])
+      get order_path(order.id)
       must_respond_with :success
+    end
+
+    it "redirects to root path if there is no current shopping cart or if one is not found" do
+      get order_path(order1.id)
+      must_respond_with :not_found
     end
   end
 
@@ -89,7 +88,7 @@ describe OrdersController do
       order = Order.find_by(id: session[:order_id])
 
       expect {
-        patch order_path(order.id), params: {order: {status: nil, }}
+        patch order_path(order.id), params: {order: {submit_date: Time.now + 1.year }}
       }.wont_change "Order.count"
 
       must_respond_with :bad_request
@@ -106,13 +105,12 @@ describe OrdersController do
 
   describe "destroy" do
     it "destroys an existing work then redirects" do
+      start_cart
+      order = Order.find_by(id: session[:order_id])
+
       expect {
-        delete order_path(order1.id)
+        delete order_path(order.id)
       }.must_differ "Order.count", -1
-
-      found_order = Order.find_by(id: order1.id)
-
-      expect(found_order).must_be_nil
 
       must_respond_with :redirect
 
@@ -131,6 +129,7 @@ describe OrdersController do
     it "updates status and complete_date for existing orders" do
       start_cart
       order = Order.find_by(id: session[:order_id])
+      order.update(complete_date: nil)
 
       expect{
         post complete_order_path(order.id)
@@ -145,6 +144,7 @@ describe OrdersController do
     it "responds with :not_found for nonexisting order" do
       start_cart
       order = Order.find_by(id: session[:order_id])
+      order.update(complete_date: nil)
 
       expect{
         post complete_order_path(-1)
@@ -169,7 +169,6 @@ describe OrdersController do
       must_respond_with :redirect
       order.reload
       expect(order.status).must_equal "complete"
-      expect(order.complete_date).wont_be_nil
     end
 
     it "responds with :not_found for nonexisting order" do
@@ -183,27 +182,66 @@ describe OrdersController do
       must_respond_with :redirect
       order.reload
       expect(order.status).must_equal "complete"
-      expect(order.complete_date).wont_be_nil
     end
   end
 
   describe "status_filter" do
-    it "responds with :ok for any post successfully received" do
-      post order_status_filter_path, params: {order: {status: "cancelled"}}
-      must_respond_with :ok
-
-      post order_status_filter_path, params: {order: {status: nil}}
-      must_respond_with :ok
-
-      post order_status_filter_path, params: {order: {status: ""}}
-      must_respond_with :ok
-
-      post order_status_filter_path, params: {order: {status: "invalid_status"}}
-      must_respond_with :ok
+    it "responds with :ok for any post successfully received and won't change the number of orders in the db" do
+      expect {
+        post order_status_filter_path, params: {order: {status: "cancelled"}}
+        must_respond_with :ok
+        post order_status_filter_path, params: {order: {status: nil}}
+        must_respond_with :ok
+        post order_status_filter_path, params: {order: {status: ""}}
+        must_respond_with :ok
+        post order_status_filter_path, params: {order: {status: "invalid_status"}}
+        must_respond_with :ok
+      }.wont_change "Order.count"
     end
   end
 
   describe "submit" do
+    it "if there is valid billing info, the order submit date and status update, clears session[:order_id], and issues ok status" do
+      perform_login(user1)
+      start_cart
+      order = Order.find_by(id: session[:order_id])
+      order.billing_infos << billing_infos(:billing1)
+      order.update(submit_date: nil)
 
+      expect{
+        post checkout_order_path(order.id)
+      }.wont_change "Order.count"
+
+      must_respond_with :ok
+
+      order.reload
+
+      expect(order.status).must_equal "paid"
+      expect(order.submit_date).wont_be_nil
+
+    end
+    it "if there is invalid billing info, redirect back to shopping cart checkout" do
+      billing1 = billing_infos(:billing1)
+      billing1.update(card_number: "10000001")
+
+      perform_login(user1)
+      start_cart
+      order = Order.find_by(id: session[:order_id])
+      order.update(submit_date: nil)
+
+      order.billing_infos << billing1
+      before_status = order.status
+
+      expect{
+        post checkout_order_path(order.id)
+      }.wont_change "Order.count"
+
+      must_respond_with :bad_request
+
+      order.reload
+
+      expect(order.status).must_equal before_status
+      expect(order.submit_date).must_be_nil
+    end
   end
 end
