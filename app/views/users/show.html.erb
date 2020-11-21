@@ -83,11 +83,13 @@
         </td>
         <% if product.image.attached? %>
           <td>
-            <a href="<%= product_path(product.id) %>"><image src="<%=(url_for(product.image)) %>" alt="black hole">
+            <a href="<%= product_path(product.id) %>"><image src="<%=(url_for(product.image)) %>" alt="black hole" class="dashboard-image">
             </image></a>
           </td>
         <% else %>
-          <td>👾No Image🧨</td>
+          <td>
+            <%= link_to "👾No Image🧨", product_path(product.id) %>
+          </td>
         <% end %>
 
         <% if @user.id == session[:user_id]%>
