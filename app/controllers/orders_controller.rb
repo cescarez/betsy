@@ -90,13 +90,22 @@ class OrdersController < ApplicationController
     return
   end
 
-  ###TODO: COMPLETE CHECKOUT METHOD
-  def checkout
+  ###TODO: so much testing -- does this do what I think it does???
+  def submit
     if session[:user_id].nil?
       flash.now[:notice] = "Please note, you are completing this order as a guest user. Please log in if you would like to associate this purchase with your account."
-    else
-
     end
+
+    @order.update(submit_date: Time.now)
+    @order.update(status: "paid") if @order.billing_info
+    @order.order_items.each do |order_item|
+      order_item.product.inventory -= order_item.quantity
+    end
+    flash[:success] = "Thank you for shopping with Stellar!"
+
+    session[:order_id] = nil
+    redirect_to root_path
+    return
   end
 
   private
