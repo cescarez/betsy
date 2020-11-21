@@ -45,6 +45,10 @@ describe OrderItem do
       expect(order_item1.product).must_be_instance_of Product
       expect(order_item1.product).must_equal product1
     end
+    it "belongs to an order" do
+      expect(order_item1.order).must_be_instance_of Order
+      expect(order_item1.order).must_equal orders(:order1)
+    end
   end
 
   describe "custom methods" do
