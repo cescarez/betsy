@@ -3,8 +3,10 @@ class OrdersController < ApplicationController
   before_action :require_login, only: [:index]
 
   def index
-    current_user = User.find_by(id: session[:user_id])
-    @orders = Order.all.filter { |order| order.user == current_user }
+    if @orders.nil?
+      current_user = User.find_by(id: session[:user_id])
+      @orders = Order.all.filter { |order| order.user == current_user }
+    end
   end
 
   def create
@@ -85,7 +87,7 @@ class OrdersController < ApplicationController
   def status_filter
     status = params[:status]
     @orders = Order.filter_orders(status)
-    # render orders_path
+    render :index
     return
   end
 
