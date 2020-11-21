@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_many :products # add scope so just logged in user has products
-  has_many :order_items, through: :orders #should be through :orders instead of :products? checking the schema, it seems like both would work, but both are currently giving errors
+  has_many :orders
+  # has_many :order_items, through: :orders
   validates :username, uniqueness: true, presence: true
   validates :uid, uniqueness: {scope: :provider}, presence: true
   validates :email, :provider, presence: :true

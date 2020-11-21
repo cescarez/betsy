@@ -100,12 +100,17 @@ describe User do
       user_id = @user.id
       @product = Product.new(category: "category", name: "name", price: 100, inventory: 5, user_id: user_id)
       @product.save!
+      @order = Order.new(id: 10, user: @user, status: "pending")
+      @order.save!
       @order_item = OrderItem.new(quantity: 1)
       @order_item.product_id = @product.id
       @order_item.save!
+      @order.order_items_id = [@order_item.id]
+
     end
 
     it "accurately calculates total earnings for a seller when order status is complete" do
+      @order_item.save!
       @order_item.order.status = "complete"
       @order_item.save
       expect(@user.total_probable_earnings).must_equal 100
