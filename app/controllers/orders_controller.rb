@@ -84,9 +84,8 @@ class OrdersController < ApplicationController
 
   def status_filter
     status = params[:order][:status]
-    #TODO: write filter_orders model method
     @orders = Order.filter_orders(status)
-    #TODO: DOES THIS NEED A REDIRECTION?
+    render orders_path
     return
   end
 

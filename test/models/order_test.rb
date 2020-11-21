@@ -4,6 +4,8 @@ describe Order do
   let (:order1) { orders(:order1) }
   let (:order2) { orders(:order2) }
   let (:order3) { orders(:order3) }
+  let (:order4) { orders(:order4) }
+  let (:order5) { orders(:order5) }
 
   describe "instantiation" do
     it "can instantiate" do
@@ -26,6 +28,18 @@ describe Order do
     it  "will generate a validation error if status is missing" do
       order1.update(status: nil)
       expect(order1.errors.messages).must_include :status
+    end
+    it "will raise an exception for a future submit date" do
+      order1.update(submit_date: Time.now + 1.year)
+      expect(order1.errors.messages).must_include :submit_date
+    end
+    it "will raise an exception for a future complete date" do
+      order1.update(complete_date: Time.now + 1.year)
+      expect(order1.errors.messages).must_include :complete_date
+    end
+    it "will raise an exception for complete date that precedes the submit date" do
+      order1.update(submit_date: Time.now, complete_date: Time.now - 1.day)
+      expect(order1.errors.messages).must_include :complete_date
     end
   end
 
@@ -72,16 +86,48 @@ describe Order do
         order1.status = "chillin"
         order1.save
         expect {
-          order1.validate_status
+          order1.validate_status(order1.status)
         }.must_raise ArgumentError
       end
       it "will raise an exception for an empty string status" do
         order1.status = ""
         order1.save
         expect {
-          order1.validate_status
+          order1.validate_status(order1.status)
         }.must_raise ArgumentError
       end
+    end
+
+    describe "filter_orders" do
+      it "filters all orders on a valid status" do
+        pending_orders = Order.filter_orders("pending")
+        paid_orders = Order.filter_orders("paid")
+        complete_orders = Order.filter_orders("complete")
+        cancelled_orders = Order.filter_orders("cancelled")
+        expect(pending_orders).must_include order1
+        expect(pending_orders.length).must_equal 1
+        expect(paid_orders).must_include order2
+        expect(paid_orders.length).must_equal 1
+        expect(complete_orders).must_include order3
+        expect(complete_orders.length).must_equal 1
+        expect(cancelled_orders).must_include order4
+        expect(cancelled_orders).must_include order5
+        expect(cancelled_orders.length).must_equal 2
+      end
+
+      it "returns an empty array if no status is given (even though an inprogress cart has a nil status)" do
+        expect(Order.filter_orders("")).must_be_empty
+        expect(Order.filter_orders("")).must_be_kind_of Array
+        expect(Order.filter_orders(nil)).must_be_empty
+        expect(Order.filter_orders(nil)).must_be_kind_of Array
+      end
+
+      it "will raise an exception for an invalid order status" do
+        expect {
+          Order.filter_orders("cotton_candy")
+        }.must_raise ArgumentError
+      end
+
     end
   end
 end
