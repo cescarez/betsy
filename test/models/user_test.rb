@@ -2,6 +2,10 @@ require "test_helper"
 
 describe User do
 
+  before do
+    @user = User.new(uid: 12345, username: "Username", provider: "github", email: "email@address.com")
+  end
+
   describe "relations" do
 
     it "has products" do
@@ -23,9 +27,6 @@ describe User do
   end
 
   describe "validations" do
-    before do
-      @user = User.new(uid: 12345, username: "Username", provider: "github", email: "email@address.com")
-    end
 
     it "must have a username" do
       @user.username = nil
@@ -79,7 +80,7 @@ describe User do
           info: {
               name: "Name",
               email: "email@address.com",
-              #avatar:
+              avatar: "not sure what to write here"
           }
       }
       user = User.build_from_github(auth_hash)
@@ -92,17 +93,39 @@ describe User do
     end
   end
 
-  # describe "total_probable_earnings" do
-  #
-  #
-  #
-  # end
-  #
-  # describe "total_actual_earnings" do
-  #
-  #
-  #
-  # end
+  describe "total_probable_earnings" do
+    before do
+      @user.save!
+      uid = @user.uid
+      @product = Product.new(category: "category", name: "name", price: 100, inventory: 5, user_id: uid)
+      @product.save!
+      @order_item = OrderItem.new(quantity: 1)
+      @order_item.product_id = @product.id
+      @order_item.save!
+    end
 
+    it "accurately calculates total earnings for a seller when order status is complete" do
+      @order_item.order.status = "complete"
+      @order_item.save
+      expect(@user.total_probable_earnings).must_equal 100
+    end
+
+    it "accurately calculates total earnings for a seller when order status is pending" do
+      @order_item.order.status = "pending"
+      @order_item.save
+      expect(@user.total_probable_earnings).must_equal 100
+    end
+
+    it "accurately calculates total earnings for a seller when order status is canceled" do
+      @order_item.order.status = "canceled"
+      expect(@user.total_probable_earnings).must_equal 100
+    end
+
+    it "accurately calculates total earnings for a seller when order status is paid" do
+      @order_item.order.status = "paid"
+      expect(@user.total_probable_earnings).must_equal 100
+    end
+
+  end
 
 end
