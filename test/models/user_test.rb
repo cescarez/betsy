@@ -2,10 +2,6 @@ require "test_helper"
 
 describe User do
 
-  before do
-    @user = User.new(uid: 12345, username: "Username", provider: "github", email: "email@address.com")
-  end
-
   describe "relations" do
 
     it "has products" do
@@ -27,6 +23,10 @@ describe User do
   end
 
   describe "validations" do
+
+    before do
+      @user = User.new(uid: 12345, username: "Username", provider: "github", email: "email@address.com")
+    end
 
     it "must have a username" do
       @user.username = nil
@@ -95,6 +95,7 @@ describe User do
 
   describe "total_probable_earnings" do
     before do
+      @user = User.new(uid: 12345, username: "Username", provider: "github", email: "email@address.com")
       @user.save!
       uid = @user.uid
       @product = Product.new(category: "category", name: "name", price: 100, inventory: 5, user_id: uid)
