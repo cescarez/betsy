@@ -6,7 +6,6 @@ class Order < ApplicationRecord
   has_many :shipping_infos
   has_many :billing_infos
 
-  validates :status, presence: true
   validates_date :submit_date, on_or_before: :today, allow_nil: true
   validates_date :complete_date, on_or_before: :today, on_or_after: :submit_date, allow_nil: true
 

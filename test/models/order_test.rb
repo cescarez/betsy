@@ -20,15 +20,6 @@ describe Order do
   end
 
   describe "validations" do
-    it "must have a status" do
-      order1.status = nil
-      expect(order1.valid?).must_equal false
-    end
-
-    it  "will generate a validation error if status is missing" do
-      order1.update(status: nil)
-      expect(order1.errors.messages).must_include :status
-    end
     it "will raise an exception for a future submit date" do
       order1.update(submit_date: Time.now + 1.year)
       expect(order1.errors.messages).must_include :submit_date
