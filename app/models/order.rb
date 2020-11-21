@@ -25,6 +25,10 @@ class Order < ApplicationRecord
     return Order.all.filter { |order| status.include? order.status }
   end
 
+  def total_cost
+    return self.order_items.sum { |order_item| order_item.product.price * order_item.quantity }
+  end
+
   private
 
   def self.validate_status(status)
@@ -32,6 +36,5 @@ class Order < ApplicationRecord
 
     return status
   end
-
 
 end

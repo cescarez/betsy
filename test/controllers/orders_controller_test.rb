@@ -16,11 +16,11 @@ describe OrdersController do
   end
 
   describe "index" do
-    #TODO: omniauth test to check if user is logged in
     it "responds with a success code if user is logged in" do
+      perform_login(users(:user_1))
 
       get orders_path
-      must_respond_with :redirect
+      must_respond_with :success
     end
     it "responds with a redirect code if user is not logged in" do
       get orders_path
@@ -31,6 +31,7 @@ describe OrdersController do
   describe "create" do
 
   end
+
   describe "show" do
 
   end

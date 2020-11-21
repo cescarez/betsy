@@ -126,6 +126,25 @@ describe Order do
           Order.filter_orders("cotton_candy")
         }.must_raise ArgumentError
       end
+    end
+
+    describe "total_cost" do
+      let (:order_item1) { order_items(:order_item1) }
+      let (:order_item2) { order_items(:order_item2) }
+
+      it "returns a total of all items in an order" do
+        order1.order_items << order_item1
+        order1.order_items << order_item2
+        total_cost = order1.total_cost
+
+        expected_cost = (order_item1.product.price * order_item1.quantity) + (order_item2.product.price * order_item2.quantity)
+        expect(total_cost).must_equal expected_cost
+      end
+
+      it "returns zero for an empty order_item list" do
+        order1.order_items.delete_all
+        expect(order1.total_cost).must_equal 0
+      end
 
     end
   end
