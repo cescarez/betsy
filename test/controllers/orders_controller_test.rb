@@ -158,11 +158,51 @@ describe OrdersController do
   end
 
   describe "cancel" do
+    it "updates status and nothing else for existing orders" do
+      start_cart
+      order = Order.find_by(id: session[:order_id])
 
+      expect{
+        post complete_order_path(order.id)
+      }.wont_change "Order.count"
+
+      must_respond_with :redirect
+      order.reload
+      expect(order.status).must_equal "complete"
+      expect(order.complete_date).wont_be_nil
+    end
+
+    it "responds with :not_found for nonexisting order" do
+      start_cart
+      order = Order.find_by(id: session[:order_id])
+
+      expect{
+        post complete_order_path(-1)
+      }.wont_change "Order.count"
+
+      must_respond_with :redirect
+      order.reload
+      expect(order.status).must_equal "complete"
+      expect(order.complete_date).wont_be_nil
+    end
   end
+
   describe "status_filter" do
+    it "responds with :ok for any post successfully received" do
+      post order_status_filter_path, params: {order: {status: "cancelled"}}
+      must_respond_with :ok
 
+      post order_status_filter_path, params: {order: {status: nil}}
+      must_respond_with :ok
+
+      post order_status_filter_path, params: {order: {status: ""}}
+      must_respond_with :ok
+
+      post order_status_filter_path, params: {order: {status: "invalid_status"}}
+      must_respond_with :ok
+    end
   end
+
   describe "submit" do
 
   end
