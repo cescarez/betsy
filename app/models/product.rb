@@ -1,5 +1,5 @@
 class Product < ApplicationRecord
-  belongs_to :user
+  belongs_to :user #scope needed so only logged in users?
 
   validates :category, presence: true
   validates :name, presence: true
