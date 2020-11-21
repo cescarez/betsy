@@ -108,22 +108,17 @@ describe BillingInfo do
     end
 
     describe "validate_card_brand" do
-      it "will raise an exception for an invalid card brand" do
-        billing1.card_brand = "apple_pay"
-        billing1.save
-        expect {
-          billing1.validate_card_brand
-        }.must_raise ArgumentError
+      it "will added a validation error for an invalid card brand" do
+        billing1.update(card_brand: "apple_pay")
+        billing1.validate_card_brand
+        expect(billing1.errors.messages).must_include :card_brand
       end
-      it "will raise an exception for an empty string" do
+      it "will added a validation error for an empty string" do
         billing1.card_brand = ""
         billing1.save
-        expect {
-          billing1.validate_card_brand
-        }.must_raise ArgumentError
+        billing1.validate_card_brand
+        expect(billing1.errors.messages).must_include :card_brand
       end
     end
   end
-
-
 end
