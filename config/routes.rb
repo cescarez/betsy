@@ -17,6 +17,8 @@ Rails.application.routes.draw do
 
   resources :products
 
+  resources :categories, except: [:edit, :update, :destroy]
+
 
   post "/orders/:id/cancel", to: "orders#cancel", as: "cancel_order"
   post "/orders/status", to: "orders#status_filter", as: "order_status"
