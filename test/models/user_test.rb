@@ -128,4 +128,29 @@ describe User do
 
   end
 
+  describe "total_actual_earnings" do
+    it "accurately calculates total earnings for a seller when order status is complete" do
+      @order_item.order.status = "complete"
+      @order_item.save
+      expect(@user.total_actual_earnings).must_equal 100
+    end
+
+    it "accurately calculates total earnings for a seller when order status is pending" do
+      @order_item.order.status = "pending"
+      @order_item.save
+      expect(@user.total_actual_earnings).must_equal 0
+    end
+
+    it "accurately calculates total earnings for a seller when order status is canceled" do
+      @order_item.order.status = "canceled"
+      expect(@user.total_actual_earnings).must_equal 0
+    end
+
+    it "accurately calculates total earnings for a seller when order status is paid" do
+      @order_item.order.status = "paid"
+      expect(@user.total_actual_earnings).must_equal 100
+    end
+
+  end
+
 end
