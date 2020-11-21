@@ -105,7 +105,26 @@ describe OrdersController do
   end
 
   describe "destroy" do
+    it "destroys an existing work then redirects" do
+      expect {
+        delete order_path(order1.id)
+      }.must_differ "Order.count", -1
 
+      found_order = Order.find_by(id: order1.id)
+
+      expect(found_order).must_be_nil
+
+      must_respond_with :redirect
+
+    end
+
+    it "does not change the db when the order does not exist, then responds with :not_found" do
+      expect{
+        delete order_path(-1)
+      }.wont_change "Order.count"
+
+      must_respond_with :not_found
+    end
   end
 
   describe "complete" do
@@ -117,7 +136,7 @@ describe OrdersController do
   describe "status_filter" do
 
   end
-  describe "checkout" do
+  describe "submit" do
 
   end
 end
