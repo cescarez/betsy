@@ -49,7 +49,7 @@ class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
 
   def start_cart
-    post orders_path, params: {order: {status: "pending"}}
+    post orders_path, params: {order: {status: "pending", submit_date: Time.now}}
     expect(session[:order_id]).wont_be_nil
   end
 

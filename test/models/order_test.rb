@@ -41,6 +41,10 @@ describe Order do
       order1.update(submit_date: Time.now, complete_date: Time.now - 1.day)
       expect(order1.errors.messages).must_include :complete_date
     end
+    it "will raise an exception for complete date but no submit date" do
+      order1.update(submit_date: nil, complete_date: Time.now)
+      expect(order1.errors.messages).must_include :complete_date
+    end
   end
 
   describe "relationships" do

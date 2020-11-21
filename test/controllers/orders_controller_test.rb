@@ -128,8 +128,35 @@ describe OrdersController do
   end
 
   describe "complete" do
+    it "updates status and complete_date for existing orders" do
+      start_cart
+      order = Order.find_by(id: session[:order_id])
 
+      expect{
+        post complete_order_path(order.id)
+      }.wont_change "Order.count"
+
+      must_respond_with :redirect
+      order.reload
+      expect(order.status).must_equal "complete"
+      expect(order.complete_date).wont_be_nil
+    end
+
+    it "responds with :not_found for nonexisting order" do
+      start_cart
+      order = Order.find_by(id: session[:order_id])
+
+      expect{
+        post complete_order_path(-1)
+      }.wont_change "Order.count"
+
+      must_respond_with :redirect
+      order.reload
+      expect(order.status).must_equal "complete"
+      expect(order.complete_date).wont_be_nil
+    end
   end
+
   describe "cancel" do
 
   end
