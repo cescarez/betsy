@@ -83,5 +83,6 @@ end
 
 gem "omniauth"
 gem "omniauth-github"
+gem 'faker'
 
 #ENV['GITHUB_CLIENT_ID']
