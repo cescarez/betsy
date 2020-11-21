@@ -15,5 +15,9 @@
       <%= @product.description %>
     </p>
   </section>
+  <section>
+    <h2>Throw some sound in the void a/k/a script a review:</h2>
+    <%= render partial: "reviews/review_form", locals: { action_name: "Leave your Mark", product: @product } %>
+  </section>
 
 </main>
