@@ -93,8 +93,7 @@ describe User do
       expect(user.email).must_equal auth_hash["info"]["email"]
     end
   end
-
-  describe "total_probable_earnings" do
+  describe "earnings methods " do
     before do
       @user = User.new(uid: 12345, username: "Username", provider: "github", email: "email@address.com")
       @user.save!
@@ -111,12 +110,10 @@ describe User do
       #@order.order_items << @order_item
       @order_item.save!
     end
+    describe "total_probable_earnings" do
 
     it "accurately calculates total earnings for a seller when order status is complete" do
-      #@order_item.save!
-      # @order_item.order.status = "complete"
       @order.status = "complete"
-      @order.save
       @order_item.save!
       expect(@user.total_probable_earnings).must_equal 100
     end
@@ -129,39 +126,42 @@ describe User do
 
     it "accurately calculates total earnings for a seller when order status is canceled" do
       @order_item.order.status = "canceled"
+      @order_item.save!
       expect(@user.total_probable_earnings).must_equal 100
     end
 
     it "accurately calculates total earnings for a seller when order status is paid" do
       @order_item.order.status = "paid"
+      @order_item.save!
       expect(@user.total_probable_earnings).must_equal 100
     end
 
   end
 
   describe "total_actual_earnings" do
-    # it "accurately calculates total earnings for a seller when order status is complete" do
-    #   @order_item.order.status = "complete"
-    #   @order_item.save
-    #   expect(@user.total_actual_earnings).must_equal 100
-    # end
-    #
-    # it "accurately calculates total earnings for a seller when order status is pending" do
-    #   @order_item.order.status = "pending"
-    #   @order_item.save
-    #   expect(@user.total_actual_earnings).must_equal 0
-    # end
+    it "accurately calculates total earnings for a seller when order status is complete" do
+      @order_item.order.status = "complete"
+      @order_item.save!
+      expect(@user.total_actual_earnings).must_equal 100
+    end
 
-    # it "accurately calculates total earnings for a seller when order status is canceled" do
-    #   @order_item.order.status = "canceled"
-    #   expect(@user.total_actual_earnings).must_equal 0
-    # end
-    #
-    # it "accurately calculates total earnings for a seller when order status is paid" do
-    #   @order_item.order.status = "paid"
-    #   expect(@user.total_actual_earnings).must_equal 100
-    # end
+    it "accurately calculates total earnings for a seller when order status is pending" do
+      @order_item.order.status = "pending"
+      @order_item.save!
+      expect(@user.total_actual_earnings).must_equal 0
+    end
+
+    it "accurately calculates total earnings for a seller when order status is canceled" do
+      @order_item.order.status = "canceled"
+      expect(@user.total_actual_earnings).must_equal 0
+    end
+
+    it "accurately calculates total earnings for a seller when order status is paid" do
+      @order_item.order.status = "paid"
+      @order_item.save!
+      expect(@user.total_actual_earnings).must_equal 100
+    end
 
   end
-
+  end
 end
