@@ -3,18 +3,18 @@ class ShippingInfosController < ApplicationController
   before_action :find_order, except: [:new]
   before_action :find_user, except: [:new]
 
-  def index
-    if @user
-      #TODO: associate it with user?
-      # @shipping_infos = ShippingInfo.all.filter { |shipping_info| shipping_info.user == @user }
-    elsif @user.nil? && @order
-      flash[:error] = "You must be logged in to view all shipping information associated with your account."
-      redirect_to order_shipping_info_path(@shipping_info.id)
-    else
-      #TODO: change this to an empty list eventually.
-      @shipping_infos = ShippingInfo.all
-    end
-  end
+  # def index
+  #   if @user
+  #     #TODO: associate it with user?
+  #     # @shipping_infos = ShippingInfo.all.filter { |shipping_info| shipping_info.user == @user }
+  #   elsif @user.nil? && @order
+  #     flash[:error] = "You must be logged in to view all shipping information associated with your account."
+  #     redirect_to order_shipping_info_path(@shipping_info.id)
+  #   else
+  #     #TODO: change this to an empty list eventually.
+  #     @shipping_infos = ShippingInfo.all
+  #   end
+  # end
 
   def new
     @shipping_info = ShippingInfo.new
@@ -32,6 +32,9 @@ class ShippingInfosController < ApplicationController
       else
         flash[:error] = "An error occurred and while the shipping info has been saved, it has not been associated with the current order (Order #{@order.id}). Please try again."
       end
+      #for now, the shipping info for the order is the same as the billing address
+      @order.billing_info.shipping_infos << @shipping_info
+
       redirect_back fallback_location: shipping_infos(@shipping_info.id)
     else
       flash[:error] = "Error: shipping info was not created."
@@ -75,6 +78,7 @@ class ShippingInfosController < ApplicationController
   def shipping_info_params
     return params.require(:shipping_info).permit(:card_number, :card_brand, :card_cvv, :card_expiration)
   end
+
   def find_shipping_info
     @shipping_info = ShippingInfo.find_by(params[:id])
     if @shipping_info.nil?
@@ -83,11 +87,12 @@ class ShippingInfosController < ApplicationController
       return
     end
   end
+
   def find_order
-    #TODO: figure out nested routes
-    @order = Order.find_by(id: session[:order_id]) ||= Order.find_by(id: params[:order_id])
+    @order = Order.find_by(id: session[:order_id])
   end
-  def find_user
-    @user = User.find_by(id: session[:user_id])
-  end
+
+  # def find_user
+  #   @user = User.find_by(id: session[:user_id])
+  # end
 end

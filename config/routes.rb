@@ -23,8 +23,8 @@ Rails.application.routes.draw do
 
   post "/orders/status", to: "orders#status_filter", as: "order_status_filter"
 
-  resources :shipping_infos
-  resources :billing_infos
+  resources :shipping_infos, except: [:index]
+  resources :billing_infos, except: [:index]
 
   get "/orders/:id/checkout", to: "orders#checkout", as: "checkout_order"
   post "/orders/:id/checkout", to: "orders#submit"

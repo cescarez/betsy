@@ -3,18 +3,18 @@ class BillingInfosController < ApplicationController
   before_action :find_order, except: [:new]
   before_action :find_user, except: [:new]
 
-  def index
-    if @user
-      #TODO: associate it with user?
-      # @billing_infos = BillingInfo.all.filter { |billing_info| billing_info.user == @user }
-    elsif @user.nil? && @order
-      flash[:error] = "You must be logged in to view all billing information associated with your account."
-      redirect_to order_billing_info_path(@billing_info.id)
-    else
-      #TODO: change this to an empty list eventually.
-      @billing_infos = BillingInfo.all
-    end
-  end
+  # def index
+  #   if @user
+  #     #TODO: associate it with user?
+  #     # @billing_infos = BillingInfo.all.filter { |billing_info| billing_info.user == @user }
+  #   elsif @user.nil? && @order
+  #     flash[:error] = "You must be logged in to view all billing information associated with your account."
+  #     redirect_to order_billing_info_path(@billing_info.id)
+  #   else
+  #     #TODO: change this to an empty list eventually.
+  #     @billing_infos = BillingInfo.all
+  #   end
+  # end
 
   def new
     @billing_info = BillingInfo.new
@@ -86,7 +86,7 @@ class BillingInfosController < ApplicationController
   def find_order
     @order = Order.find_by(id: session[:order_id])
   end
-  def find_user
-    @user = User.find_by(id: session[:user_id])
-  end
+  # def find_user
+  #   @user = User.find_by(id: session[:user_id])
+  # end
 end
