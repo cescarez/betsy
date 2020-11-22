@@ -1,10 +1,12 @@
 class OrdersController < ApplicationController
-  before_action :find_order, except: [:index, :new, :create, :status_filter]
+  before_action :find_order, except: [:index, :create, :status_filter]
   before_action :require_login, only: [:index]
 
   def index
-    current_user = User.find_by(id: session[:user_id])
-    @orders = Order.all.filter { |order| order.user == current_user }
+    if @orders.nil?
+      current_user = User.find_by(id: session[:user_id])
+      @orders = Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user }}
+    end
   end
 
   def create
@@ -12,12 +14,13 @@ class OrdersController < ApplicationController
 
     if @order.save
       flash[:success] = "First item added to cart. Welcome to Stellar."
-      redirect_to order_path(@order.id)
+      session[:order_id] = @order.id
+      redirect_back fallback_location: order_path(@order.id)
     else
-      flash.now[:error] = "Error: shopping cart was not created."
-      @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
-      flash.now[:error] << "Please try again."
-      render :new, status: :bad_request
+      flash[:error] = "Error: shopping cart was not created."
+      @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+      flash[:error] << "Please try again."
+      redirect_back fallback_location: root_path, status: :bad_request
     end
     return
   end
@@ -25,31 +28,26 @@ class OrdersController < ApplicationController
   def show
   end
 
-  def edit
-  end
-
   def update
     if @order.complete_date
       flash[:error] = "Your order has already been submitted for fulfillment. Please contact customer service for assistance."
       redirect_back fallback_location: order_path(@order.id)
+    else
+      if @order.update(order_params)
+        flash[:success] = "Order successfully updated."
+        redirect_back fallback_location: order_path(@order.id)
+      else
+        flash.now[:error] = "Error: order did not update."
+        @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+        flash.now[:error] << "Please try again."
+        render :show, status: :bad_request
+      end
     end
 
-    if @order.update(order_params)
-      flash[:success] = "#{@order.complete_date ? "Order" : "Shopping cart" } successfully updated."
-      redirect_to order_path(@order.id)
-    else
-      flash.now[:error] = "Error: #{@order.complete_date ? "order" : "shopping cart" } did not update."
-      @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
-      flash.now[:error] << "Please try again."
-      render :edit, status: :bad_request
-    end
     return
   end
 
   def destroy
-    ##can do this in model with dependent: destroy
-    # @order.order_items.destroy_all
-
     if @order.destroy
       flash[:success] = "#{@order.complete_date ? "Order successfully deleted" : "Shopping cart successfully cancelled" }."
       redirect_back fallback_location: orders_path
@@ -82,32 +80,53 @@ class OrdersController < ApplicationController
   end
 
   def status_filter
-    status = params[:order][:status]
-    #TODO: write filter_orders model method
+    status = params[:status]
     @orders = Order.filter_orders(status)
-    #TODO: DOES THIS NEED A REDIRECTION?
+    render :index, status: :ok
     return
   end
 
-  ###TODO: COMPLETE CHECKOUT METHOD
-  def checkout
-    unless @order.user.is_auth
-      #ask user if they would like to log in or proceed as guest
+  ###TODO: so much testing -- does this do what I think it does???
+  def submit
+    if session[:user_id].nil?
+      flash.now[:notice] = "Please note, you are completing this order as a guest user. Please log in if you would like to associate this purchase with your account."
     end
+
+    if @order.validate_billing_infos
+      @order.update(submit_date: Time.now, status: "paid")
+
+      #TODO do this is add_product to cart stage? or here?
+      # @order.order_items.each do |order_item|
+      #   order_item.product.inventory -= order_item.quantity
+      # end
+
+      flash[:success] = "Thank you for shopping with Stellar!"
+      session[:order_id] = nil
+      render :show #sends user to order summary page after purchase, but needs to be render since session has been set to nil
+    else
+      flash.now[:error] = "Error: order was not submitted."
+      @order.billing_infos.each { |billing_info| flash.now[:error] << billing_info.errors.full_messages.join(" ") }
+      flash.now[:error] << "Please try again."
+
+      render :checkout, status: :bad_request
+    end
+
+    return
   end
 
   private
 
   def order_params
-    return require(:order).permit(:user_id, :order_item_id, :shipping_info_id, :billing_info_id, :status, :submit_date, :complete_date)
+    return params.require(:order).permit(:user_id, :status, :submit_date, :complete_date)
   end
 
   def find_order
-    @order = Order.find_by(id: params[:id])
+    #should this also be creating a session if no order is found?
+    @order = Order.find_by(id: session[:order_id])
 
     if @order.nil?
-      flash.now[:error] = "Order not found."
-      render_404
+      flash.now[:error] = "There was a problem with your cart. Please clear your cookies or close your browser and revisit Stellar."
+      redirect_to root_path, status: :not_found
       return
     end
   end

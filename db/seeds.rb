@@ -34,22 +34,45 @@ end
 puts "Added #{User.count} user records"
 puts "#{user_failures.length} users failed to save"
 
+CATEGORIES_FILES = Rails.root.join('db', 'categories-seeds.csv')
+
+puts "Loading raw data from #{CATEGORIES_FILES}"
+category_failures = []
+CSV.foreach(CATEGORIES_FILES, :headers => true) do |row|
+  category = Category.new
+  category.name = row['name']
+  category.description = row['description']
+  successful = category.save
+  if !successful
+    category_failures << category
+    puts "Failed to save categories: #{category.inspect}"
+  else
+    puts "Created categories: #{category.inspect}"
+  end
+end
+
+puts "Added #{Category.count} categories records"
+puts "#{category_failures.length} categories failed to save"
+
+
 PRODUCTS_FILE = Rails.root.join('db', 'products-seeds.csv')
 
 puts "Loading raw data from #{PRODUCTS_FILE}"
 product_failures = []
+categories = Category.all
 CSV.foreach(PRODUCTS_FILE, :headers => true) do |row|
   product = Product.new
   product.id = row['id']
-  product.category = row['category']
   product.name = row['name']
   product.price = row['price']
   product.description = row['description']
   product.inventory = row['inventory']
   product.user_id = row['user_id']
   #product.order_id = row['order_id']
+  product.categories << Category.first
   successful = product.save
   if !successful
+    binding.pry
     product_failures << product
     puts "Failed to save products: #{product.inspect}"
   else
