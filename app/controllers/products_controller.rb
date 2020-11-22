@@ -26,7 +26,7 @@ class ProductsController < ApplicationController
     if @user
       @product = Product.new(product_params)
       @product.user_id = @user.id
-      @product.image.attach(params[:image])
+      @product.image.attach(params[:product][:image])
     else
       flash[:error] = 'You must create an account to access this page.'
       end
