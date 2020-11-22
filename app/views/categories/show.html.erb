@@ -6,7 +6,7 @@
   </h2>
   <section>
     <p>
-      <%= @categry.description %>
+      <%= @category.description %>
     </p>
   </section>
   <section>
@@ -19,6 +19,7 @@
         <%= "Celestial bodies for sale under #{@category.name}" %>
       </h3>
     <table>
+      <th>Category</th>
       <th>Name</th>
       <th>Price</th>
       <th>Description</th>
@@ -27,7 +28,9 @@
       <% @category.products.each do |product| %>
         <tr>
           <td>
-            <%= product.category %>
+            <% product.categories.each do |category| %>
+                <%= category.name %><br/>
+            <% end %>
           </td>
           <td>
             <%= product.name %>
