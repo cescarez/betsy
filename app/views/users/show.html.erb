@@ -19,7 +19,7 @@
   </h3>
   <table>
     <tr>
-      <th>Category</th>
+<!--      <th>Category</th>-->
       <th>Name</th>
       <th>Price</th>
       <th>Description</th>
@@ -33,9 +33,9 @@
     </tr>
     <% @user.products.each do |product| %>
       <tr>
-        <td>
-          <%= product.category %>
-        </td>
+<!--        <td>-->
+          <%#= product.category %>
+<!--        </td>-->
         <td>
           <%= link_to "#{product.name}", product_path(product.id)  %>
         </td>
