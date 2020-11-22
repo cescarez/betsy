@@ -8,6 +8,7 @@
 <h3>Seller information</h3>
 <p>Name: <%=@user.name %></p>
 <p>Member Since: <%= @user.created_at %></p>
+<p><img src="<%=@user.avatar%>"></p>
 
 <% if @user.products.nil? %>
   <h3>

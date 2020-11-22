@@ -3,6 +3,7 @@
   <h4>Submitted on <%= @order.submit_date %></h4>
   <h4>Order Status: <%= @order.status %></h4>
 </section>
+
 <section class="orders-show user-table">
   <table class="table table-sm">
     <thead>
@@ -14,20 +15,25 @@
     </thead>
     <tbody>
       <tr>
-        <td><%= @order.user.name %></td>
-        <td><%= @order.user.email %></td>
-        <td><%= "#{@order.shipping_info.street} #{@order.shipping_info.city}, #{@order.shipping_info.state} #{@order.shipping_info.zipcode}, #{@order.shipping_info.country}" %></td>
-        <td><%= @order.billing_info.card_brand %>: <%= hide_card(@order.billing_info.card_number) %></td>
-        <td><%= @order.billing_info.card_expiration %></td>
+        <% @order.order_items.each do |order_item| %>
+          <% if order_item.user %>
+            <td><%= order_item.user.name %></td>
+            <td><%= order_item.user.email %></td>
+            <td><%= "#{@order.shipping_info.street} #{@order.shipping_info.city}, #{@order.shipping_info.state} #{@order.shipping_info.zipcode}, #{@order.shipping_info.country}" %></td>
+            <td><%= @order.billing_info.card_brand %>: <%= hide_card(@order.billing_info.card_number) %></td>
+            <td><%= @order.billing_info.card_expiration %></td>
+          <% end %>
+        <% end %>
       </tr>
     </tbody>
   </table>
-
 </section>
 
 <section class="orders-show order-table">
-  <%= button_to "Order has been Shipped", complete_order_path(@order.id), class:"btn btn-success"  %>
-  <table class="table">
+  <% unless session[:user_id].nil? %>
+    <%= button_to "Mark Order as Shipped", complete_order_path(@order.id), class:"btn btn-success"  %>
+  <% end %>
+  <table class="table table-hover">
     <thead>
     <tr>
       <th scope="col">Item</th>

@@ -1,9 +1,12 @@
 order_item1:
+    order: order1
     product: product_1
     quantity: 1
 order_item2:
+    order: order2
     product: product_2
     quantity: 20
 order_item3:
+    order: order3
     product: product_1
     quantity: 300

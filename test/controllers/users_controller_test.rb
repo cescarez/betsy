@@ -68,7 +68,7 @@ end
 
     it "redirects us back if the user is not logged in" do
       get current_user_path
-      expect(flash[:error]).must_equal "You must log in first to view this page 🙃"
+      expect(flash[:error]).must_equal "You must be logged in to view this page"
       must_respond_with :redirect
       must_redirect_to root_path
 
