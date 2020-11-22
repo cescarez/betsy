@@ -76,4 +76,12 @@ describe Product do
       expect(product_1.valid?).must_equal false
     end
   end
+
+  describe "relationships" do
+    it "belongs to a user" do
+      product = products(:product_1)
+      expect(product.user_id).must_be_instance_of Product
+      expect(product.user_id).must_equal user_1
+    end
+  end
 end

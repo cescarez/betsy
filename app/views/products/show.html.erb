@@ -1,13 +1,22 @@
 <main>
   <h2>
-    <section class="product-index">
+    <section class=”product-show”>
       <%= "Product: #{@product.name}" %>
     </section>
   </h2>
   <section>
     <ul>
-      <li> <%= "Category: #{@product.category}" %> </li>
-      <li> <%= "Price: #{number_to_currency(@product.price)}" %> </li>
+
+      <li> <%= "Merchant: #{@product.user.name}" %></li>
+      <li>
+        <ul>
+          <% @product.categories.each do |category| %>
+          <li>
+            <%= category.name %>
+          </li>
+          <% end %>
+      </ul>
+    <li> <%= "Price: #{number_to_currency(@product.price)}" %> </li>
     </ul>
   </section>
   <section>

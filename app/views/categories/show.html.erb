@@ -1,0 +1,51 @@
+<main>
+  <h2>
+    <section class=”category-show”>
+      <%= "Category: #{@category.name}" %>
+    </section>
+  </h2>
+  <section>
+    <p>
+      <%= @category.description %>
+    </p>
+  </section>
+  <section>
+    <% if @category.products.nil? %>
+      <h3>
+        <%= "No celestial bodies are for sale under #{@category.name}" %>
+      </h3>
+      <% else %>
+      <h3>
+        <%= "Celestial bodies for sale under #{@category.name}" %>
+      </h3>
+    <table>
+      <th>Category</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Description</th>
+      <th>Inventory</th>
+      </tr>
+      <% @category.products.each do |product| %>
+        <tr>
+          <td>
+            <% product.categories.each do |category| %>
+                <%= category.name %><br/>
+            <% end %>
+          </td>
+          <td>
+            <%= product.name %>
+          </td>
+          <td>
+            <%= product.price %>
+          </td>
+          <td>
+            <%= product.description %>
+          </td>
+          <td>
+            <%= product.inventory %>
+          </td>
+        <% end %>
+    </table>
+    <% end %>
+  </section>
+</main>

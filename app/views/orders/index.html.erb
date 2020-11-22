@@ -2,14 +2,11 @@
   <h2>Orders</h2>
 </section>
 <section class="orders-index orders-table">
-  <%#= form_with model: @order, url: order_filter_status_path, class:"order-status-filter" do |f| %>
-    <%#= f.label :status %>
-    <%#= f.check_box_tag :status, "pending", checked = false %>
-    <%#= f.check_box_tag :status, "paid", checked = false %>
-    <%#= f.check_box_tag :status, "complete", checked = false %>
-    <%#= f.check_box_tag :status, "cancelled", checked = false %>
-    <%#= f.submit "Filter Orders" %>
-  <%# end %>
+  <%= form_with model: @order, url: order_status_filter_path, class:"order-status-filter" do |f| %>
+    <%= f.label :status %>
+    <%= f.select :status, ["", "pending", "paid", "complete", "cancelled"] %>
+    <%= f.submit "Filter Orders" %>
+  <% end %>
   <table class="table table-hover">
     <thead>
       <tr>

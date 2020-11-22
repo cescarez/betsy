@@ -13,6 +13,7 @@ class BillingInfo < ApplicationRecord
     num = self.card_number.delete("\s")
 
     if !num || num.length <= 1 || num =~ /\D/
+      self.errors.add(:card_number, "Invalid card number. Please enter a valid card number to continue.")
       return false
     end
 
@@ -30,14 +31,16 @@ class BillingInfo < ApplicationRecord
       return num
     else
       self.errors.add(:card_number, "Invalid card number. Please enter a valid card number to continue.")
+      return false
     end
   end
 
   def validate_card_brand
-    unless VALID_CARD_BRANDS.include? self.card_brand
-      raise ArgumentError, "Invalid card company. Fatal Error."
-    else
+    if VALID_CARD_BRANDS.include? self.card_brand
       return self.card_brand
+    else
+      self.errors.add(:card_brand, "Invalid card brand. Please enter a valid card brand to continue.")
+      return false
     end
   end
 end
