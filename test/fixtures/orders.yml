@@ -1,4 +1,5 @@
 order1:
+<<<<<<< HEAD
   status: pending
   submit_date: 2020-11-19 11:55:03 -0800
   complete_date: 2020-11-19 11:55:03 -0800
@@ -8,6 +9,15 @@ order2:
   complete_date: 2020-11-19 11:55:03 -0800
 order3:
   status: complete
+  status: "pending"
+  submit_date: 2020-11-19 11:55:03 -0800
+  complete_date: 2020-11-19 11:55:03 -0800
+order2:
+  status: "paid"
+  submit_date: 2020-11-19 11:55:03 -0800
+  complete_date: 2020-11-19 11:55:03 -0800
+order3:
+  status: "complete"
   submit_date: 2020-11-19 11:55:03 -0800
   complete_date: 2020-11-19 11:55:03 -0800
 order4:
