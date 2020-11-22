@@ -1,6 +1,6 @@
 <main>
   <h2>
-    <section class=”product-index”>
+    <section class="product-index">
       <%= "Product: #{@product.name}" %>
     </section>
   </h2>
@@ -17,6 +17,47 @@
     <% if @product.image.attached? %>
       <image src="<%=(url_for(@product.image)) %>" alt="black hole">
       </image>
+    <% end %>
+  </section>
+  <section>
+    <h2>Stellar Product Reviews:</h2>
+    <!--     if user product reviews don't exist:-->
+    <% if @product.reviews.length < 1 %>
+          <h3>this seller has not been rated</h3>
+<!--         if user product reviews exist:-->
+    <% else %>
+          <table>
+            <tr>
+              <th>Rating (⭐️ to ⭐⭐⭐⭐⭐)</th>
+              <th>Date</th>
+              <th>Review</th>
+            </tr>
+          </table>
+      <% @product.reviews.each do |review| %>
+        <table>
+            <tr>
+              <td>
+                <% if review.rating == 1 %>
+                  <%= "⭐" %>
+                <% elsif review.rating == 2 %>
+                  <%= "⭐" %>
+                <% elsif review.rating == 3 %>
+                  <%= "⭐⭐⭐" %>
+                <% elsif review.rating == 4 %>
+                  <%= "⭐⭐⭐⭐" %>
+                <% elsif review.rating == 5 %>
+                  <%= "⭐⭐⭐⭐⭐" %>
+                <% end %>
+              </td>
+              <td>
+        <%= review.created_at %>
+              </td>
+              <td>
+        <%= review.description %>
+              </td>
+            </tr>
+        </table>
+        <% end %>
     <% end %>
   </section>
   <section>

@@ -1,26 +1,30 @@
 class ReviewsController < ApplicationController
 
+  def new
+    @review = Review.new(review_params)
+  end
+
   def create
     @product = Product.find_by(id: params[:product_id])
     @user = User.find_by(id: session[:user_id])
-    if @user.nil?
-      @review = Review.new(review_params)
-      @review.product_id = @product.id
-    elsif @product.user_id == @user.id
+    if !@user.nil? && @product.user_id == @user.id
       flash[:notice] = "beep boop bop...you can't leave a review for yourself...(°_o)"
-      reviewed_self = true
-    else
-      flash[:error] = "💦👾🔥💦👾🔥💦👾🔥💦👾🔥 - we're not sure what's going on either"
+      redirect_to request.referrer
+      return
     end
 
-    if !@review.nil?
-      @review.save
+    @review = Review.new(review_params)
+    @review.product_id = @product.id
+    result = @review.save
+
+    if result
       flash[:success] = "Thank you for your feedback!"
-    elsif !reviewed_self
+    else
       flash[:error] = "Unable to leave feedback at this time!"
     end
     redirect_to request.referrer
-end
+    return
+  end
 
 
   private
