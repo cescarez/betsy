@@ -5,7 +5,8 @@ class BillingInfosController < ApplicationController
 
   def index
     if @user
-      @billing_infos = BillingInfo.all.filter { |billing_info| billing_info.user == current_user }
+      #TODO: associate it with user?
+      # @billing_infos = BillingInfo.all.filter { |billing_info| billing_info.user == @user }
     elsif @user.nil? && @order
       flash[:error] = "You must be logged in to view all billing information associated with your account."
       redirect_to order_billing_info_path(@billing_info.id)
@@ -22,7 +23,7 @@ class BillingInfosController < ApplicationController
   def create
     if @billing_info.save
       flash[:success] = "Billing info has been saved."
-      #TODO: associate it with order and/or user?
+      #TODO: associate it with user?
       # if session[:user_id]
       #   @user.billing_infos << @billing_info
       # end
