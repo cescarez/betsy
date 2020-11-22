@@ -18,6 +18,8 @@ Rails.application.routes.draw do
     resources :reviews, only: [:create]
   end
 
+  resources :categories, except: [:edit, :update, :destroy]
+
 
   post "/orders/status", to: "orders#status_filter", as: "order_status_filter"
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'faker'
 require 'date'
 require 'csv'
@@ -8,29 +10,35 @@ require 'csv'
 # if satisfied with the new <name>-seeds.csv file, recreate the db with:
 # $ rails db:reset
 
+CSV.open('db/categories-seeds.csv', 'w', write_headers: true,
+         headers: %w[name description]) do |csv|
+  categories = %w[star planet moon galaxy nebula]
+  5.times do |num|
+    name = categories[num]
+    description = Faker::ChuckNorris.unique.fact
+    csv << [name, description]
+  end
+end
+
 CSV.open('db/products-seeds.csv', 'w', write_headers: true,
-                                       headers: %w[category name price description inventory user_id order_id]) do |csv|
-  25.times do |num|
-    category = %w[star planet moon galaxy nebula].sample
-    name = if category == 'star'
-      Faker::Space.unique.star
-           elsif category == 'planet'
-      Faker::Space.unique.planet
-           elsif category == 'moon'
-             Faker::Space.unique.moon
-           elsif category == 'galaxy'
-             Faker::Space.unique.galaxy
-           elsif category == 'nebula'
-             Faker::Space.unique.nebula
-           else
-             nil
-           end
+                                       headers: %w[name price description inventory user_id order_id]) do |csv|
+  10.times do |num|
+    name = Faker::Space.unique.star
     price = rand(100.0..1_000_000.0)
     description = Faker::ChuckNorris.unique.fact
     inventory = rand(1..10)
     user_id = num + 1
     order_id = num + 1
-    csv << [category, name, price, description, inventory, user_id, order_id]
+    csv << [name, price, description, inventory, user_id, order_id]
+  end
+  15.times do |num|
+    name = Faker::Space.unique.moon
+    price = rand(100.0..1_000_000.0)
+    description = Faker::ChuckNorris.unique.fact
+    inventory = rand(1..10)
+    user_id = num + 1
+    order_id = num + 1
+    csv << [name, price, description, inventory, user_id, order_id]
   end
 end
 

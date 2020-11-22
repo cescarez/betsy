@@ -54,7 +54,7 @@ describe ProductsController do
       it "can update a product" do
       product = products(product_1)
 
-      expect {patch product_path(product.id), params: :name "Pluto" }.wont_change Product.count
+      expect {patch product_path(product.id)}.wont_change Product.count
     end
   end
 end
