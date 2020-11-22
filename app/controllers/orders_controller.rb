@@ -5,7 +5,7 @@ class OrdersController < ApplicationController
   def index
     if @orders.nil?
       current_user = User.find_by(id: session[:user_id])
-      @orders = Order.all.filter { |order| order.user == current_user }
+      @orders = Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user }}
     end
   end
 

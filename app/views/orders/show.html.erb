@@ -15,12 +15,14 @@
     </thead>
     <tbody>
       <tr>
-        <% if @order.user %>
-          <td><%= @order.user.name %></td>
-          <td><%= @order.user.email %></td>
-          <td><%= "#{@order.shipping_info.street} #{@order.shipping_info.city}, #{@order.shipping_info.state} #{@order.shipping_info.zipcode}, #{@order.shipping_info.country}" %></td>
-          <td><%= @order.billing_info.card_brand %>: <%= hide_card(@order.billing_info.card_number) %></td>
-          <td><%= @order.billing_info.card_expiration %></td>
+        <% @order.order_items.each do |order_item| %>
+          <% if order_item.user %>
+            <td><%= order_item.user.name %></td>
+            <td><%= order_item.user.email %></td>
+            <td><%= "#{@order.shipping_info.street} #{@order.shipping_info.city}, #{@order.shipping_info.state} #{@order.shipping_info.zipcode}, #{@order.shipping_info.country}" %></td>
+            <td><%= @order.billing_info.card_brand %>: <%= hide_card(@order.billing_info.card_number) %></td>
+            <td><%= @order.billing_info.card_expiration %></td>
+          <% end %>
         <% end %>
       </tr>
     </tbody>
