@@ -13,7 +13,7 @@ describe Order do
     end
 
     it "responds to all the expected fields" do
-      [:user_id, :status, :submit_date, :complete_date].each do |field|
+      [:status, :submit_date, :complete_date].each do |field|
         expect(order1).must_respond_to field
       end
     end
@@ -39,13 +39,6 @@ describe Order do
   end
 
   describe "relationships" do
-    it "can belong to a user" do
-      expect(order1.user).must_equal users(:user_1)
-    end
-    it "user can be nil" do
-      order1.user = nil
-      expect(order1.valid?).must_equal true
-    end
     it "has many order_items" do
       order1.order_items << order_items(:order_item1)
       order1.order_items << order_items(:order_item2)
