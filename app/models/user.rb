@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   has_many :products # add scope so just logged in user has products
-  has_many :orders
-  # has_many :order_items, through: :orders
+  has_many :order_items, through: :products
+  has_many :orders, through: :order_items
   validates :username, uniqueness: true, presence: true
   validates :uid, uniqueness: {scope: :provider}, presence: true
   validates :email, :provider, presence: :true
@@ -18,28 +18,24 @@ class User < ApplicationRecord
 
   def total_probable_earnings
     total_earnings = 0
-    sold_products = self.order_items
-    if sold_products.length.positive?
-      sold_products.each do |sold_product|
-        total_earnings += sold_product.quantity * sold_product.price
+    if order_items.length.positive?
+      order_items.each do |sold_item|
+        total_earnings += sold_item.quantity * sold_item.product.price
       end
     end
     return total_earnings
   end
 
   def total_actual_earnings
-    status = %w[cancelled pending]
+    statuses = %w[cancelled pending]
     total_earnings = 0
-    sold_products = self.order_items
-    if sold_products.length.positive?
-      sold_products.each do |sold_product|
-        unless sold_product.status.include?(status)
-          total_earnings += sold_product.quantity * sold_product.price
+    if order_items.length.positive?
+      order_items.each do |sold_item|
+        unless statuses.include?(sold_item.order.status)
+        total_earnings += sold_item.quantity * sold_item.product.price
         end
-      end
+        end
     end
     return total_earnings
   end
-
-
 end
