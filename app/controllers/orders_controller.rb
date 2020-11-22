@@ -92,7 +92,7 @@ class OrdersController < ApplicationController
       flash.now[:notice] = "Please note, you are completing this order as a guest user. Please log in if you would like to associate this purchase with your account."
     end
 
-    if @order.validate_billing_infos
+    if @order.validate_billing_info
       @order.update(submit_date: Time.now, status: "paid")
 
       #TODO do this is add_product to cart stage? or here?
@@ -105,7 +105,7 @@ class OrdersController < ApplicationController
       render :show #sends user to order summary page after purchase, but needs to be render since session has been set to nil
     else
       flash.now[:error] = "Error: order was not submitted."
-      @order.billing_infos.each { |billing_info| flash.now[:error] << billing_info.errors.full_messages.join(" ") }
+      @order.billing_info.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
       flash.now[:error] << "Please try again."
 
       render :checkout, status: :bad_request

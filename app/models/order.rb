@@ -3,8 +3,8 @@ VALID_STATUSES = ["pending", "paid", "complete", "cancelled"]
 class Order < ApplicationRecord
   # belongs_to :user, optional: true
   has_many :order_items, dependent: :destroy
-  has_one :shipping_info, dependent: delete
-  has_one :billing_info, dependent: delete
+  has_one :shipping_info, dependent: :delete
+  has_one :billing_info, dependent: :delete
 
   validates_date :submit_date, on_or_before: :today, allow_nil: true
   validates_date :complete_date, on_or_before: :today, on_or_after: :submit_date, allow_nil: true
@@ -16,15 +16,14 @@ class Order < ApplicationRecord
     return status
   end
 
-  def validate_billing_infos
-    raise ArgumentError, "Fatal Error: no billing info associated with order." unless self.billing_infos.any?
+  def validate_billing_info
+    raise ArgumentError, "Fatal Error: no billing info associated with order." if self.billing_info.nil?
 
-    self.billing_infos.each do |billing_info|
-      unless billing_info.validate_card_number && billing_info.validate_card_brand
-        return false
-      end
+    if billing_info.validate_card_number && billing_info.validate_card_brand
+      return true
+    else
+      return false
     end
-    return true
   end
 
   def self.filter_orders(status)
