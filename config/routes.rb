@@ -30,8 +30,5 @@ Rails.application.routes.draw do
   post "/orders/:id/checkout", to: "orders#submit"
   post "/orders/:id/complete", to: "orders#complete", as: "complete_order"
   post "/orders/:id/cancel", to: "orders#cancel", as: "cancel_order"
-  resources :orders, except: [:new, :edit] do
-    resources :shipping_infos, only: [:show, :edit, :update, :destroy]
-    resources :billing_infos, only: [:show, :edit, :update, :destroy]
-  end
+  resources :orders, except: [:new, :edit]
 end
