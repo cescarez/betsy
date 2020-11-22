@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 2020_11_21_193502) do
+ActiveRecord::Schema.define(version: 2020_11_22_014747) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,14 +84,12 @@ ActiveRecord::Schema.define(version: 2020_11_21_193502) do
     t.datetime "complete_date"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "user_id"
     t.bigint "order_items_id"
     t.bigint "shipping_infos_id"
     t.bigint "billing_infos_id"
     t.index ["billing_infos_id"], name: "index_orders_on_billing_infos_id"
     t.index ["order_items_id"], name: "index_orders_on_order_items_id"
     t.index ["shipping_infos_id"], name: "index_orders_on_shipping_infos_id"
-    t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "products", force: :cascade do |t|
