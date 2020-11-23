@@ -1,6 +1,7 @@
 class OrdersController < ApplicationController
   before_action :find_order, except: [:index, :create, :status_filter]
-  before_action :require_login, only: [:index]
+  before_action :find_order_item, only: [:show, :complete, :cancel]
+  before_action :require_login, only: [:index, :complete, :cancel]
 
   def index
     if @orders.nil?
@@ -30,7 +31,7 @@ class OrdersController < ApplicationController
 
   def update
     if @order.complete_date
-      flash[:error] = "Your order has already been submitted for fulfillment. Please contact customer service for assistance."
+      flash[:error] = "Your order has already been shipped. No changes may be made at this point."
       redirect_back fallback_location: order_path(@order.id)
     else
       if @order.update(order_params)
@@ -47,33 +48,34 @@ class OrdersController < ApplicationController
     return
   end
 
-  def destroy
-    if @order.destroy
-      flash[:success] = "#{@order.complete_date ? "Order successfully deleted" : "Shopping cart successfully cancelled" }."
-      redirect_back fallback_location: orders_path
-    else
-      flash[:error] = "Error: #{@order.complete_date ? "order was not deleted" : "shopping cart was not cancelled" }. Please try again."
-      redirect_back fallback_location: order_path(@order.id), status: :internal_server_error
-    end
-    return
-  end
+  # NOT CURRENTLY IMPLEMENTED ANYWHERE. WE DON'T WANT A SELLER TO DELETE A WHOLE ORDER SO THIS SEEMS LIKE AN ADMIN ACTION
+  # def destroy
+  #   if @order.destroy
+  #     flash[:success] = "#{@order.complete_date ? "Order successfully deleted" : "Shopping cart successfully cancelled" }."
+  #     redirect_back fallback_location: orders_path
+  #   else
+  #     flash[:error] = "Error: #{@order.complete_date ? "order was not deleted" : "shopping cart was not cancelled" }. Please try again."
+  #     redirect_back fallback_location: order_path(@order.id), status: :internal_server_error
+  #   end
+  #   return
+  # end
 
   def complete
-    if @order.update(status: "complete", complete_date: Time.now)
-      flash[:success] = "Your order has successfully been submitted."
+    if @order_item.update(status: "complete", complete_date: Time.now)
+      flash[:success] = "#{@order_item.product.name.capitalize} in Order ##{@order.id} has mark and shipped and designated as 'complete'."
       redirect_back fallback_location: root_path
     else
-      flash[:error] = "Error: Order was not completed. Please try again."
+      flash[:error] = "Error: #{@order_item.product.name.capitalize} in Order ##{@order.id} was not marked as shipped. Please try again."
       redirect_back fallback_location: order_path(@order.id), status: :bad_request
     end
     return
   end
 
   def cancel
-    if @order.update(status: "cancelled")
-      flash[:success] = "Order ##{@order.id} successfully cancelled."
+    if @order_item.update(status: "cancelled")
+      flash[:success] = "#{@order_item.product.name.capitalize} in Order ##{@order.id} successfully cancelled."
     else
-      flash[:error] = "Error. Order ##{@order.id} was not cancelled. Please try again."
+      flash[:error] = "Error. #{@order_item.product.name.capitalize} in Order ##{@order.id} was not cancelled. Please try again."
     end
     redirect_back fallback_location: order_path(@order.id)
     return
@@ -86,13 +88,12 @@ class OrdersController < ApplicationController
     return
   end
 
-  ###TODO: so much testing -- does this do what I think it does???
   def submit
     if session[:user_id].nil?
       flash.now[:notice] = "Please note, you are completing this order as a guest user. Please log in if you would like to associate this purchase with your account."
     end
 
-    if @order.validate_billing_infos
+    if @order.validate_billing_info
       @order.update(submit_date: Time.now, status: "paid")
 
       #TODO do this is add_product to cart stage? or here?
@@ -102,10 +103,10 @@ class OrdersController < ApplicationController
 
       flash[:success] = "Thank you for shopping with Stellar!"
       session[:order_id] = nil
-      render :show #sends user to order summary page after purchase, but needs to be render since session has been set to nil
+      render :summary, status: :success #sends user to order summary page after purchase, but needs to be render since session has been set to nil
     else
       flash.now[:error] = "Error: order was not submitted."
-      @order.billing_infos.each { |billing_info| flash.now[:error] << billing_info.errors.full_messages.join(" ") }
+      @order.billing_info.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
       flash.now[:error] << "Please try again."
 
       render :checkout, status: :bad_request
@@ -129,5 +130,10 @@ class OrdersController < ApplicationController
       redirect_to root_path, status: :not_found
       return
     end
+  end
+
+  def find_order_item
+    current_user =  User.find_by(id: session[:user_id])
+    @order_item = @order.order_items.find { |order_item| order_item.user == current_user }
   end
 end

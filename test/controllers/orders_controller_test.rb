@@ -205,7 +205,7 @@ describe OrdersController do
       perform_login(user1)
       start_cart
       order = Order.find_by(id: session[:order_id])
-      order.billing_infos << billing_infos(:billing1)
+      order.billing_info = billing_infos(:billing1)
       order.update(submit_date: nil)
 
       expect{
@@ -224,12 +224,13 @@ describe OrdersController do
       billing1 = billing_infos(:billing1)
       billing1.update(card_number: "10000001")
 
+
       perform_login(user1)
       start_cart
       order = Order.find_by(id: session[:order_id])
       order.update(submit_date: nil)
 
-      order.billing_infos << billing1
+      order.billing_info = billing1
       before_status = order.status
 
       expect{

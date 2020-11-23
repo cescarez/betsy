@@ -48,23 +48,13 @@ describe Order do
         expect(item).must_be_instance_of OrderItem
       end
     end
-    it "has many shipping_infos" do
-      order1.shipping_infos << shipping_infos(:shipping1)
-      order1.shipping_infos << shipping_infos(:shipping2)
-      order1.shipping_infos << shipping_infos(:shipping3)
-      expect(order1.shipping_infos.count).must_equal 3
-      order1.shipping_infos.each do |shipping_info|
-        expect(shipping_info).must_be_instance_of ShippingInfo
-      end
+    it "has one shipping_info" do
+      order1.shipping_info = shipping_infos(:shipping1)
+      expect(order1.shipping_info).must_equal shipping_infos(:shipping1)
     end
     it "has many billing_infos" do
-      order1.billing_infos << billing_infos(:billing1)
-      order1.billing_infos << billing_infos(:billing2)
-      order1.billing_infos << billing_infos(:billing3)
-      expect(order1.billing_infos.count).must_equal 3
-      order1.billing_infos.each do |billing_info|
-        expect(billing_info).must_be_instance_of BillingInfo
-      end
+      order1.billing_info = billing_infos(:billing1)
+      expect(order1.billing_info).must_equal billing_infos(:billing1)
     end
   end
 
@@ -138,42 +128,32 @@ describe Order do
 
     describe "validate_billing_info" do
       it "returns true if one billing_info has valid card numbers and brands" do
-        order1.billing_infos << billing_infos(:billing1)
-        expect(order1.validate_billing_infos).must_equal true
-      end
-
-      it "returns true if all billing_infos have valid card numbers and brands" do
-        order1.billing_infos << billing_infos(:billing1)
-        order1.billing_infos << billing_infos(:billing2)
-        order1.billing_infos << billing_infos(:billing3)
-        expect(order1.validate_billing_infos).must_equal true
+        order1.billing_info = billing_infos(:billing1)
+        expect(order1.validate_billing_info).must_equal true
       end
 
       it "returns false for invalid card number" do
         billing1 = billing_infos(:billing1)
         billing1.update(card_number: "1000000001")
-        order1.billing_infos << billing1
-        order1.billing_infos << billing_infos(:billing2)
-        order1.billing_infos << billing_infos(:billing3)
-        expect(order1.validate_billing_infos).must_equal false
+        order1.billing_info = billing1
+        expect(order1.validate_billing_info).must_equal false
       end
 
       it "returns false for an invalid card brand" do
         billing1 = billing_infos(:billing1)
         billing1.update(card_brand: "fake_company")
-        order1.billing_infos << billing1
-        order1.billing_infos << billing_infos(:billing2)
-        order1.billing_infos << billing_infos(:billing3)
-        expect(order1.validate_billing_infos).must_equal false
+        order1.billing_info = billing1
+        expect(order1.validate_billing_info).must_equal false
       end
 
       it "raises an argument error if there is no billing info attached to the order" do
-        order1.billing_infos.delete_all
+        order1.billing_info = nil
+        pp order1.billing_info.nil?
+        pp order1.billing_info
         expect {
-          order1.validate_billing_infos
+          order1.validate_billing_info
         }.must_raise ArgumentError
       end
-
     end
   end
 end

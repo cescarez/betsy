@@ -1,0 +1,5 @@
+<%= render partial: "shipping-form", locals: {action_name: "Edit"} %>
+<section class="shipping-buttons">
+  <%= button_to "Delete this shipping information", shipping_info_path(@shipping_info.id), method: :delete,data:{confirm: 'Are you sure you would like to delete this information?'} %>
+  <%= button_to "Return to Shopping Cart", checkout_order_path(@order.id) %>
+</section>

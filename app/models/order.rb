@@ -3,8 +3,8 @@ VALID_STATUSES = ["pending", "paid", "complete", "cancelled"]
 class Order < ApplicationRecord
   # belongs_to :user, optional: true
   has_many :order_items, dependent: :destroy
-  has_many :shipping_infos
-  has_many :billing_infos
+  has_one :shipping_info, dependent: :delete
+  has_one :billing_info, dependent: :delete
 
   validates_date :submit_date, on_or_before: :today, allow_nil: true
   validates_date :complete_date, on_or_before: :today, on_or_after: :submit_date, allow_nil: true
@@ -16,24 +16,24 @@ class Order < ApplicationRecord
     return status
   end
 
-  def validate_billing_infos
-    raise ArgumentError, "Fatal Error: no billing info associated with order." unless self.billing_infos.any?
+  def validate_billing_info
+    raise ArgumentError, "Fatal Error: no billing info associated with order." if self.billing_info.nil?
 
-    self.billing_infos.each do |billing_info|
-      unless billing_info.validate_card_number && billing_info.validate_card_brand
-        return false
-      end
+    if billing_info.validate_card_number && billing_info.validate_card_brand
+      return true
+    else
+      return false
     end
-    return true
   end
 
   def self.filter_orders(status)
+    current_user = User.find_by(id: session[:user_id])
     if status.nil? || status.empty?
-      return Order.all
+      return Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user }}
     end
     status = validate_status(status)
 
-    return Order.all.filter { |order| status.include? order.status }
+    return Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user } && order.status == status }
   end
 
   def total_cost

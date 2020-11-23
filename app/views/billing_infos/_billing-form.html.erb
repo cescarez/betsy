@@ -1,0 +1,19 @@
+<section class="billing-info">
+  <h2><%= action_name %> Billing Info</h2>
+  <%= link_to "View Shipping Info", shipping_info_path(@shipping_info.id) %>
+  <%= form_with model: @billing_info do |f| %>
+    <%= f.label :card_brand %>
+    <%= f.text_field :card_brand %>
+
+    <%= f.label :card_number %>
+    <%= f.text_field :card_number %>
+
+    <%= f.label :card_expiration %>
+    <%= f.date_field :card_expiration %>
+
+    <%= f.label :card_cvv %>
+    <%= f.text_field :card_cvv %>
+
+    <%= f.submit "Save Billing Info", class: "btn btn-secondary" %>
+  <% end %>
+</section>
