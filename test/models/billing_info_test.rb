@@ -7,13 +7,11 @@ describe BillingInfo do
 
   describe "instantiation" do
     it "can instantiate" do
-      billing1.save
-      pp billing1.errors.messages
       expect(billing1.valid?).must_equal true
     end
 
     it "responds to all the expected fields" do
-      [:card_brand, :card_expiration, :card_number, :card_cvv].each do |field|
+      [:card_brand, :card_expiration, :card_number, :card_cvv, :email].each do |field|
         expect(billing1).must_respond_to field
       end
     end
@@ -40,13 +38,18 @@ describe BillingInfo do
       billing1.card_cvv = nil
       expect(billing1.valid?).must_equal false
     end
+    it "must have an email" do
+      billing1.email = nil
+      expect(billing1.valid?).must_equal false
+    end
     it "must generate a validation error for missing fields" do
       billing1.card_brand = nil
       billing1.card_expiration = nil
       billing1.card_number = nil
       billing1.card_cvv = nil
+      billing1.email = nil
       billing1.save
-      [:card_brand, :card_expiration, :card_number, :card_cvv].each do |field|
+      [:card_brand, :card_expiration, :card_number, :card_cvv, :email].each do |field|
         expect(billing1.errors.messages).must_include field
       end
     end
@@ -108,22 +111,17 @@ describe BillingInfo do
     end
 
     describe "validate_card_brand" do
-      it "will raise an exception for an invalid card brand" do
-        billing1.card_brand = "apple_pay"
-        billing1.save
-        expect {
-          billing1.validate_card_brand
-        }.must_raise ArgumentError
+      it "will added a validation error for an invalid card brand" do
+        billing1.update(card_brand: "apple_pay")
+        billing1.validate_card_brand
+        expect(billing1.errors.messages).must_include :card_brand
       end
-      it "will raise an exception for an empty string" do
+      it "will added a validation error for an empty string" do
         billing1.card_brand = ""
         billing1.save
-        expect {
-          billing1.validate_card_brand
-        }.must_raise ArgumentError
+        billing1.validate_card_brand
+        expect(billing1.errors.messages).must_include :card_brand
       end
     end
   end
-
-
 end

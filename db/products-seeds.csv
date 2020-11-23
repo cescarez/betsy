@@ -1,26 +1,26 @@
-category,name,price,description
-galaxy,Sunflower,947548,Chuck Norris's first program was kill -9.
-star,Sirius A,405184,"When Chuck Norris presses Ctrl+Alt+Delete, worldwide computer restart is initiated."
-moon,Umbriel,526101,Chuck Norris doesn't use a computer because a computer does everything slower than Chuck Norris.
-galaxy,Blackeye,775915,Chuck Norris burst the dot com bubble.
-nebula,Bodes Nebula,29051,"Chuck Norris doesn't bug hunt, as that signifies a probability of failure. He goes bug killing."
-planet,Mars,356996,Chuck Norris solved the Travelling Salesman problem in O(1) time.
-galaxy,Centaurus A,480444,"For Chuck Norris, NP-Hard = O(1)."
-planet,Saturn,980435,Chuck Norris can unit test an entire application with a single assert.
-moon,Titan,318043,"Chuck Norris doesn't need garbage collection because he doesn't call .Dispose(), he calls .DropKick()."
-moon,Ariel,373017,Chuck Norris doesn't have performance bottlenecks. He just makes the universe wait its turn.
-star,Luyten 726-8B,108906,Chuck Norris programs do not accept input.
-galaxy,Whirlpool,849375,Chuck Norris can write infinite recursion functions... and have them return.
-nebula,Dumbell Nebula,788226,Chuck Norris went out of an infinite loop.
-star,Betelgeuse,711686,"There is no Esc key on Chuck Norris' keyboard, because no one escapes Chuck Norris."
-planet,Venus,46926,Chuck Norris doesn't have disk latency because the hard drive knows to hurry the hell up.
-planet,Jupiter,206423,Chuck Norris's keyboard doesn't have a Ctrl key because nothing controls Chuck Norris.
-galaxy,Milky Way,695492,Chuck Norris can instantiate an abstract class.
-star,Sun,372039,Chuck Norris can use GOTO as much as he wants to. Telling him otherwise is considered harmful.
-star,Sirius B,360346,Chuck Norris can spawn threads that complete before they are started.
-galaxy,Messier 83,444314,"Chuck Norris doesn't get compiler errors, the language changes itself to accommodate Chuck Norris."
-planet,Neptune,553461,"Chuck Norris' protocol design method has no status, requests or responses, only commands."
-planet,Earth,471640,Chuck Norris can write multi-threaded applications with a single thread.
-star,Rigel,325609,"You don't disable the Chuck Norris plug-in, it disables you."
-nebula,Orion Nebula,212777,Project managers never ask Chuck Norris for estimations... ever.
-planet,Uranus,51207,The only pattern Chuck Norris knows is God Object.
+name,price,description,inventory,user_id,order_id
+Ross 154,621909.0669454627,Chuck Norris can use GOTO as much as he wants to. Telling him otherwise is considered harmful.,10,1,1
+Sun,268365.60378978885,Chuck Norris doesn't pair program.,4,2,2
+Arcturus,983043.9558281298,When Chuck Norris' code fails to compile the compiler apologises.,9,3,3
+Procyon B,27162.07390987159,"""It works on my machine"" always holds true for Chuck Norris.",6,4,4
+Proxima Centauri,234638.78489732105,Chuck Norris doesn't need to know about class factory pattern. He can instantiate interfaces.,2,5,5
+Procyon A,559945.7301843116,Chuck Norris doesn't need an OS.,7,6,6
+Wolf 359,508763.36604368465,Chuck Norris burst the dot com bubble.,9,7,7
+Ross 248,47516.46080187312,"When Chuck Norris points to null, null quakes in fear.",2,8,8
+Betelgeuse,294037.5979207025,The only pattern Chuck Norris knows is God Object.,5,9,9
+Sirius A,952112.9248334988,Chuck Norris hosting is 101% uptime guaranteed.,5,10,10
+Moon,672395.9239352428,Chuck Norris doesn't program with a keyboard. He stares the computer down until it does what he wants.,10,1,1
+Ganymede,457899.19633570674,"Chuck Norris doesn't need a java compiler, he goes straight to .war",3,2,2
+Titan,725707.172885062,Chuck Norris' preferred IDE is hexedit.,4,3,3
+Deimos,796013.8237978902,Chuck Norris does not use exceptions when programming. He has not been able to identify any of his code that is not exceptional.,3,4,4
+Triton,640232.4342082735,Chuck Norris' addition operator doesn't commute; it teleports to where he needs it to be.,7,5,5
+Callisto,442469.45469444164,"Chuck Norris is immutable. If something's going to change, it's going to have to be the rest of the universe.",3,6,6
+Proteus,440764.126698616,"Chuck Norris can read all encrypted data, because nothing can hide from Chuck Norris.",10,7,7
+Oberon,603572.4583094573,Chuck Norris breaks RSA 128-bit encrypted codes in milliseconds.,4,8,8
+Rhea,710289.0408070164,Chuck Norris can write infinite recursion functions... and have them return.,7,9,9
+Dione,233664.18952951525,"You don't disable the Chuck Norris plug-in, it disables you.",1,10,10
+Ariel,978817.2753154295,Chuck Norris's first program was kill -9.,4,11,11
+Europa,723642.8377911684,"For Chuck Norris, NP-Hard = O(1).",8,12,12
+Hyperion,554384.733810913,Chuck Norris went out of an infinite loop.,5,13,13
+Luna,928223.002287784,Project managers never ask Chuck Norris for estimations... ever.,4,14,14
+Puck,415880.05713175214,Chuck Norris can recite π. Backwards.,7,15,15

@@ -1,0 +1,15 @@
+star:
+  name: star
+  description: This is a star
+planet:
+  name: planet
+  description: This is a planet
+nebula:
+  name: nebula
+  description: This is a nebula
+moon:
+  name: moon
+  description: This is a moon
+galaxy:
+  name: galaxy
+  description: This is a galaxy

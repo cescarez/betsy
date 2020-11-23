@@ -1,24 +1,24 @@
 order1:
-  user: user_1
-#  order_items: order_item1
-#  shipping_infos: shipping1
-#  billing_infos: billing1
-  status: "pending"
+  status: pending
   submit_date: 2020-11-19 11:55:03 -0800
   complete_date: 2020-11-19 11:55:03 -0800
 order2:
-  user: user_2
-#  order_items: order_item2
-#  shipping_infos: shipping2
-#  billing_infos: billing2
-  status: "paid"
+  status: paid
   submit_date: 2020-11-19 11:55:03 -0800
   complete_date: 2020-11-19 11:55:03 -0800
 order3:
-  user: user_3
-#  order_items: order_item3
-#  shipping_infos: shipping3
-#  billing_infos: billing3
-  status: "complete"
+  status: pending
   submit_date: 2020-11-19 11:55:03 -0800
   complete_date: 2020-11-19 11:55:03 -0800
+order4:
+  status: cancelled
+  submit_date: 2020-10-19 11:55:03 -0800
+  complete_date: 2020-10-19 11:55:03 -0800
+order5:
+  status: cancelled
+  submit_date: 2020-10-19 11:55:03 -0800
+  complete_date: 2020-10-19 11:55:03 -0800
+in_progress_order1:
+  status: nil
+  submit_date: nil
+  complete_date: nil

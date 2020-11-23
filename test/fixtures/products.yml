@@ -1,15 +1,15 @@
 product_1:
-  category: galaxy
-  name: Andromeda
+  name: "Andromeda"
   price: 2.00
-  description: Ahhhh it's coming right for us!
+  description: "Ahhhh it's coming right for us!"
   inventory: 1
   user: user_1
+  retire: false
 
 product_2:
-  category: star
-  name: Sirius
+  name: "Sirius"
   price: 23.00
-  description: Doggy doggy what now?
+  description: "Doggy doggy what now?"
   inventory: 3
   user: user_2
+  retire: false

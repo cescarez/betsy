@@ -1,8 +1,14 @@
 <%= form_with model: @product, class: 'product_form' do |f| %>
 
 
-  <%= f.label :category %>
-  <%= f.text_field :category %>
+  <div>
+    <%= f.label :categories %>
+    <%= collection_check_boxes :product, :categories, Category.all, :id, :name do |b| %>
+    <%= b.check_box %>
+      <%= b.label %>
+    <% end %>
+  </div>
+
 
   <%= f.label :name %>
   <%= f.text_field :name %>
@@ -15,6 +21,9 @@
 
   <%= f.label :inventory %>
   <%= f.text_field :inventory %>
+
+  <%= f.label :image %>
+  <%= f.file_field :image %>
 
 
   <%= f.submit "Submit", class: "product-button" %>

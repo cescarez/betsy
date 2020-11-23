@@ -11,7 +11,7 @@ describe OrderItem do
       expect(order_item1.valid?).must_equal true
     end
     it "will have the required fields" do
-      [:product_id, :quantity].each do |attribute|
+      [:product_id, :quantity, :status].each do |attribute|
         expect(order_item1).must_respond_to attribute
       end
     end
@@ -45,29 +45,43 @@ describe OrderItem do
       expect(order_item1.product).must_be_instance_of Product
       expect(order_item1.product).must_equal product1
     end
+    it "belongs to an order" do
+      expect(order_item1.order).must_be_instance_of Order
+      expect(order_item1.order).must_equal orders(:order1)
+    end
   end
 
   describe "custom methods" do
-    describe "validate quantity" do
-      it "will generate a validation error for a quantity that exceeds product inventory" do
-        product1.update(inventory: 4)
-        order_item1.update(quantity: 6)
-        order_item1.validate_quantity
-
-        expect(order_item1.errors.messages).must_include :quantity
-      end
-      it "will return the quantity if less than product inventory" do
-        product1.update(inventory: 5)
-        order_item1.update(quantity: 4)
-
-        expect(order_item1.validate_quantity).must_equal order_item1.quantity
+    describe "validate status" do
+      it "will return the status for 'pending' status" do
+        order_item1.update(status: "pending")
+        order_item1.validate_status
+        expect(order_item1.status).must_equal "pending"
       end
 
-      it "will return the quantity if equal to product inventory" do
-        product1.update(inventory: 4)
-        order_item1.update(quantity: 4)
+      it "will return the status for 'paid' status" do
+        order_item1.update(status: "paid")
+        order_item1.validate_status
+        expect(order_item1.status).must_equal "paid"
+      end
 
-        expect(order_item1.validate_quantity).must_equal order_item1.quantity
+      it "will return the status for 'complete' status" do
+        order_item1.update(status: "complete")
+        order_item1.validate_status
+        expect(order_item1.status).must_equal "complete"
+      end
+
+      it "will return the status for 'cancelled' status" do
+        order_item1.update(status: "cancelled")
+        order_item1.validate_status
+        expect(order_item1.status).must_equal "cancelled"
+      end
+
+      it "will raise an argument error for an invalid status" do
+        order_item1.update(status: "Invalid status")
+        expect {
+          order_item1.validate_status
+        }.must_raise ArgumentError
       end
     end
 

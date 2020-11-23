@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 class ProductsController < ApplicationController
-
-  before_action :require_login, only: [:create, :update, :edit, :new]
+  before_action :find_product, only: [:add_to_cart]
+  before_action :require_login, only: %i[create update edit new set_retire]
   def index
     @products = Product.all
   end
@@ -8,12 +9,10 @@ class ProductsController < ApplicationController
   def show
     product_id = params[:id]
     @product = Product.find_by(id: product_id)
-    if @product.nil?
-      redirect_to products_path
-    end
+    redirect_to products_path if @product.nil?
     if @product.nil?
       head :not_found
-      return
+      nil
     end
   end
 
@@ -28,15 +27,15 @@ class ProductsController < ApplicationController
       @product.user_id = @user.id
     else
       flash[:error] = 'You must create an account to access this page.'
-      end
+    end
     if @product.save
       redirect_to products_path
       flash[:success] = "#{@product.name} was successfully added!"
-      return
+      nil
     else
       flash.now[:error] = 'Something went wrong. Product was not added.'
       render :new, status: :bad_request
-      return
+      nil
     end
   end
 
@@ -45,7 +44,7 @@ class ProductsController < ApplicationController
     if @product.nil?
       head :not_found
       flash[:error] = 'Cannot find this product.'
-      return
+      nil
     end
   end
 
@@ -55,30 +54,91 @@ class ProductsController < ApplicationController
     if @product.nil?
       head :not_found
       flash.now[:error] = 'Something happened. Media not updated.'
-      return
-    elsif @product.update(product_params)
+      nil
+    elsif @product.update!(product_params)
       flash[:success] = "#{@product.name} was successfully updated!"
       redirect_to products_path
-      return
+      nil
     end
   end
 
-  def destroy
+  def set_retire
+    @login_user = User.find_by(id: session[:user_id]) if session[:user_id]
     @product = Product.find_by(id: params[:id])
-
-    if @product.nil?
-      head :not_found
-      return
+    if @login_user.products.includes @product
+      @product.toggle!(:retire)
+      @product.save
+      redirect_back fallback_location: root_path
+      flash[:success] = "#{@product.name} has been updated!"
     else
-      @product.destroy
-      flash[:success] = "#{@product.name} was deleted"
-      redirect_to products_path
-      return
+      flash[:error] = 'This is not your product.'
+    redirect_to user_path
+      end
+  end
+
+  # def destroy
+  #   @product = Product.find_by(id: params[:id])
+  #
+  #   if @product.nil?
+  #     head :not_found
+  #     return
+  #   else
+  #     @product.destroy
+  #     flash[:success] = "#{@product.name} was deleted"
+  #     redirect_to products_path
+  #     return
+  #   end
+  # end
+
+  # low priority: refactor and break this method into method calls to order and only keep product-related code in products controller
+  def add_to_cart
+    if @product.retire == false
+    quantity = params[:product][:inventory].to_i
+    @order_item = OrderItem.create(product: @product, quantity: quantity)
+
+    existing_item = nil
+    if session[:order_id]
+      @order = Order.find_by(id: session[:order_id])
+      existing_item = @order.order_items.find { |order_item| order_item.product.name == @order_item.product.name }
+    else
+      @order = Order.create
     end
+
+    if existing_item
+      existing_item.quantity += quantity
+      existing_item.save
+    else
+      @order.order_items << @order_item
+    end
+
+    if @order.order_items.find { |order_item| order_item.product.name == @order_item.product.name }
+      flash[:success] = "Item #{@order.order_items.last.product.name.capitalize.to_s.gsub('_', ' ')} has been added to cart."
+      session[:order_id] = @order.id
+
+      @product.inventory -= quantity
+      @product.save
+
+      redirect_to products_path
+    else
+      flash[:error] = "Error: item #{@order.order_items.last.product.name.capitalize.to_s.gsub('_', ' ')} was not added to cart."
+      @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+      flash[:error] << 'Please try again.'
+      redirect_back fallback_location: root_path, status: :bad_request
+    end
+    else
+      flash[:error] = "Sorry! This product is no longer available!"
+      redirect_to products_path
+      end
+    nil
   end
 
   private
+
+  def find_product
+    @product = Product.find_by(id: params[:id])
+  end
+
   def product_params
-    params.require(:product).permit(:category, :name, :price, :description, :inventory, :user_id)
+    params.require(:product).permit(:categories, :name, :price, :description, :inventory, :user_id, :image)
   end
 end

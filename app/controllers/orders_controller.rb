@@ -1,9 +1,18 @@
 class OrdersController < ApplicationController
-  before_action :find_order, except: [:index, :new, :create, :status_filter]
-  # before_action :require_login, only: [:index]
+  before_action :find_current_order, except: [:index, :create, :show, :status_filter, :complete, :cancel]
+  before_action :find_order, only: [:show, :complete, :cancel]
+  before_action :find_order_item, only: [:show, :complete, :cancel]
+  before_action :require_login, only: [:index, :complete, :cancel]
+
+  def checkout
+
+  end
 
   def index
-    @orders = Order.all
+    if @orders.nil?
+      current_user = User.find_by(id: session[:user_id])
+      @orders = Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user }}
+    end
   end
 
   def create
@@ -11,70 +20,70 @@ class OrdersController < ApplicationController
 
     if @order.save
       flash[:success] = "First item added to cart. Welcome to Stellar."
-      redirect_to order_path(@order.id)
+      session[:order_id] = @order.id
+      # redirect_back fallback_location: order_path(@order.id)
     else
-      flash.now[:error] = "Error: shopping cart was not created."
-      @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
-      flash.now[:error] << "Please try again."
-      render :new, status: :bad_request
+      flash[:error] = "Error: shopping cart was not created."
+      @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+      flash[:error] << "Please try again."
+      redirect_back fallback_location: root_path, status: :bad_request
     end
     return
   end
 
+  #show pulls from params, all other actions pull @order from session
   def show
   end
 
-  def edit
+  def summary
   end
 
   def update
     if @order.complete_date
-      flash[:error] = "Your order has already been submitted for fulfillment. Please contact customer service for assistance."
+      flash[:error] = "Your order has already been shipped. No changes may be made at this point."
       redirect_back fallback_location: order_path(@order.id)
-    end
-
-    if @order.update(order_params)
-      flash[:success] = "#{@order.complete_date ? "Order" : "Shopping cart" } successfully updated."
-      redirect_to order_path(@order.id)
     else
-      flash.now[:error] = "Error: #{@order.complete_date ? "order" : "shopping cart" } did not update."
-      @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
-      flash.now[:error] << "Please try again."
-      render :edit, status: :bad_request
+      if @order.update(order_params)
+        flash[:success] = "Order successfully updated."
+        redirect_back fallback_location: order_path(@order.id)
+      else
+        flash.now[:error] = "Error: order did not update."
+        @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+        flash.now[:error] << "Please try again."
+        render :show, status: :bad_request
+      end
     end
-    return
-  end
 
-  def destroy
-    ##can do this in model with dependent: destroy
-    # @order.order_items.destroy_all
-
-    if @order.destroy
-      flash[:success] = "#{@order.complete_date ? "Order successfully deleted" : "Shopping cart successfully cancelled" }."
-      redirect_back fallback_location: orders_path
-    else
-      flash[:error] = "Error: #{@order.complete_date ? "order was not deleted" : "shopping cart was not cancelled" }. Please try again."
-      redirect_back fallback_location: order_path(@order.id), status: :internal_server_error
-    end
     return
   end
 
   def complete
-    if @order.update(status: "complete", complete_date: Time.now)
-      flash[:success] = "Your order has successfully been submitted."
-      redirect_back fallback_location: root_path
+    if @order_item
+      if @order_item.update(status: "complete")
+        if @order.validate_status
+          @order.update(complete_date: Time.now)
+        end
+        flash[:success] = "#{@order_item.product.name.capitalize} in Order ##{@order.id} has marked as shipped and designated as 'complete'."
+      else
+        flash[:error] = "Error: #{@order_item.product.name.capitalize} in Order ##{@order.id} was not marked as shipped. Please try again."
+      end
     else
-      flash[:error] = "Error: Order was not completed. Please try again."
-      redirect_back fallback_location: order_path(@order.id), status: :bad_request
+      flash[:error] = "You do are not the seller for any items in Order ##{@order.id}."
     end
+    redirect_back fallback_location: order_path(@order.id)
     return
   end
 
   def cancel
-    if @order.update(status: "cancelled")
-      flash[:success] = "Order ##{@order.id} successfully cancelled."
+    if @order_item
+      if @order_item.update(status: "cancelled")
+        @order.validate_status
+        flash[:success] = "#{@order_item.product.name.capitalize} in Order ##{@order.id} successfully cancelled."
+      else
+        flash[:error] = "Error. #{@order_item.product.name.capitalize} in Order ##{@order.id} was not cancelled. Please try again."
+      end
     else
-      flash[:error] = "Error. Order ##{@order.id} was not cancelled. Please try again."
+      flash[:error] = "You do are not the seller for any items in Order ##{@order.id}."
     end
     redirect_back fallback_location: order_path(@order.id)
     return
@@ -82,32 +91,72 @@ class OrdersController < ApplicationController
 
   def status_filter
     status = params[:order][:status]
-    #TODO: write filter_orders model method
-    @orders = Order.filter_orders(status)
-    #TODO: DOES THIS NEED A REDIRECTION?
+    current_user = User.find_by(id: session[:user_id])
+    @orders = Order.filter_orders(status, current_user)
+    render :index, status: :ok
     return
   end
 
-  ###TODO: COMPLETE CHECKOUT METHOD
-  def checkout
-    unless @order.user.is_auth
-      #ask user if they would like to log in or proceed as guest
+  def submit
+    @order.update_all_items("pending")
+    if @order.errors.any?
+      flash.now[:error] = "Error occurred while updating order item status to 'pending'."
+      @order.errors.each { |error| flash.now[:error] += error.full_message.join(" ") }
     end
+
+    if session[:user_id].nil?
+      flash.now[:notice] = "Please note, you are completing this order as a guest user. Please log in if you would like to associate this purchase with your account."
+    end
+
+    if @order.validate_billing_info
+      @order.update(submit_date: Time.now)
+      @order.update_all_items("paid")
+      if @order.errors.any?
+        flash.now[:error] = "Error occurred while updating order item status to 'paid'."
+        @order.errors.each { |error| flash.now[:error] += error.full_message.join(" ") }
+      end
+
+      @order.order_items.each do |order_item|
+        order_item.product.inventory -= order_item.quantity
+      end
+
+      flash[:success] = "Thank you for shopping with Stellar!"
+      session[:order_id] = nil
+      #sends user to order summary page after purchase, but needs to be render since session has been set to nil
+      render :summary, status: :ok
+    else
+      flash.now[:error] = "Error: order was not submitted for fulfillment."
+      @order.billing_info.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+      flash.now[:error] << "Please try again."
+
+      render :checkout, status: :bad_request
+    end
+
+    return
   end
 
   private
 
   def order_params
-    return require(:order).permit(:user_id, :order_item_id, :shipping_info_id, :billing_info_id, :status, :submit_date, :complete_date)
+    return params.require(:order).permit(:user_id, :status, :submit_date, :complete_date)
+  end
+
+  def find_current_order
+    @order = Order.find_by(id: session[:order_id]) || Order.create
   end
 
   def find_order
     @order = Order.find_by(id: params[:id])
 
     if @order.nil?
-      flash.now[:error] = "Order not found."
-      render_404
+      flash.now[:error] = "There was a problem with your cart. Please clear your cookies or close your browser and revisit Stellar."
+      redirect_to root_path, status: :not_found
       return
     end
+  end
+
+  def find_order_item
+    current_user =  User.find_by(id: session[:user_id])
+    @order_item = @order.order_items.find { |order_item| order_item.user == current_user }
   end
 end

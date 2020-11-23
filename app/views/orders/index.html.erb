@@ -2,12 +2,9 @@
   <h2>Orders</h2>
 </section>
 <section class="orders-index orders-table">
-  <%= form_with model: @order, url: order_filter_status_path, class:"order-status-filter" do |f| %>
+  <%= form_with model: @order, url: order_status_filter_path, class:"order-status-filter" do |f| %>
     <%= f.label :status %>
-    <%= f.check_box_tag :status, "pending", checked = false %>
-    <%= f.check_box_tag :status, "paid", checked = false %>
-    <%= f.check_box_tag :status, "complete", checked = false %>
-    <%= f.check_box_tag :status, "cancelled", checked = false %>
+    <%= f.select :status, ["", "pending", "paid", "complete", "cancelled"] %>
     <%= f.submit "Filter Orders" %>
   <% end %>
   <table class="table table-hover">
@@ -21,12 +18,11 @@
       </tr>
     </thead>
     <tbody>
-      #TODO: add filter to all orders to limit view to logged in user
       <% @orders.each do |order| %>
         <tr class="table-active">
           <td><em>Orders Summary</em></td>
           <td><%= @orders.length %></td>
-          <td><%= format_money(@orders.sum{ |order| order.total_cost }) %></td>
+          <td><%= format_money(@orders.sum { |order| order.total_cost(session[:user_id]) }) %></td>
           <td colspan="2"></td> #empty cell to span last two columns
         </tr>
         <tr>
@@ -34,13 +30,13 @@
           <td>
             <ul>
               <% order.order_items.each do |order_item| %>
-                <% if order_item %>
-                  <li><%= format_money(order_item.quantity * order_item.product.price) %> for <%= order_item.quantity %> of <%= order_item.product.name %></li>
+                <% if order_item.product.user.id == session[:user_id] %>
+                  <li><%= number_to_currency(order_item.quantity * order_item.product.price) %> for <%= order_item.quantity %> of <%= order_item.product.name %> (<%= number_to_currency(order_item.product.price) %>/each)</li>
                 <% end %>
               <% end %>
             </ul>
           </td>
-          <td><%= format_money(order.total_cost) %></td>
+          <td><%= format_money(order.total_cost(session[:user_id])) %></td>
           <td><%= order.status %></td>
           <td><%= order.complete_date %></td>
         </tr>

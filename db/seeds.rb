@@ -8,42 +8,20 @@
 
 require 'csv'
 
-# PRODUCTS_FILE = Rails.root.join('db', 'products-seeds.csv')
-# puts "Loading raw data from #{PRODUCTS_FILE}"
-#
-# product_failures = []
-# CSV.foreach(PRODUCTS_FILE, :headers => true) do |row|
-#   product = Product.new
-#   product.id = row['id']
-#   product.category = row['category']
-#   product.name = row['name']
-#   product.price = row['price']
-#   product.description = row['description']
-#   successful = product.save
-#   if !successful
-#     product_failures << product
-#     puts "Failed to save products: #{product.inspect}"
-#   else
-#     puts "Created products: #{product.inspect}"
-#   end
-# end
-#
-# puts "Added #{Product.count} products records"
-# puts "#{product_failures.length} products failed to save"
-
 USERS_FILE = Rails.root.join('db', 'users-seeds.csv')
 puts "Loading raw data from #{USERS_FILE}"
 
 user_failures = []
 CSV.foreach(USERS_FILE, :headers => true) do |row|
   user = User.new
-  user.id = row['id']
+  user.uid = row['uid']
   user.username = row['username']
   user.name = row['name']
   user.provider = row['provider']
   user.email = row['email']
   user.is_authenticated = row['is_authenticated']
   user.created_at = row['created_at']
+  user.order_id = row['order_id']
   successful = user.save
   if !successful
     user_failures << user
@@ -55,6 +33,67 @@ end
 
 puts "Added #{User.count} user records"
 puts "#{user_failures.length} users failed to save"
+
+CATEGORIES_FILES = Rails.root.join('db', 'categories-seeds.csv')
+
+puts "Loading raw data from #{CATEGORIES_FILES}"
+category_failures = []
+CSV.foreach(CATEGORIES_FILES, :headers => true) do |row|
+  category = Category.new
+  category.name = row['name']
+  category.description = row['description']
+  successful = category.save
+  if !successful
+    category_failures << category
+    puts "Failed to save categories: #{category.inspect}"
+  else
+    puts "Created categories: #{category.inspect}"
+  end
+end
+
+puts "Added #{Category.count} categories records"
+puts "#{category_failures.length} categories failed to save"
+
+
+PRODUCTS_FILE = Rails.root.join('db', 'products-seeds.csv')
+
+puts "Loading raw data from #{PRODUCTS_FILE}"
+product_failures = []
+categories = Category.all
+CSV.foreach(PRODUCTS_FILE, :headers => true) do |row|
+  product = Product.new
+  product.id = row['id']
+  product.name = row['name']
+  product.price = row['price']
+  product.description = row['description']
+  product.inventory = row['inventory']
+  product.user_id = row['user_id']
+  #product.order_id = row['order_id']
+  product.categories << Category.first
+  product.retire = row['retire']
+  successful = product.save
+  if !successful
+<<<<<<< HEAD
+=======
+    #binding.pry
+>>>>>>> master
+    product_failures << product
+    puts "Failed to save products: #{product.inspect}"
+  else
+    puts "Created products: #{product.inspect}"
+  end
+end
+
+puts "Added #{Product.count} products records"
+puts "#{product_failures.length} products failed to save"
+
+puts "Manally resetting PK sequence on each table"
+
+ActiveRecord::Base.connection.tables.each do |t|
+  ActiveRecord::Base.connection.reset_pk_sequence!(t)
+end
+
+puts "done"
 
 
 # Since we set the primary key (the ID) manually on each of the

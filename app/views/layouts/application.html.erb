@@ -11,6 +11,9 @@
   <header>
     <h1><a name="top">Stellar</a></h1>
     <ul class="nav app-header__user-nav-container">
+      <li class="nav-item app-header__nav_item">
+        <%= link_to "Home", root_path, class: "btn btn-primary" %>
+      </li>
       <% if @login_user %>
         <li class="nav-item app-header__nav_item">
           <%= link_to "Logged in as #{@login_user.username}", user_path(@login_user), class: "btn btn-primary" %>
@@ -21,6 +24,17 @@
       <% else %>
         <li class="nav-item app-header__nav_item">
           <%= link_to "Log in with GitHub", github_login_path, class: "btn btn-primary" %>
+        </li>
+      <% end %>
+      <li class="nav-item app-header__nav_item">
+        <%= link_to "View Products", products_path, class: "btn btn-primary"  %>
+      </li>
+      <li class="nav-item app-header__nav_item">
+        <%= link_to "View Users", users_path, class: "btn btn-primary"  %>
+      </li>
+      <% if session[:order_id] %>
+        <li>
+          <%= button_to "View Cart", checkout_order_path(session[:order_id]), method: :get, class: "btn btn-info"  %>
         </li>
       <% end %>
     </ul>
@@ -36,7 +50,7 @@
       </section>
     <% end %>
     <%= yield %>
-  </main>
+  </maint>
   </body>
   <footer>
     <%= link_to "Back to Top", "#top", class:"small" %>
