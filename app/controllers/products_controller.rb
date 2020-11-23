@@ -88,6 +88,7 @@ class ProductsController < ApplicationController
   #   end
   # end
 
+  # low priority: refactor and break this method into method calls to order and only keep product-related code in products controller
   def add_to_cart
     if @product.retire == false
     quantity = params[:product][:inventory].to_i

@@ -7,13 +7,11 @@ describe BillingInfo do
 
   describe "instantiation" do
     it "can instantiate" do
-      billing1.save
-      pp billing1.errors.messages
       expect(billing1.valid?).must_equal true
     end
 
     it "responds to all the expected fields" do
-      [:card_brand, :card_expiration, :card_number, :card_cvv].each do |field|
+      [:card_brand, :card_expiration, :card_number, :card_cvv, :email].each do |field|
         expect(billing1).must_respond_to field
       end
     end
@@ -40,13 +38,18 @@ describe BillingInfo do
       billing1.card_cvv = nil
       expect(billing1.valid?).must_equal false
     end
+    it "must have an email" do
+      billing1.email = nil
+      expect(billing1.valid?).must_equal false
+    end
     it "must generate a validation error for missing fields" do
       billing1.card_brand = nil
       billing1.card_expiration = nil
       billing1.card_number = nil
       billing1.card_cvv = nil
+      billing1.email = nil
       billing1.save
-      [:card_brand, :card_expiration, :card_number, :card_cvv].each do |field|
+      [:card_brand, :card_expiration, :card_number, :card_cvv, :email].each do |field|
         expect(billing1.errors.messages).must_include field
       end
     end

@@ -8,6 +8,7 @@ class BillingInfo < ApplicationRecord
   validates_date :card_expiration, after: :today
   validates :card_number, presence: true
   validates :card_cvv, presence: true
+  validates :email, presence: true
 
   def validate_card_number
     num = self.card_number.delete("\s")
@@ -28,7 +29,7 @@ class BillingInfo < ApplicationRecord
     end
 
     if (check_num.sum % 10 == 0)
-      return num
+      return self.card_number
     else
       self.errors.add(:card_number, "Invalid card number. Please enter a valid card number to continue.")
       return false

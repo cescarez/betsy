@@ -9,12 +9,11 @@
 <section class="orders-show user-table">
   <table class="table table-sm">
     <thead>
-    <th scope="col">Name</th>
-    <th scope="col">Email</th>
-    <th scope="col">Mailing Address</th>
-    <th scope="col">Card Information</th>
-    <th scope="col">Card Exp. Date</th>
-
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Mailing Address</th>
+      <th scope="col">Card Information</th>
+      <th scope="col">Card Exp. Date</th>
     </thead>
     <tbody>
     <tr>
@@ -26,7 +25,7 @@
         <td><%= @order.billing_info.email %></td>
         <td><%= @order.billing_info.card_brand %>: <%= hide_card(@order.billing_info.card_number) %></td>
         <td><%= @order.billing_info.card_expiration %></td>
-        <% end %>
+      <% end %>
     </tr>
     </tbody>
   </table>
