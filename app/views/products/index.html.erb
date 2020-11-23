@@ -4,8 +4,11 @@
       Products
     </section>
   </h2>
-  <ul> <% @products.each do |product|  %>
+  <ul>
+    <% @products.each do |product|  %>
+      <% if product.retire == false || product.retire == nil%>
       <li> <%= link_to product.name, product_path(product) %> </li>
     <% end %>
+      <% end %>
   </ul>
 </main>

@@ -5,6 +5,7 @@ billing1:
   card_expiration: 2022-11-19 17:23:32 -0800
   card_number: 4024007195432835
   card_cvv: 123
+  email: test@gmail.com
 billing2:
   order: order2
   shipping_infos: shipping2
@@ -12,6 +13,7 @@ billing2:
   card_expiration: 2022-11-19 17:23:32 -0800
   card_number: 5498041011538065
   card_cvv: 456
+  email: test@gmail.com
 billing3:
   order: order3
   shipping_infos: shipping3
@@ -19,3 +21,4 @@ billing3:
   card_expiration: 2022-11-19 17:23:32 -0800
   card_number: 379767782811407
   card_cvv: 012
+  email: test@gmail.com

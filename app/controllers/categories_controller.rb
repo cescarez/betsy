@@ -34,5 +34,8 @@ class CategoriesController < ApplicationController
     render :new, status: :bad_request
     return
   end
-end
+  end
+  def category_params
+    params.require(:category).permit(:name, :description, :products)
+  end
 end

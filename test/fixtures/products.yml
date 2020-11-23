@@ -4,6 +4,7 @@ product_1:
   description: "Ahhhh it's coming right for us!"
   inventory: 1
   user: user_1
+  retire: false
 
 product_2:
   name: "Sirius"
@@ -11,3 +12,4 @@ product_2:
   description: "Doggy doggy what now?"
   inventory: 3
   user: user_2
+  retire: false

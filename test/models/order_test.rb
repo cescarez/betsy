@@ -111,67 +111,44 @@ describe Order do
 
     describe "filter_orders" do
       it "filters all orders on a valid status and the current session user" do
-        perform_login(user1)
-        order1.order_items.delete_all
         order1.order_items << order_item1
         order1.order_items << order_item2
         order1.order_items << order_item3
         order1.update_all_items("pending")
-        order2.order_items << order_item2
-        order2.order_items << order_item2
-        order2.order_items << order_item2
-        order2.update_all_items("paid")
-        order3.order_items << order_item1
-        order3.order_items << order_item2
-        order3.order_items << order_item3
-        order3.update_all_items("complete")
-        order4.order_items << order_item1
-        order4.order_items << order_item2
-        order4.order_items << order_item3
-        order4.update_all_items("cancelled")
 
-        pending_orders = Order.filter_orders("pending")
-        paid_orders = Order.filter_orders("paid")
-        complete_orders = Order.filter_orders("complete")
-        cancelled_orders = Order.filter_orders("cancelled")
+        pending_orders = Order.filter_orders("pending", user1)
 
         expect pending_orders.each do |order|
           expect([order1, order3]).must_include order
-          expect(order).wont_equal order 2
+          expect(order).wont_equal order2
         end
-
-        expect(pending_orders).must_include order1
-        expect(pending_orders).must_include order2
-        expect(pending_orders.length).must_equal 1
-        expect(paid_orders).must_include order2
-        expect(paid_orders.length).must_equal 1
-        expect(complete_orders).must_include order3
-        expect(complete_orders.length).must_equal 1
-        expect(cancelled_orders).must_include order4
-        expect(cancelled_orders).must_include order5
-        expect(cancelled_orders.length).must_equal 2
+2
       end
       it "will return nil if the currently logged in user has no orders of that status" do
-        perform_login(user1)
-        order1.order_items.delete_all
         order2.order_items << order_item2
         order2.order_items << order_item2
         order2.order_items << order_item2
         order2.update_all_items("paid")
-        paid_orders = Order.filter_orders("paid")
-        expect(paid_orders).must_be_nil
+        paid_orders = Order.filter_orders("paid", user1)
+        expect(paid_orders).must_be_empty
       end
 
-      it "returns all orders if no status is given (even though an inprogress cart has a nil status)" do
-        all_orders = Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user }}
+      it "returns all orders associated with the logged in user if no status is given (even though an inprogress cart has a nil status)" do
+        all_orders = Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == user1 }}
 
-        expect(Order.filter_orders("")).must_equal all_orders
-        expect(Order.filter_orders(nil)).must_equal all_orders
+        expect(Order.filter_orders("", user1)).must_equal all_orders
+        expect(Order.filter_orders(nil, user1)).must_equal all_orders
       end
 
       it "will raise an exception for an invalid order status" do
         expect {
-          Order.filter_orders("cotton_candy")
+          Order.filter_orders("cotton_candy", user1)
+        }.must_raise ArgumentError
+      end
+
+      it "will raise an exception if user is not logged in" do
+        expect {
+          Order.filter_orders("pending", nil)
         }.must_raise ArgumentError
       end
     end

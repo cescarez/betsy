@@ -103,33 +103,22 @@ describe OrdersController do
     end
   end
 
-  describe "destroy" do
-    it "destroys an existing work then redirects" do
-      start_cart
-      order = Order.find_by(id: session[:order_id])
-
-      expect {
-        delete order_path(order.id)
-      }.must_differ "Order.count", -1
-
-      must_respond_with :redirect
-
-    end
-
-    it "does not change the db when the order does not exist, then responds with :not_found" do
-      expect{
-        delete order_path(-1)
-      }.wont_change "Order.count"
-
-      must_respond_with :not_found
-    end
-  end
-
   describe "complete" do
-    it "updates status and complete_date for existing orders" do
+    let (:order_item1) { order_items(:order_item1) }
+    let (:order_item2) { order_items(:order_item2) }
+
+    it "updates status for order_item in order that is sold by logged in user and updates status of order and sets complete date if all order items are set to the same status" do
+      new_status = "complete"
+      perform_login(user1)
       start_cart
+
       order = Order.find_by(id: session[:order_id])
+      order.update(status: "pending")
       order.update(complete_date: nil)
+      order_item1.update(status: "pending")
+      order_item2.update(status: new_status)
+      order.order_items << order_item1
+      order.order_items << order_item2
 
       expect{
         post complete_order_path(order.id)
@@ -137,51 +126,224 @@ describe OrdersController do
 
       must_respond_with :redirect
       order.reload
-      expect(order.status).must_equal "complete"
+
+      #user1 is the seller for item 1, but not item 2
+      order.order_items.each do |order_item|
+          expect(order_item.status).must_equal new_status
+      end
+      expect(order.status).must_equal new_status
       expect(order.complete_date).wont_be_nil
     end
 
-    it "responds with :not_found for nonexisting order" do
+    it "updates status for order_item in order that is sold by logged in user but does not update status of order or set complete date if not all order items are the same status" do
+      new_status = "complete"
+      perform_login(user1)
       start_cart
+
       order = Order.find_by(id: session[:order_id])
+      order.update(status: "pending")
       order.update(complete_date: nil)
+      order_item1.update(status: "pending")
+      order_item2.update(status: "pending")
+      order.order_items << order_item1
+      order.order_items << order_item2
 
       expect{
-        post complete_order_path(-1)
+        post complete_order_path(order.id)
       }.wont_change "Order.count"
 
       must_respond_with :redirect
       order.reload
-      expect(order.status).must_equal "complete"
-      expect(order.complete_date).wont_be_nil
+
+      #user1 is the seller for item 1, but not item 2
+      order.order_items.each do |order_item|
+        if order_item == order_item1
+          expect(order_item.status).must_equal new_status
+        else
+          expect(order_item.status).wont_equal new_status
+        end
+      end
+      expect(order.status).wont_equal new_status
+      expect(order.complete_date).must_be_nil
+    end
+
+    it "does not change any order item in the order, or the order status, if the logged in user does not sell any of the order items in the cart" do
+      new_status = "complete"
+      perform_login(user1)
+      start_cart
+
+      order = Order.find_by(id: session[:order_id])
+      order.update(status: "pending")
+      order.update(complete_date: nil)
+      order_item2.update(status: "pending")
+      order.order_items << order_item2
+      order.order_items << order_item2
+
+      expect{
+        post complete_order_path(order.id)
+      }.wont_change "Order.count"
+
+      must_respond_with :redirect
+      order.reload
+
+      #user1 is the seller for item 1, but not item 2
+      order.order_items.each do |order_item|
+        expect(order_item.status).wont_equal new_status
+      end
+      expect(order.status).wont_equal new_status
+      expect(order.complete_date).must_be_nil
+    end
+
+    it "if no user is logged in, redirected to root" do
+      new_status = "complete"
+      start_cart
+
+      order = Order.find_by(id: session[:order_id])
+      order.update(status: "pending")
+      order.update(complete_date: nil)
+      order_item2.update(status: "pending")
+      order.order_items << order_item2
+      order.order_items << order_item2
+
+      expect{
+        post complete_order_path(order.id)
+      }.wont_change "Order.count"
+
+      must_respond_with :redirect
+      must_redirect_to root_path
+      order.reload
+
+      order.order_items.each do |order_item|
+        expect(order_item.status).wont_equal new_status
+      end
+      expect(order.status).wont_equal new_status
+      expect(order.complete_date).must_be_nil
+    end
+
+    it "if no items are currently in cart (thus no session[:user_id], a no route error is raised" do
+      perform_login(user1)
+
+      expect{
+        post complete_order_path(Order.find_by(id: session[:order_id]))
+      }.must_raise ActionController::UrlGenerationError
     end
   end
 
   describe "cancel" do
-    it "updates status and nothing else for existing orders" do
+    let (:order_item1) { order_items(:order_item1) }
+    let (:order_item2) { order_items(:order_item2) }
+
+    it "updates status for order_item in order that is sold by logged in user and updates status of order if all order items are set to the same status" do
+      new_status = "cancelled"
+      perform_login(user1)
       start_cart
+
       order = Order.find_by(id: session[:order_id])
+      order.update(status: "pending")
+      order_item1.update(status: "pending")
+      order_item2.update(status: new_status)
+      order.order_items << order_item1
+      order.order_items << order_item2
 
       expect{
-        post complete_order_path(order.id)
+        post cancel_order_path(order.id)
       }.wont_change "Order.count"
 
       must_respond_with :redirect
       order.reload
-      expect(order.status).must_equal "complete"
+
+      #user1 is the seller for item 1, but not item 2
+      order.order_items.each do |order_item|
+        expect(order_item.status).must_equal new_status
+      end
+      expect(order.status).must_equal new_status
     end
 
-    it "responds with :not_found for nonexisting order" do
+    it "updates status for order_item in order that is sold by logged in user but does not update status of order if not all order items are the same status" do
+      new_status = "cancelled"
+      perform_login(user1)
       start_cart
+
       order = Order.find_by(id: session[:order_id])
+      order.update(status: "pending")
+      order_item1.update(status: "pending")
+      order_item2.update(status: "pending")
+      order.order_items << order_item1
+      order.order_items << order_item2
 
       expect{
-        post complete_order_path(-1)
+        post cancel_order_path(order.id)
       }.wont_change "Order.count"
 
       must_respond_with :redirect
       order.reload
-      expect(order.status).must_equal "complete"
+
+      #user1 is the seller for item 1, but not item 2
+      order.order_items.each do |order_item|
+        if order_item == order_item1
+          expect(order_item.status).must_equal new_status
+        else
+          expect(order_item.status).wont_equal new_status
+        end
+      end
+      expect(order.status).wont_equal new_status
+    end
+
+    it "does not change any order item in the order, or the order status, if the logged in user does not sell any of the order items in the cart" do
+      new_status = "cancelled"
+      perform_login(user1)
+      start_cart
+
+      order = Order.find_by(id: session[:order_id])
+      order.update(status: "pending")
+      order_item2.update(status: "pending")
+      order.order_items << order_item2
+      order.order_items << order_item2
+
+      expect{
+        post cancel_order_path(order.id)
+      }.wont_change "Order.count"
+
+      must_respond_with :redirect
+      order.reload
+
+      #user1 is the seller for item 1, but not item 2
+      order.order_items.each do |order_item|
+        expect(order_item.status).wont_equal new_status
+      end
+      expect(order.status).wont_equal new_status
+    end
+
+    it "if no user is logged in, redirected to root" do
+      new_status = "cancelled"
+      start_cart
+
+      order = Order.find_by(id: session[:order_id])
+      order.update(status: "pending")
+      order_item2.update(status: "pending")
+      order.order_items << order_item2
+      order.order_items << order_item2
+
+      expect{
+        post cancel_order_path(order.id)
+      }.wont_change "Order.count"
+
+      must_respond_with :redirect
+      must_redirect_to root_path
+      order.reload
+
+      order.order_items.each do |order_item|
+        expect(order_item.status).wont_equal new_status
+      end
+      expect(order.status).wont_equal new_status
+    end
+
+    it "if no items are currently in cart (thus no session[:user_id], a no route error is raised" do
+      perform_login(user1)
+
+      expect{
+        post cancel_order_path(Order.find_by(id: session[:order_id]))
+      }.must_raise ActionController::UrlGenerationError
     end
   end
 

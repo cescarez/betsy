@@ -67,4 +67,11 @@ describe ProductsController do
       }.must_change "Order.order_items.length", -2
     end
   end
+
+  describe "set retire boolean" do
+    it "successfully changes the boolean" do
+      product = products(:product_1)
+      expect {patch retire_path(product.id)}.must_change product.retire, true
+    end
+  end
 end
