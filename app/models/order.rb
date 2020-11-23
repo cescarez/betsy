@@ -1,4 +1,4 @@
-VALID_STATUSES = ["pending", "paid", "complete", "cancelled"]
+VALID_STATUSES = [nil, "pending", "paid", "complete", "cancelled"]
 
 class Order < ApplicationRecord
   # belongs_to :user, optional: true
@@ -9,11 +9,16 @@ class Order < ApplicationRecord
   validates_date :submit_date, on_or_before: :today, allow_nil: true
   validates_date :complete_date, on_or_before: :today, on_or_after: :submit_date, allow_nil: true
 
+  def validate_status
+    raise ArgumentError, "Invalid order status. Fatal Error." unless (VALID_STATUSES.include? self.status)
 
-  def validate_status(status)
-    raise ArgumentError, "Invalid order status. Fatal Error." unless VALID_STATUSES.include? status
+    VALID_STATUSES.each do |valid_status|
+      if self.order_items.all? { |order_item| order_item.status == valid_status }
+        self.update(status: valid_status)
+      end
+    end
 
-    return status
+    return self.status
   end
 
   def validate_billing_info
@@ -42,11 +47,11 @@ class Order < ApplicationRecord
 
   private
 
+
   def self.validate_status(status)
-    raise ArgumentError, "Invalid order status. Fatal Error." unless (VALID_STATUSES.include? status)
+    raise ArgumentError, "Invalid order status. Fatal Error." unless VALID_STATUSES.include? status
 
     return status
   end
-
 
 end

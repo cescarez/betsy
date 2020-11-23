@@ -34,6 +34,8 @@
       </li>
       <li class="nav-item app-header__nav_item">
         <p><img src="<%=@login_user.avatar%>"></p>
+      <li>
+        <%= button_to "View Cart", checkout_order_path(session[:order_id]), method: :get, class: "btn btn-info"  %>
       </li>
     </ul>
   </header>

@@ -245,4 +245,18 @@ describe OrdersController do
       expect(order.submit_date).must_be_nil
     end
   end
+
+  describe "create cart" do
+    it "saves a valid order and returns a redirect code" do
+      expect {
+        post create_cart_path, params: order_hash
+      }.must_differ "Order.count", 1
+
+      latest = Order.last
+
+      must_respond_with :redirect
+
+      expect(latest.status).must_equal order_hash[:order][:status]
+    end
+  end
 end

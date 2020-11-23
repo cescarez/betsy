@@ -56,5 +56,15 @@ describe ProductsController do
 
       expect {patch product_path(product.id)}.wont_change Product.count
     end
+    end
+
+  describe "add_to_cart" do
+    it "creates an order, creates an order_item, adds order item to order, decrements product inventory" do
+      product = products(:product_1)
+
+      expect {
+        patch add_to_cart_path(product.id), params:{product:{inventory:2}}
+      }.must_change "Order.order_items.length", -2
+    end
   end
 end
