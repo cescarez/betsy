@@ -32,6 +32,9 @@
       <li class="nav-item app-header__nav_item">
         <%= link_to "View Users", users_path, class: "btn btn-primary"  %>
       </li>
+      <li>
+        <%= button_to "View Cart", checkout_order_path(session[:order_id]), method: :get, class: "btn btn-info"  %>
+      </li>
     </ul>
   </header>
   <main>
