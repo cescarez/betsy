@@ -22,11 +22,11 @@ Rails.application.routes.draw do
 
   resources :categories, except: [:edit, :update, :destroy]
 
-
   post "/orders/status", to: "orders#status_filter", as: "order_status_filter"
 
   resources :shipping_infos, only: [:new, :edit, :show]
   resources :billing_infos, only: [:new, :edit, :show]
+
 
   patch "/orders", to: 'orders#create', as: 'create_cart'
   get "/orders/:id/checkout", to: "orders#checkout", as: "checkout_order"

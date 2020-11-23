@@ -16,8 +16,7 @@ class OrdersController < ApplicationController
     if @order.save
       flash[:success] = "First item added to cart. Welcome to Stellar."
       session[:order_id] = @order.id
-      pp "enters order controller" ###################
-      redirect_back fallback_location: order_path(@order.id)
+      # redirect_back fallback_location: order_path(@order.id)
     else
       flash[:error] = "Error: shopping cart was not created."
       @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }

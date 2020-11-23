@@ -83,7 +83,7 @@ class ProductsController < ApplicationController
     @order = Order.new
 
     if @order.save
-      flash[:success] = "First item added to cart. Welcome to Stellar."
+      flash[:success] = "Item #{@order.order_items.last.name.capitalize.to_s.gsub('_', ' ')} has added to cart."
       session[:order_id] = @order.id
     else
       flash[:error] = "Error: shopping cart was not created."
