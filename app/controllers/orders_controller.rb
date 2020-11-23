@@ -85,7 +85,7 @@ class OrdersController < ApplicationController
   end
 
   def status_filter
-    status = params[:status]
+    status = params[:order][:status]
     @orders = Order.filter_orders(status)
     render :index, status: :ok
     return
