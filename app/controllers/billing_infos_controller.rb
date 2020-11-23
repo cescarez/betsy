@@ -9,14 +9,18 @@ class BillingInfosController < ApplicationController
 
   def create
     @billing_info = BillingInfo.new(billing_info_params)
+    @billing_info.order = @order
     if @billing_info.save
       flash[:success] = "Billing info has been saved."
       if @order.update(billing_info: @billing_info)
         flash[:success] << " Billing info has been associated with the current order (Order ##{@order.id})."
+
+        #for now, the shipping info for payment is the same as the shipping address
+        @billing_info.shipping_infos << @billing_info.order.shipping_info
       else
         flash[:error] = "An error occurred and while the billing info has been saved, it has not been associated with the current order (Order #{@order.id}). Please try again."
       end
-      redirect_back fallback_location: billing_infos(@billing_info.id)
+      redirect_to checkout_order_path(@order.id)
     else
       flash[:error] = "Error: billing info was not created."
       @billing_info.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }

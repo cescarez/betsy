@@ -17,9 +17,6 @@ class ShippingInfosController < ApplicationController
       else
         flash[:error] = "An error occurred and while the shipping info has been saved, it has not been associated with the current order (Order #{@order.id}). Please try again."
       end
-      @order.shipping_info = @shipping_info
-      #for now, the shipping info for payment is the same as the shipping address
-      # @order.billing_info.shipping_infos << @shipping_info
 
       redirect_to new_billing_info_path
     else
