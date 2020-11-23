@@ -45,13 +45,28 @@ class Order < ApplicationRecord
     return self.order_items.sum { |order_item| order_item.product.price * order_item.quantity }
   end
 
+  def update_all_items(status)
+    #status = self.class.validate_status(status)
+
+    self.order_items.each do |order_item|
+      order_item.update(status: status)
+      if order_item.errors.any?
+        messages = order_item.errors.full_messages.join(" ")
+        self.errors.add(:order_item, messages)
+        return false
+      end
+    end
+    return self.update(status: status)
+  end
+
   private
 
 
-  def self.validate_status(status)
-    raise ArgumentError, "Invalid order status. Fatal Error." unless VALID_STATUSES.include? status
+  # def self.validate_status(status)
+  #   raise ArgumentError, "Invalid order status. Fatal Error." unless VALID_STATUSES.include? status
+  #
+  #   return status
+  # end
 
-    return status
-  end
 
 end
