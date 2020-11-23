@@ -85,12 +85,6 @@ class ProductsController < ApplicationController
     if @order.save
       flash[:success] = "First item added to cart. Welcome to Stellar."
       session[:order_id] = @order.id
-
-      if session[:order_id].nil?
-        redirect_to orders_path, action: 'create'
-      end
-      @order = Order.find_by(id: session[:order_id])
-
     else
       flash[:error] = "Error: shopping cart was not created."
       @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
