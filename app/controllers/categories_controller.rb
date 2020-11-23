@@ -9,9 +9,7 @@ class CategoriesController < ApplicationController
     @category = Category.find_by(id: category_id)
     if @category.nil?
       redirect_to categories_path
-    end
-    if @category.nil?
-      head :not_found
+      flash[:error] = 'That category does not exist.'
       return
     end
   end
