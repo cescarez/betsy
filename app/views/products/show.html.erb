@@ -31,11 +31,15 @@
     <% end %>
   </section>
   <section>
+    <% if @product.retire == false || @product.retire == nil %>
     <%= form_with model: @product, url: add_to_cart_path do |f| %>
       <%= f.label :quantity %>
       <%= f.select :inventory, (1..@product.inventory) %>
       <%= f.submit "Add to Cart" %>
     <% end %>
+      <% else %>
+    <p>This product is not currently for sale.</p>
+      <% end %>
   </section>
   <section>
     <h2>Stellar Product Reviews:</h2>

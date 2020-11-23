@@ -65,13 +65,15 @@ class ProductsController < ApplicationController
   def set_retire
     @login_user = User.find_by(id: session[:user_id]) if session[:user_id]
     @product = Product.find_by(id: params[:id])
-    # if @product == @login_user.products
+    if @login_user.products.includes @product
       @product.toggle!(:retire)
       @product.save
       redirect_back fallback_location: root_path
-    # else
-    #   flash[:error] = 'This is not your product.'
-    #   end
+      flash[:success] = "#{@product.name} has been updated!"
+    else
+      flash[:error] = 'This is not your product.'
+    redirect_to user_path
+      end
   end
 
   # def destroy
@@ -125,6 +127,7 @@ class ProductsController < ApplicationController
     end
     else
       flash[:error] = "Sorry! This product is no longer available!"
+      redirect_to products_path
       end
     nil
   end
