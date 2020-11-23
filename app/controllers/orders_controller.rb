@@ -29,6 +29,9 @@ class OrdersController < ApplicationController
   def show
   end
 
+  def summary
+  end
+
   def update
     if @order.complete_date
       flash[:error] = "Your order has already been shipped. No changes may be made at this point."
