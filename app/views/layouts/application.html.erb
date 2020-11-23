@@ -32,11 +32,11 @@
       <li class="nav-item app-header__nav_item">
         <%= link_to "View Users", users_path, class: "btn btn-primary"  %>
       </li>
-     <%if session[:order_id] %>
-      <li>
-        <%= button_to "View Cart", checkout_order_path(session[:order_id]), method: :get, class: "btn btn-info"  %>
-      </li>
-      <%end %>
+      <% if session[:order_id] %>
+        <li>
+          <%= button_to "View Cart", checkout_order_path(session[:order_id]), method: :get, class: "btn btn-info"  %>
+        </li>
+      <% end %>
     </ul>
   </header>
   <main>
