@@ -4,6 +4,10 @@ class OrdersController < ApplicationController
   before_action :find_order_item, only: [:show, :complete, :cancel]
   before_action :require_login, only: [:index, :complete, :cancel]
 
+  def checkout
+
+  end
+
   def index
     if @orders.nil?
       current_user = User.find_by(id: session[:user_id])
@@ -110,6 +114,10 @@ class OrdersController < ApplicationController
       if @order.errors.any?
         flash.now[:error] = "Error occurred while updating order item status to 'paid'."
         @order.errors.each { |error| flash.now[:error] += error.full_message.join(" ") }
+      end
+
+      @order.order_items.each do |order_item|
+        order_item.product.inventory -= order_item.quantity
       end
 
       flash[:success] = "Thank you for shopping with Stellar!"

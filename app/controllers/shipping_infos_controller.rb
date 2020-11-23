@@ -59,7 +59,8 @@ class ShippingInfosController < ApplicationController
 
   private
   def shipping_info_params
-    return params.require(:shipping_info).permit(:card_number, :card_brand, :card_cvv, :card_expiration)
+    # return params.require(:shipping_info).permit(:card_number, :card_brand, :card_cvv, :card_expiration)
+    return params.require(:shipping_info).permit(:first_name, :last_name, :street, :city, :state, :zipcode, :country)
   end
 
   def find_shipping_info

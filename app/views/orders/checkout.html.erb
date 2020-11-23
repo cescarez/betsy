@@ -1,3 +1,48 @@
-<h1>not sure what goes here. the contents of the shopping card and fiels to update the quantities/save?</h1>
-<h2>oh also shipping and billing info</h2>
-<h2>ability to remove order items, or change their quantity</h2>
+
+  <section>
+  <table>
+    <tr>
+      <th>
+
+      </th>
+      <th>
+        Product Name
+      </th>
+      <th>
+        Price
+      </th>
+      <th>
+        Quantity
+      </th>
+      <th>
+        Total Price
+      </th>
+    </tr>
+    <% @order.order_items.each do |item| %>
+    <tr>
+      <td>
+        <%if item.product.image.attached? %>
+          <image src="<%=(url_for(item.product.image)) %>" alt="celestial body"></image>
+        <%else %>
+          No image
+        <%end %>
+      </td>
+      <td>
+        <%= item.product.name %>
+      </td>
+      <td>
+        <%= number_to_currency(item.product.price) %>
+      </td>
+      <td>
+        <%= item.quantity %>
+      </td>
+      <td>
+        <%= number_to_currency(item.quantity * item.product.price) %>
+      </td>
+
+    </tr>
+      <% end %>
+  </table>
+    <%= button_to "Submit Order", checkout_order_path(@order.id) %>
+  </section>
+
