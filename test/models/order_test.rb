@@ -154,20 +154,30 @@ describe Order do
     end
 
     describe "total_cost" do
-      it "returns a total of all items in an order" do
+      it "returns a total of all the items in an order that are sold by the currently logged in user" do
         order1.order_items << order_item1
         order1.order_items << order_item2
-        total_cost = order1.total_cost
+        total_cost = order1.total_cost(user1.id)
 
-        expected_cost = (order_item1.product.price * order_item1.quantity) + (order_item2.product.price * order_item2.quantity)
+        #user1 sells item 1 but not item 2
+        expected_cost = (order_item1.product.price * order_item1.quantity)
         expect(total_cost).must_equal expected_cost
+      end
+
+      it "returns 0 if no items in the order are sold by the currently logged in user" do
+        user2 = users(:user_2)
+        order1.order_items << order_item1
+        order1.order_items << order_item3
+        total_cost = order1.total_cost(user2.id)
+
+        #user2 sells item 2 but not items 1 or 3
+        expect(total_cost).must_equal 0
       end
 
       it "returns zero for an empty order_item list" do
         order1.order_items.delete_all
-        expect(order1.total_cost).must_equal 0
+        expect(order1.total_cost(user1.id)).must_equal 0
       end
-
     end
 
     describe "validate_billing_info" do
