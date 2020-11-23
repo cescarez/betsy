@@ -7,6 +7,12 @@ describe Order do
   let (:order4) { orders(:order4) }
   let (:order5) { orders(:order5) }
 
+  let (:order_item1) { order_items(:order_item1) }
+  let (:order_item2) { order_items(:order_item2) }
+  let (:order_item3) { order_items(:order_item3) }
+
+  let (:user1) { users(:user_1) }
+
   describe "instantiation" do
     it "can instantiate" do
       expect(order1.valid?).must_equal true
@@ -40,9 +46,9 @@ describe Order do
 
   describe "relationships" do
     it "has many order_items" do
-      order1.order_items << order_items(:order_item1)
-      order1.order_items << order_items(:order_item2)
-      order1.order_items << order_items(:order_item3)
+      order1.order_items << order_item1
+      order1.order_items << order_item2
+      order1.order_items << order_item3
       expect(order1.order_items.count).must_equal 3
       order1.order_items.each do |item|
         expect(item).must_be_instance_of OrderItem
@@ -60,9 +66,7 @@ describe Order do
 
   describe "custom methods" do
     describe "validate_status" do
-      let (:order_item1) { order_items(:order_item1) }
-      let (:order_item2) { order_items(:order_item2) }
-      let (:order_item3) { order_items(:order_item3) }
+
 
       it "will update the order status if all order items share the same status" do
         order_item1.update(status: "complete")
@@ -108,12 +112,38 @@ describe Order do
     end
 
     describe "filter_orders" do
-      it "filters all orders on a valid status" do
+      it "filters all orders on a valid status and the current session user" do
+        perform_login(user1)
+        order1.order_items.delete_all
+        order1.order_items << order_item1
+        order1.order_items << order_item2
+        order1.order_items << order_item3
+        order1.update_all_items("pending")
+        order2.order_items << order_item2
+        order2.order_items << order_item2
+        order2.order_items << order_item2
+        order2.update_all_items("paid")
+        order3.order_items << order_item1
+        order3.order_items << order_item2
+        order3.order_items << order_item3
+        order3.update_all_items("complete")
+        order4.order_items << order_item1
+        order4.order_items << order_item2
+        order4.order_items << order_item3
+        order4.update_all_items("cancelled")
+
         pending_orders = Order.filter_orders("pending")
         paid_orders = Order.filter_orders("paid")
         complete_orders = Order.filter_orders("complete")
         cancelled_orders = Order.filter_orders("cancelled")
+
+        expect pending_orders.each do |order|
+          expect([order1, order3]).must_include order
+          expect(order).wont_equal order 2
+        end
+
         expect(pending_orders).must_include order1
+        expect(pending_orders).must_include order2
         expect(pending_orders.length).must_equal 1
         expect(paid_orders).must_include order2
         expect(paid_orders.length).must_equal 1
@@ -123,9 +153,20 @@ describe Order do
         expect(cancelled_orders).must_include order5
         expect(cancelled_orders.length).must_equal 2
       end
+      it "will return nil if the currently logged in user has no orders of that status" do
+        perform_login(user1)
+        order1.order_items.delete_all
+        order2.order_items << order_item2
+        order2.order_items << order_item2
+        order2.order_items << order_item2
+        order2.update_all_items("paid")
+        paid_orders = Order.filter_orders("paid")
+        expect(paid_orders).must_be_nil
+      end
 
       it "returns all orders if no status is given (even though an inprogress cart has a nil status)" do
-        all_orders = Order.all
+        all_orders = Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user }}
+
         expect(Order.filter_orders("")).must_equal all_orders
         expect(Order.filter_orders(nil)).must_equal all_orders
       end
@@ -138,9 +179,6 @@ describe Order do
     end
 
     describe "total_cost" do
-      let (:order_item1) { order_items(:order_item1) }
-      let (:order_item2) { order_items(:order_item2) }
-
       it "returns a total of all items in an order" do
         order1.order_items << order_item1
         order1.order_items << order_item2
@@ -186,10 +224,6 @@ describe Order do
     end
 
     describe "update all items" do
-      let (:order_item1) { order_items(:order_item1) }
-      let (:order_item2) { order_items(:order_item2) }
-      let (:order_item3) { order_items(:order_item3) }
-
       it "updates all order items and the order status" do
         new_status = "complete"
         order_item1.update(status: "pending")

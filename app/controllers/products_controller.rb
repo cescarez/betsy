@@ -87,22 +87,28 @@ class ProductsController < ApplicationController
       @order = Order.create
     end
 
-    @order.order_items << @order_item
+    existing_item = @order.order_items.find { |order_item| order_item.product.name == @order_item.product.name }
+    if existing_item
+      existing_item.quantity += quantity
+      existing_item.save
+    else
+      @order.order_items << @order_item
+    end
 
-    if @order.order_items.last == @order_item
+    if @order.order_items.find { |order_item| order_item.product.name == @order_item.product.name }
       flash[:success] = "Item #{@order.order_items.last.product.name.capitalize.to_s.gsub('_', ' ')} has been added to cart."
       session[:order_id] = @order.id
+
+      @product.inventory -= quantity
+      @product.save
+
+      redirect_to products_path
     else
       flash[:error] = "Error: item #{@order.order_items.last.product.name.capitalize.to_s.gsub('_', ' ')} was not added to cart."
       @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
       flash[:error] << "Please try again."
       redirect_back fallback_location: root_path, status: :bad_request
     end
-
-    @product.inventory -= quantity
-    @product.save
-
-    redirect_to products_path
     return
   end
 
