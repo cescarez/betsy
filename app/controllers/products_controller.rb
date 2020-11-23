@@ -81,13 +81,14 @@ class ProductsController < ApplicationController
     quantity = params[:product][:inventory].to_i
     @order_item = OrderItem.create(product: @product, quantity: quantity)
 
+    existing_item = nil
     if session[:order_id]
       @order = Order.find_by(id: session[:order_id])
+      existing_item = @order.order_items.find { |order_item| order_item.product.name == @order_item.product.name }
     else
       @order = Order.create
     end
 
-    existing_item = @order.order_items.find { |order_item| order_item.product.name == @order_item.product.name }
     if existing_item
       existing_item.quantity += quantity
       existing_item.save
