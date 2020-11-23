@@ -1,3 +1,5 @@
+VALID_STATUSES = ["pending", "paid", "complete", "cancelled"]
+
 class OrderItem < ApplicationRecord
   belongs_to :product
   belongs_to :order
@@ -11,6 +13,12 @@ class OrderItem < ApplicationRecord
     else
       return self.quantity
     end
+  end
+
+  def self.validate_status(status)
+    raise ArgumentError, "Invalid order status. Fatal Error." unless (VALID_STATUSES.include? status)
+
+    return status
   end
 
 end
