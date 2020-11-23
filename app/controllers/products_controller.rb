@@ -80,23 +80,29 @@ class ProductsController < ApplicationController
   def add_to_cart
     quantity = params[:product][:inventory].to_i
     @order_item = OrderItem.create(product: @product, quantity: quantity)
-    @order = Order.new
 
-    if @order.save
-      flash[:success] = "Item #{@order.order_items.last.name.capitalize.to_s.gsub('_', ' ')} has added to cart."
+    if session[:order_id]
+      @order = Order.find_by(id: session[:order_id])
+    else
+      @order = Order.create
+    end
+
+    @order.order_items << @order_item
+
+    if @order.order_items.last == @order_item
+      flash[:success] = "Item #{@order.order_items.last.product.name.capitalize.to_s.gsub('_', ' ')} has been added to cart."
       session[:order_id] = @order.id
     else
-      flash[:error] = "Error: shopping cart was not created."
+      flash[:error] = "Error: item #{@order.order_items.last.product.name.capitalize.to_s.gsub('_', ' ')} was not added to cart."
       @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
       flash[:error] << "Please try again."
       redirect_back fallback_location: root_path, status: :bad_request
     end
 
-    @order.order_items << @order_item
     @product.inventory -= quantity
     @product.save
-    redirect_to products_path
 
+    redirect_to products_path
     return
   end
 
