@@ -1,5 +1,10 @@
 class ReviewsController < ApplicationController
 
+
+  def new
+    @review = Review.new()
+  end
+
   def create
     @product = Product.find_by(id: params[:product_id])
     @user = User.find_by(id: session[:user_id])
@@ -17,7 +22,9 @@ class ReviewsController < ApplicationController
     elsif !reviewed_self
       flash[:error] = "Unable to leave feedback at this time!"
     end
-    redirect_to request.referrer
+
+    redirect_to product_path(@product.id)
+    return
 end
 
 
