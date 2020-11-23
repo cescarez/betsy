@@ -78,8 +78,10 @@ class ProductsController < ApplicationController
   # end
 
   def add_to_cart
-    @order_item = OrderItem.create(product: @product, quantity: 1)
+    quantity = params[:product][:inventory].to_i
+    @order_item = OrderItem.create(product: @product, quantity: quantity)
     @order = Order.new
+
 
     if @order.save
       flash[:success] = "First item added to cart. Welcome to Stellar."
@@ -98,7 +100,7 @@ class ProductsController < ApplicationController
     end
 
     @order.order_items << @order_item
-    @product.inventory -= 1
+    @product.inventory -= quantity
     @product.save
     redirect_to products_path
 
