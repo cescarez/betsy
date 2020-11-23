@@ -3,6 +3,10 @@ class OrdersController < ApplicationController
   before_action :find_order_item, only: [:show, :complete, :cancel]
   before_action :require_login, only: [:index, :complete, :cancel]
 
+  def checkout do
+
+  end
+
   def index
     if @orders.nil?
       current_user = User.find_by(id: session[:user_id])
