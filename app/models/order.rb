@@ -25,7 +25,7 @@ class Order < ApplicationRecord
   def validate_billing_info
     raise ArgumentError, "Fatal Error: no billing info associated with order." if self.billing_info.nil?
 
-    if billing_info.validate_card_number && billing_info.validate_card_brand
+    if self.billing_info.validate_card_number && self.billing_info.validate_card_brand
       return true
     else
       return false

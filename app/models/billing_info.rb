@@ -29,7 +29,7 @@ class BillingInfo < ApplicationRecord
     end
 
     if (check_num.sum % 10 == 0)
-      return num
+      return self.card_number
     else
       self.errors.add(:card_number, "Invalid card number. Please enter a valid card number to continue.")
       return false
