@@ -14,11 +14,12 @@ class Order < ApplicationRecord
 
     VALID_STATUSES.each do |valid_status|
       if self.order_items.all? { |order_item| order_item.status == valid_status }
-        return self.update(status: valid_status)
+        self.update(status: valid_status)
+        return self.status
       end
     end
 
-    return self.status
+    return false
   end
 
   def validate_billing_info
