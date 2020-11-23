@@ -6,10 +6,10 @@ class Product < ApplicationRecord
   has_many :order_items
 
 
-  # validates :category, presence: true
+  validates :category_ids, presence: true
   validates :name, presence: true
   validates :price, presence: true
-  validates :inventory, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :inventory, presence: true, numericality: { only_integer: true, greater_than: -1 }
   validates :user_id, presence: true
   validates :name, uniqueness: true
 end
