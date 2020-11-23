@@ -94,14 +94,23 @@ class OrdersController < ApplicationController
   end
 
   def submit
-    @order.update(status: "pending")
+    @order.update_all_items(status: "pending")
+    if @order.errors.any?
+      flash.now[:error] = "Error occurred while updating order item status to 'pending'."
+      @order.errors.each { |error| flash.now[:error] += error.full_message.join(" ") }
+    end
 
     if session[:user_id].nil?
       flash.now[:notice] = "Please note, you are completing this order as a guest user. Please log in if you would like to associate this purchase with your account."
     end
 
     if @order.validate_billing_info
-      @order.update(submit_date: Time.now, status: "paid")
+      @order.update(submit_date: Time.now)
+      @order.update_all_items(status: "paid")
+      if @order.errors.any?
+        flash.now[:error] = "Error occurred while updating order item status to 'paid'."
+        @order.errors.each { |error| flash.now[:error] += error.full_message.join(" ") }
+      end
 
       flash[:success] = "Thank you for shopping with Stellar!"
       session[:order_id] = nil
