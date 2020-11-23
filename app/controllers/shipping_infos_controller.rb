@@ -8,6 +8,8 @@ class ShippingInfosController < ApplicationController
   end
 
   def create
+    @shipping_info = ShippingInfo.new(shipping_info_params)
+    @shipping_info.order = @order
     if @shipping_info.save
       flash[:success] = "Shipping info has been saved."
       if @order.update(shipping_info: @shipping_info)
@@ -15,10 +17,11 @@ class ShippingInfosController < ApplicationController
       else
         flash[:error] = "An error occurred and while the shipping info has been saved, it has not been associated with the current order (Order #{@order.id}). Please try again."
       end
-      #for now, the shipping info for the order is the same as the billing address
-      @order.billing_info.shipping_infos << @shipping_info
+      @order.shipping_info = @shipping_info
+      #for now, the shipping info for payment is the same as the shipping address
+      # @order.billing_info.shipping_infos << @shipping_info
 
-      redirect_back fallback_location: shipping_infos(@shipping_info.id)
+      redirect_back fallback_location: checkout_order_path(@order.id)
     else
       flash[:error] = "Error: shipping info was not created."
       @shipping_info.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
