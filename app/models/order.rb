@@ -27,12 +27,13 @@ class Order < ApplicationRecord
   end
 
   def self.filter_orders(status)
+    current_user = User.find_by(id: session[:user_id])
     if status.nil? || status.empty?
-      return Order.all
+      return Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user }}
     end
     status = validate_status(status)
 
-    return Order.all.filter { |order| status.include? order.status }
+    return Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user } && order.status == status }
   end
 
   def total_cost
