@@ -21,7 +21,7 @@ CSV.open('db/categories-seeds.csv', 'w', write_headers: true,
 end
 
 CSV.open('db/products-seeds.csv', 'w', write_headers: true,
-                                       headers: %w[name price description inventory user_id order_id]) do |csv|
+                                       headers: %w[name price description inventory user_id order_id retire]) do |csv|
   10.times do |num|
     name = Faker::Space.unique.star
     price = rand(100.0..1_000_000.0)
@@ -29,7 +29,8 @@ CSV.open('db/products-seeds.csv', 'w', write_headers: true,
     inventory = rand(1..10)
     user_id = num + 1
     order_id = num + 1
-    csv << [name, price, description, inventory, user_id, order_id]
+    retire = false
+    csv << [name, price, description, inventory, user_id, order_id, retire]
   end
   15.times do |num|
     name = Faker::Space.unique.moon
@@ -38,7 +39,8 @@ CSV.open('db/products-seeds.csv', 'w', write_headers: true,
     inventory = rand(1..10)
     user_id = num + 1
     order_id = num + 1
-    csv << [name, price, description, inventory, user_id, order_id]
+    retire = false
+    csv << [name, price, description, inventory, user_id, order_id, retire]
   end
 end
 

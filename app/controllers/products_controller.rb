@@ -1,6 +1,6 @@
 class ProductsController < ApplicationController
   before_action :find_product, only: [:add_to_cart]
-  before_action :require_login, only: [:create, :update, :edit, :new]
+  before_action :require_login, only: [:create, :update, :edit, :new, :set_retire]
   def index
     @products = Product.all
   end
@@ -61,6 +61,14 @@ class ProductsController < ApplicationController
       redirect_to products_path
       return
     end
+  end
+
+  def set_retire
+    @product = Product.find_by(id: params[:id])
+    @product.toggle!(:retire)
+    @product.save
+    redirect_back fallback_location: root_path
+    # flash[]
   end
 
   # def destroy

@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   end
 
   patch "products/:id/add_to_cart", to: 'products#add_to_cart', as: 'add_to_cart'
-
+  patch "products/:id/retire", to: 'products#set_retire', as: 'retire'
   resources :categories, except: [:edit, :update, :destroy]
 
   post "/orders/status", to: "orders#status_filter", as: "order_status_filter"
