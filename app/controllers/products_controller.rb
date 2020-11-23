@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 class ProductsController < ApplicationController
   before_action :find_product, only: [:add_to_cart]
-  before_action :require_login, only: [:create, :update, :edit, :new, :set_retire]
+  before_action :require_login, only: %i[create update edit new set_retire]
   def index
     @products = Product.all
   end
@@ -8,12 +9,10 @@ class ProductsController < ApplicationController
   def show
     product_id = params[:id]
     @product = Product.find_by(id: product_id)
-    if @product.nil?
-      redirect_to products_path
-    end
+    redirect_to products_path if @product.nil?
     if @product.nil?
       head :not_found
-      return
+      nil
     end
   end
 
@@ -32,11 +31,11 @@ class ProductsController < ApplicationController
     if @product.save
       redirect_to products_path
       flash[:success] = "#{@product.name} was successfully added!"
-      return
+      nil
     else
       flash.now[:error] = 'Something went wrong. Product was not added.'
       render :new, status: :bad_request
-      return
+      nil
     end
   end
 
@@ -45,7 +44,7 @@ class ProductsController < ApplicationController
     if @product.nil?
       head :not_found
       flash[:error] = 'Cannot find this product.'
-      return
+      nil
     end
   end
 
@@ -55,20 +54,24 @@ class ProductsController < ApplicationController
     if @product.nil?
       head :not_found
       flash.now[:error] = 'Something happened. Media not updated.'
-      return
+      nil
     elsif @product.update(product_params)
       flash[:success] = "#{@product.name} was successfully updated!"
       redirect_to products_path
-      return
+      nil
     end
   end
 
   def set_retire
+    @login_user = User.find_by(id: session[:user_id]) if session[:user_id]
     @product = Product.find_by(id: params[:id])
-    @product.toggle!(:retire)
-    @product.save
-    redirect_back fallback_location: root_path
-    # flash[]
+    # if @product == @login_user.products
+      @product.toggle!(:retire)
+      @product.save
+      redirect_back fallback_location: root_path
+    # else
+    #   flash[:error] = 'This is not your product.'
+    #   end
   end
 
   # def destroy
@@ -86,6 +89,7 @@ class ProductsController < ApplicationController
   # end
 
   def add_to_cart
+    if @product.retire == false
     quantity = params[:product][:inventory].to_i
     @order_item = OrderItem.create(product: @product, quantity: quantity)
 
@@ -115,10 +119,13 @@ class ProductsController < ApplicationController
     else
       flash[:error] = "Error: item #{@order.order_items.last.product.name.capitalize.to_s.gsub('_', ' ')} was not added to cart."
       @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
-      flash[:error] << "Please try again."
+      flash[:error] << 'Please try again.'
       redirect_back fallback_location: root_path, status: :bad_request
     end
-    return
+    else
+      flash[:error] = "Sorry! This product is no longer available!"
+      end
+    nil
   end
 
   private
