@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-
+  before_action :find_product, only: [:add_to_cart]
   before_action :require_login, only: [:create, :update, :edit, :new]
   def index
     @products = Product.all
@@ -63,21 +63,37 @@ class ProductsController < ApplicationController
     end
   end
 
-  def destroy
-    @product = Product.find_by(id: params[:id])
+  # def destroy
+  #   @product = Product.find_by(id: params[:id])
+  #
+  #   if @product.nil?
+  #     head :not_found
+  #     return
+  #   else
+  #     @product.destroy
+  #     flash[:success] = "#{@product.name} was deleted"
+  #     redirect_to products_path
+  #     return
+  #   end
+  # end
 
-    if @product.nil?
-      head :not_found
-      return
-    else
-      @product.destroy
-      flash[:success] = "#{@product.name} was deleted"
-      redirect_to products_path
-      return
-    end
+  def add_to_cart
+    @order_item = OrderItem.create(product: @product, quantity: 1)
+    redirect_to create_cart_path
+    @order = Order.find_by(id: session[:order_id])
+    @order.order_items << @order_item
+    @product.inventory -= 1
+    @product.save
+    redirect_to products_path
+    return
   end
 
   private
+
+  def find_product
+    @product = Product.find_by(id: params[:id])
+  end
+
   def product_params
     params.require(:product).permit(:category, :name, :price, :description, :inventory, :user_id, :image)
   end

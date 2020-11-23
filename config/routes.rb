@@ -18,6 +18,8 @@ Rails.application.routes.draw do
     resources :reviews, only: [:create]
   end
 
+  patch "products/:id/add_to_cart", to: 'products#add_to_cart', as: 'add_to_cart'
+
   resources :categories, except: [:edit, :update, :destroy]
 
 
@@ -30,5 +32,8 @@ Rails.application.routes.draw do
   post "/orders/:id/checkout", to: "orders#submit"
   post "/orders/:id/complete", to: "orders#complete", as: "complete_order"
   post "/orders/:id/cancel", to: "orders#cancel", as: "cancel_order"
+  post "/orders", to: 'orders#create', as: 'create_cart'
   resources :orders, except: [:new, :edit]
+
+
 end
