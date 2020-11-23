@@ -31,6 +31,13 @@
     <% end %>
   </section>
   <section>
+    <%= form_with model: @product, url: add_to_cart_path do |f| %>
+      <%= f.label :quantity %>
+      <%= f.select :inventory, (1..@product.inventory) %>
+      <%= f.submit "Add to Cart" %>
+    <% end %>
+  </section>
+  <section>
     <h2>Stellar Product Reviews:</h2>
     <!--     if user product reviews don't exist:-->
     <% if @product.reviews.length < 1 %>

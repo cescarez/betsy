@@ -16,6 +16,7 @@ class OrdersController < ApplicationController
     if @order.save
       flash[:success] = "First item added to cart. Welcome to Stellar."
       session[:order_id] = @order.id
+      pp "enters order controller" ###################
       redirect_back fallback_location: order_path(@order.id)
     else
       flash[:error] = "Error: shopping cart was not created."

@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-
+  before_action :find_product, only: [:add_to_cart]
   before_action :require_login, only: [:create, :update, :edit, :new]
   def index
     @products = Product.all
@@ -28,7 +28,7 @@ class ProductsController < ApplicationController
       @product.user_id = @user.id
     else
       flash[:error] = 'You must create an account to access this page.'
-      end
+    end
     if @product.save
       redirect_to products_path
       flash[:success] = "#{@product.name} was successfully added!"
@@ -63,21 +63,56 @@ class ProductsController < ApplicationController
     end
   end
 
-  def destroy
-    @product = Product.find_by(id: params[:id])
+  # def destroy
+  #   @product = Product.find_by(id: params[:id])
+  #
+  #   if @product.nil?
+  #     head :not_found
+  #     return
+  #   else
+  #     @product.destroy
+  #     flash[:success] = "#{@product.name} was deleted"
+  #     redirect_to products_path
+  #     return
+  #   end
+  # end
 
-    if @product.nil?
-      head :not_found
-      return
+  def add_to_cart
+    quantity = params[:product][:inventory].to_i
+    @order_item = OrderItem.create(product: @product, quantity: quantity)
+    @order = Order.new
+
+
+    if @order.save
+      flash[:success] = "First item added to cart. Welcome to Stellar."
+      session[:order_id] = @order.id
+
+      if session[:order_id].nil?
+        redirect_to orders_path, action: 'create'
+      end
+      @order = Order.find_by(id: session[:order_id])
+
     else
-      @product.destroy
-      flash[:success] = "#{@product.name} was deleted"
-      redirect_to products_path
-      return
+      flash[:error] = "Error: shopping cart was not created."
+      @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+      flash[:error] << "Please try again."
+      redirect_back fallback_location: root_path, status: :bad_request
     end
+
+    @order.order_items << @order_item
+    @product.inventory -= quantity
+    @product.save
+    redirect_to products_path
+
+    return
   end
 
   private
+
+  def find_product
+    @product = Product.find_by(id: params[:id])
+  end
+
   def product_params
     params.require(:product).permit(:category, :name, :price, :description, :inventory, :user_id, :image)
   end
