@@ -1,5 +1,6 @@
 class OrdersController < ApplicationController
-  before_action :find_order, except: [:index, :create, :status_filter]
+  before_action :find_current_order, except: [:index, :create, :status_filter]
+  before_action :find_order, only: [:show]
   before_action :find_order_item, only: [:show, :complete, :cancel]
   before_action :require_login, only: [:index, :complete, :cancel]
 
@@ -26,6 +27,7 @@ class OrdersController < ApplicationController
     return
   end
 
+  #show pulls from params, all other actions pull @order from session
   def show
   end
 
@@ -50,18 +52,6 @@ class OrdersController < ApplicationController
 
     return
   end
-
-  # NOT CURRENTLY IMPLEMENTED ANYWHERE. WE DON'T WANT A SELLER TO DELETE A WHOLE ORDER SO THIS SEEMS LIKE AN ADMIN ACTION
-  # def destroy
-  #   if @order.destroy
-  #     flash[:success] = "#{@order.complete_date ? "Order successfully deleted" : "Shopping cart successfully cancelled" }."
-  #     redirect_back fallback_location: orders_path
-  #   else
-  #     flash[:error] = "Error: #{@order.complete_date ? "order was not deleted" : "shopping cart was not cancelled" }. Please try again."
-  #     redirect_back fallback_location: order_path(@order.id), status: :internal_server_error
-  #   end
-  #   return
-  # end
 
   def complete
     if @order_item.update(status: "complete") && @order.update(complete_date: Time.now)
@@ -134,9 +124,12 @@ class OrdersController < ApplicationController
     return params.require(:order).permit(:user_id, :status, :submit_date, :complete_date)
   end
 
+  def find_current_order
+    @order = Order.find_by(id: session[:order_id]) || Order.create
+  end
+
   def find_order
-    #should this also be creating a session if no order is found?
-    @order = Order.find_by(id: session[:order_id])
+    @order = Order.find_by(id: params[:id])
 
     if @order.nil?
       flash.now[:error] = "There was a problem with your cart. Please clear your cookies or close your browser and revisit Stellar."

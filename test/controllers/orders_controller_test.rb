@@ -103,30 +103,8 @@ describe OrdersController do
     end
   end
 
-  describe "destroy" do
-    it "destroys an existing work then redirects" do
-      start_cart
-      order = Order.find_by(id: session[:order_id])
-
-      expect {
-        delete order_path(order.id)
-      }.must_differ "Order.count", -1
-
-      must_respond_with :redirect
-
-    end
-
-    it "does not change the db when the order does not exist, then responds with :not_found" do
-      expect{
-        delete order_path(-1)
-      }.wont_change "Order.count"
-
-      must_respond_with :not_found
-    end
-  end
-
   describe "complete" do
-    it "updates status and complete_date for existing orders" do
+    it "updates status and complete_date for order_item in order" do
       start_cart
       order = Order.find_by(id: session[:order_id])
       order.update(complete_date: nil)
