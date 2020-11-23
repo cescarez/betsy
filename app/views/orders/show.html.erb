@@ -18,8 +18,10 @@
     <tr>
       <% if @order.shipping_info %>
         <td><%= @order.shipping_info.first_name %> <%= @order.shipping_info.last_name %></td>
-        <td><%= @order.billing_info.email %></td>
         <td><%= "#{@order.shipping_info.street} #{@order.shipping_info.city}, #{@order.shipping_info.state} #{@order.shipping_info.zipcode}, #{@order.shipping_info.country}" %></td>
+      <% end %>
+      <% if @order.billing_info %>
+        <td><%= @order.billing_info.email %></td>
         <td><%= @order.billing_info.card_brand %>: <%= hide_card(@order.billing_info.card_number) %></td>
         <td><%= @order.billing_info.card_expiration %></td>
         <% end %>
