@@ -30,7 +30,7 @@ class OrdersController < ApplicationController
 
   def update
     if @order.complete_date
-      flash[:error] = "Your order has already been submitted for fulfillment. Please contact customer service for assistance."
+      flash[:error] = "Your order has already been shipped. No changes may be made at this point."
       redirect_back fallback_location: order_path(@order.id)
     else
       if @order.update(order_params)
@@ -59,6 +59,10 @@ class OrdersController < ApplicationController
   end
 
   def complete
+    @user =  User.find_by(id: session[:user_id])
+    if @user
+      order_item = @order.order_items.find { |order_item| order_item.user == @user }
+    end
     if @order.update(status: "complete", complete_date: Time.now)
       flash[:success] = "Your order has successfully been submitted."
       redirect_back fallback_location: root_path
@@ -86,6 +90,7 @@ class OrdersController < ApplicationController
     return
   end
 
+
   ###TODO: so much testing -- does this do what I think it does???
   def submit
     if session[:user_id].nil?
@@ -102,7 +107,7 @@ class OrdersController < ApplicationController
 
       flash[:success] = "Thank you for shopping with Stellar!"
       session[:order_id] = nil
-      render :show #sends user to order summary page after purchase, but needs to be render since session has been set to nil
+      render :summary, status: :success #sends user to order summary page after purchase, but needs to be render since session has been set to nil
     else
       flash.now[:error] = "Error: order was not submitted."
       @order.billing_info.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }

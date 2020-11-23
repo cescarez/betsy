@@ -1,0 +1,60 @@
+<section class=”orders-show page-title”>
+  <h2>Order #<%= @order.id %></h2>
+  <h4>Submitted on <%= @order.submit_date %></h4>
+  <h4>Order Status: <%= @order.status %></h4>
+</section>
+
+<section class="orders-show user-table">
+  <table class="table table-sm">
+    <thead>
+    <th scope="col">Name</th>
+    <th scope="col">Email</th>
+    <th scope="col">Mailing Address</th>
+    <th scope="col">Card Information</th>
+    <th scope="col">Card Exp. Date</th>
+    </thead>
+    <tbody>
+    <tr>
+      <% @order.order_items.each do |order_item| %>
+        <% if order_item.user %>
+          <td><%= order_item.user.name %></td>
+          <td><%= order_item.user.email %></td>
+          <td><%= "#{@order.shipping_info.street} #{@order.shipping_info.city}, #{@order.shipping_info.state} #{@order.shipping_info.zipcode}, #{@order.shipping_info.country}" %></td>
+          <td><%= @order.billing_info.card_brand %>: <%= hide_card(@order.billing_info.card_number) %></td>
+          <td><%= @order.billing_info.card_expiration %></td>
+        <% end %>
+      <% end %>
+    </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="orders-show order-table">
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th scope="col">Item</th>
+      <th scope="col">Number Ordered</th>
+      <th scope="col">Line Item Cost</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% if @order %>
+      <% @order.order_items.each do |order_item| %>
+        <% if order_item %>
+          <tr>
+            <td><%= link_to order_item.product.name, product_path(order_item.product_id) %></td>
+            <td><%= order_item.quantity %></td>
+            <td><%= order_item.quantity * order_item.product.price %></td>
+          </tr>
+        <% end %>
+      <% end %>
+      <tr class="table-active">
+        <td colspan="2">Order Summary</td>
+        <td><%= @order.order_items.length %></td>
+        <td><%= format_money(@order.total_cost) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</section>
