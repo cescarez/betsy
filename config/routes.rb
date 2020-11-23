@@ -28,11 +28,11 @@ Rails.application.routes.draw do
   resources :shipping_infos, only: [:new, :edit, :show]
   resources :billing_infos, only: [:new, :edit, :show]
 
+  patch "/orders", to: 'orders#create', as: 'create_cart'
   get "/orders/:id/checkout", to: "orders#checkout", as: "checkout_order"
   post "/orders/:id/checkout", to: "orders#submit"
   post "/orders/:id/complete", to: "orders#complete", as: "complete_order"
   post "/orders/:id/cancel", to: "orders#cancel", as: "cancel_order"
-  post "/orders", to: 'orders#create', as: 'create_cart'
   resources :orders, except: [:new, :edit]
 
 

@@ -1,5 +1,3 @@
-VALID_STATUSES = ["pending", "paid", "complete", "cancelled"]
-
 class OrderItem < ApplicationRecord
   belongs_to :product
   belongs_to :order

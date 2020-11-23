@@ -28,7 +28,7 @@ class ProductsController < ApplicationController
       @product.user_id = @user.id
     else
       flash[:error] = 'You must create an account to access this page.'
-      end
+    end
     if @product.save
       redirect_to products_path
       flash[:success] = "#{@product.name} was successfully added!"
@@ -79,12 +79,29 @@ class ProductsController < ApplicationController
 
   def add_to_cart
     @order_item = OrderItem.create(product: @product, quantity: 1)
-    redirect_to create_cart_path
-    @order = Order.find_by(id: session[:order_id])
+    @order = Order.new
+
+    if @order.save
+      flash[:success] = "First item added to cart. Welcome to Stellar."
+      session[:order_id] = @order.id
+
+      if session[:order_id].nil?
+        redirect_to orders_path, action: 'create'
+      end
+      @order = Order.find_by(id: session[:order_id])
+
+    else
+      flash[:error] = "Error: shopping cart was not created."
+      @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+      flash[:error] << "Please try again."
+      redirect_back fallback_location: root_path, status: :bad_request
+    end
+
     @order.order_items << @order_item
     @product.inventory -= 1
     @product.save
     redirect_to products_path
+
     return
   end
 
