@@ -98,7 +98,7 @@ class OrdersController < ApplicationController
   end
 
   def submit
-    @order.update_all_items(status: "pending")
+    @order.update_all_items("pending")
     if @order.errors.any?
       flash.now[:error] = "Error occurred while updating order item status to 'pending'."
       @order.errors.each { |error| flash.now[:error] += error.full_message.join(" ") }
@@ -110,7 +110,7 @@ class OrdersController < ApplicationController
 
     if @order.validate_billing_info
       @order.update(submit_date: Time.now)
-      @order.update_all_items(status: "paid")
+      @order.update_all_items("paid")
       if @order.errors.any?
         flash.now[:error] = "Error occurred while updating order item status to 'paid'."
         @order.errors.each { |error| flash.now[:error] += error.full_message.join(" ") }
@@ -123,7 +123,7 @@ class OrdersController < ApplicationController
       flash[:success] = "Thank you for shopping with Stellar!"
       session[:order_id] = nil
       #sends user to order summary page after purchase, but needs to be render since session has been set to nil
-      render :summary, status: :success
+      render :summary, status: :ok
     else
       flash.now[:error] = "Error: order was not submitted for fulfillment."
       @order.billing_info.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
