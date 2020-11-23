@@ -66,8 +66,6 @@ describe Order do
 
   describe "custom methods" do
     describe "validate_status" do
-
-
       it "will update the order status if all order items share the same status" do
         order_item1.update(status: "complete")
         order_item2.update(status: "complete")

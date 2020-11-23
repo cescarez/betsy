@@ -54,25 +54,32 @@ class OrdersController < ApplicationController
   end
 
   def complete
-    if @order_item.update(status: "complete")
-      if @order.validate_status
-        @order.update(complete_date: Time.now)
+    if @order_item
+      if @order_item.update(status: "complete")
+        if @order.validate_status
+          @order.update(complete_date: Time.now)
+        end
+        flash[:success] = "#{@order_item.product.name.capitalize} in Order ##{@order.id} has marked as shipped and designated as 'complete'."
+      else
+        flash[:error] = "Error: #{@order_item.product.name.capitalize} in Order ##{@order.id} was not marked as shipped. Please try again."
       end
-      flash[:success] = "#{@order_item.product.name.capitalize} in Order ##{@order.id} has marked as shipped and designated as 'complete'."
-      redirect_back fallback_location: root_path
     else
-      flash[:error] = "Error: #{@order_item.product.name.capitalize} in Order ##{@order.id} was not marked as shipped. Please try again."
-      redirect_back fallback_location: order_path(@order.id), status: :bad_request
+      flash[:error] = "You do are not the seller for any items in Order ##{@order.id}."
     end
+    redirect_back fallback_location: order_path(@order.id)
     return
   end
 
   def cancel
-    if @order_item.update(status: "cancelled")
-      @order.validate_status
-      flash[:success] = "#{@order_item.product.name.capitalize} in Order ##{@order.id} successfully cancelled."
+    if @order_item
+      if @order_item.update(status: "cancelled")
+        @order.validate_status
+        flash[:success] = "#{@order_item.product.name.capitalize} in Order ##{@order.id} successfully cancelled."
+      else
+        flash[:error] = "Error. #{@order_item.product.name.capitalize} in Order ##{@order.id} was not cancelled. Please try again."
+      end
     else
-      flash[:error] = "Error. #{@order_item.product.name.capitalize} in Order ##{@order.id} was not cancelled. Please try again."
+      flash[:error] = "You do are not the seller for any items in Order ##{@order.id}."
     end
     redirect_back fallback_location: order_path(@order.id)
     return
