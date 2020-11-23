@@ -1,4 +1,4 @@
-<% @cart_items.each do |item| %>
+
   <section>
   <table>
     <tr>
@@ -18,22 +18,31 @@
         Total Price
       </th>
     </tr>
-
+    <% @order.order_items.each do |item| %>
     <tr>
       <td>
-        <%= @product.name %>
+        <%if item.product.image.attached? %>
+          <image src="<%=(url_for(item.product.image)) %>" alt="celestial body"></image>
+        <%else %>
+          No image
+        <%end %>
       </td>
       <td>
-        <%= @product.price %>
+        <%= item.product.name %>
       </td>
       <td>
-        <%= @product.order_item.quantity%>
+        <%= number_to_currency(item.product.price) %>
       </td>
       <td>
-        <%= @product.order_item.quantity * @product.price %>
+        <%= item.quantity %>
+      </td>
+      <td>
+        <%= number_to_currency(item.quantity * item.product.price) %>
       </td>
 
     </tr>
+      <% end %>
   </table>
+    <%= button_to "Submit Order", checkout_order_path(@order.id) %>
   </section>
-<% end %>
+
