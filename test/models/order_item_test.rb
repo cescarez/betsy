@@ -11,7 +11,7 @@ describe OrderItem do
       expect(order_item1.valid?).must_equal true
     end
     it "will have the required fields" do
-      [:product_id, :quantity].each do |attribute|
+      [:product_id, :quantity, :status].each do |attribute|
         expect(order_item1).must_respond_to attribute
       end
     end
