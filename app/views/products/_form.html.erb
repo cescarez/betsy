@@ -3,10 +3,7 @@
 
   <div>
     <%= f.label :categories %>
-    <%= collection_check_boxes :product, :categories, Category.all, :id, :name do |b| %>
-    <%= b.check_box %>
-      <%= b.label %>
-    <% end %>
+    <%= collection_check_boxes :product, :category_ids, Category.all, :id, :name %>
   </div>
 
 
