@@ -21,7 +21,7 @@ class ShippingInfosController < ApplicationController
       #for now, the shipping info for payment is the same as the shipping address
       # @order.billing_info.shipping_infos << @shipping_info
 
-      redirect_back fallback_location: checkout_order_path(@order.id)
+      redirect_to new_billing_info_path
     else
       flash[:error] = "Error: shipping info was not created."
       @shipping_info.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }

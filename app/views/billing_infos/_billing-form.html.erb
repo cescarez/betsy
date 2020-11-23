@@ -17,6 +17,6 @@
     <%= f.label :card_cvv %>
     <%= f.text_field :card_cvv %>
 
-    <%= f.submit "Save Billing Info", class: "btn btn-secondary" %>
+    <%= f.submit "Save Billing Info", class: "btn btn-secondary", data: {confirm: "Are you sure you want to submit this billing info? You will be redirected to back to your cart for final confirmation."} %>
   <% end %>
 </section>
