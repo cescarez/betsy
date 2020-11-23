@@ -31,14 +31,17 @@ class Order < ApplicationRecord
     end
   end
 
-  def self.filter_orders(status)
-    current_user = User.find_by(id: session[:user_id])
-    if status.nil? || status.empty?
-      return Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user }}
-    end
-    status = validate_status(status)
+  def self.filter_orders(status, current_user)
+    if current_user.nil?
+      raise ArgumentError, "Fatal error. Filter order status has been called and the user is not currently logged in."
+    else
+      if status.nil? || status.empty?
+        return Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user }}
+      end
+      status = validate_status(status)
 
-    return Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user  && order.status == status }}
+      return Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user  && order.status == status }}
+    end
   end
 
   def total_cost

@@ -88,7 +88,8 @@ class OrdersController < ApplicationController
 
   def status_filter
     status = params[:order][:status]
-    @orders = Order.filter_orders(status)
+    current_user = User.find_by(id: session[:user_id])
+    @orders = Order.filter_orders(status, current_user)
     render :index, status: :ok
     return
   end
