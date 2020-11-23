@@ -15,34 +15,44 @@ class Order < ApplicationRecord
     VALID_STATUSES.each do |valid_status|
       if self.order_items.all? { |order_item| order_item.status == valid_status }
         self.update(status: valid_status)
+        return self.status
       end
     end
 
-    return self.status
+    return false
   end
 
   def validate_billing_info
     raise ArgumentError, "Fatal Error: no billing info associated with order." if self.billing_info.nil?
 
-    if billing_info.validate_card_number && billing_info.validate_card_brand
+    if self.billing_info.validate_card_number && self.billing_info.validate_card_brand
       return true
     else
       return false
     end
   end
 
-  def self.filter_orders(status)
-    current_user = User.find_by(id: session[:user_id])
-    if status.nil? || status.empty?
-      return Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user }}
-    end
-    status = validate_status(status)
+  def self.filter_orders(status, current_user)
+    if current_user.nil?
+      raise ArgumentError, "Fatal error. Filter order status has been called and the user is not currently logged in."
+    else
+      if status.nil? || status.empty?
+        return Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user }}
+      end
+      status = validate_status(status)
 
-    return Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user } && order.status == status }
+      return Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user  && order.status == status }}
+    end
   end
 
-  def total_cost
-    return self.order_items.sum { |order_item| order_item.product.price * order_item.quantity }
+  def total_cost(user_id)
+    return self.order_items.sum do |order_item|
+      if order_item.product.user.id == user_id
+        order_item.product.price * order_item.quantity
+      else
+        0
+      end
+    end
   end
 
   def update_all_items(status)
@@ -60,7 +70,6 @@ class Order < ApplicationRecord
   end
 
   private
-
 
   # def self.validate_status(status)
   #   raise ArgumentError, "Invalid order status. Fatal Error." unless VALID_STATUSES.include? status

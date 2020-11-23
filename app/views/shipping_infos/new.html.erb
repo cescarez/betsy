@@ -1,4 +1,6 @@
 <%= render partial: "shipping-form", locals: {action_name: "Create"} %>
 <section class="shipping buttons">
-  <%= button_to "Return to Shopping Cart", checkout_order_path(@order.id) %>
+  <% if @order %>
+    <%= button_to "Return to Shopping Cart", checkout_order_path(@order.id), method: :get %>
+  <% end %>
 </section>

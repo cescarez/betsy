@@ -1,38 +1,26 @@
 class BillingInfosController < ApplicationController
   before_action :find_billing_info, only: [:show, :edit, :update, :destroy]
-  before_action :find_order, except: [:new]
+  before_action :find_current_order, except: [:new]
   before_action :find_user, except: [:new]
-
-  # def index
-  #   if @user
-  #     #TODO: associate it with user?
-  #     # @billing_infos = BillingInfo.all.filter { |billing_info| billing_info.user == @user }
-  #   elsif @user.nil? && @order
-  #     flash[:error] = "You must be logged in to view all billing information associated with your account."
-  #     redirect_to order_billing_info_path(@billing_info.id)
-  #   else
-  #     #TODO: change this to an empty list eventually.
-  #     @billing_infos = BillingInfo.all
-  #   end
-  # end
 
   def new
     @billing_info = BillingInfo.new
   end
 
   def create
+    @billing_info = BillingInfo.new(billing_info_params)
+    @billing_info.order = @order
     if @billing_info.save
       flash[:success] = "Billing info has been saved."
-      #TODO: associate it with user?
-      # if session[:user_id]
-      #   @user.billing_infos << @billing_info
-      # end
       if @order.update(billing_info: @billing_info)
         flash[:success] << " Billing info has been associated with the current order (Order ##{@order.id})."
+
+        #for now, the shipping info for payment is the same as the shipping address
+        @billing_info.shipping_infos << @billing_info.order.shipping_info
       else
         flash[:error] = "An error occurred and while the billing info has been saved, it has not been associated with the current order (Order #{@order.id}). Please try again."
       end
-      redirect_back fallback_location: billing_infos(@billing_info.id)
+      redirect_to checkout_order_path(@order.id)
     else
       flash[:error] = "Error: billing info was not created."
       @billing_info.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
@@ -73,7 +61,7 @@ class BillingInfosController < ApplicationController
 
   private
   def billing_info_params
-    return params.require(:billing_info).permit(:card_number, :card_brand, :card_cvv, :card_expiration)
+    return params.require(:billing_info).permit(:card_number, :card_brand, :card_cvv, :card_expiration, :email)
   end
   def find_billing_info
     @billing_info = BillingInfo.find_by(params[:id])
@@ -83,7 +71,7 @@ class BillingInfosController < ApplicationController
       return
     end
   end
-  def find_order
+  def find_current_order
     @order = Order.find_by(id: session[:order_id])
   end
   # def find_user

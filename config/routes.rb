@@ -24,8 +24,8 @@ Rails.application.routes.draw do
 
   post "/orders/status", to: "orders#status_filter", as: "order_status_filter"
 
-  resources :shipping_infos, only: [:new, :edit, :show]
-  resources :billing_infos, only: [:new, :edit, :show]
+  resources :shipping_infos, except: [:index]
+  resources :billing_infos, except: [:index]
 
 
   patch "/orders", to: 'orders#create', as: 'create_cart'
@@ -34,7 +34,7 @@ Rails.application.routes.draw do
   post "/orders/:id/checkout", to: "orders#submit"
   post "/orders/:id/complete", to: "orders#complete", as: "complete_order"
   post "/orders/:id/cancel", to: "orders#cancel", as: "cancel_order"
-  resources :orders, except: [:new, :edit]
+  resources :orders, except: [:new, :edit, :destroy]
 
 
 end
