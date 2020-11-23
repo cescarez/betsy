@@ -45,8 +45,14 @@ class Order < ApplicationRecord
     end
   end
 
-  def total_cost
-    return self.order_items.sum { |order_item| order_item.product.price * order_item.quantity }
+  def total_cost(user_id)
+    return self.order_items.sum do |order_item|
+      if order_item.product.user.id == user_id
+        order_item.product.price * order_item.quantity
+      else
+        0
+      end
+    end
   end
 
   def update_all_items(status)

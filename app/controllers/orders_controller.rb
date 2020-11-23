@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
-  before_action :find_current_order, except: [:index, :create, :status_filter]
-  before_action :find_order, only: [:show]
+  before_action :find_current_order, except: [:index, :create, :show, :status_filter, :complete, :cancel]
+  before_action :find_order, only: [:show, :complete, :cancel]
   before_action :find_order_item, only: [:show, :complete, :cancel]
   before_action :require_login, only: [:index, :complete, :cancel]
 
