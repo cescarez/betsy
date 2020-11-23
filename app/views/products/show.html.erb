@@ -33,14 +33,16 @@
     <% end %>
   </section>
   <section>
-    <% if @product.retire == false || @product.retire == nil %>
+    <% if @product.inventory <= 0 %>
+    <p>Sorry! This product is out of stock, please check back later!</p>
+    <% elsif @product.retire == false || @product.retire == nil %>
     <%= form_with model: @product, url: add_to_cart_path do |f| %>
       <%= f.label :quantity %>
       <%= f.select :inventory, (1..@product.inventory) %>
       <%= f.submit "Add to Cart" %>
     <% end %>
       <% else %>
-    <p>This product is not currently for sale.</p>
+    <p>Sorry! This product is not currently for sale.</p>
       <% end %>
   </section>
   <section>
