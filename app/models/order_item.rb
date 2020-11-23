@@ -13,4 +13,10 @@ class OrderItem < ApplicationRecord
     end
   end
 
+  def self.validate_status(status)
+    raise ArgumentError, "Invalid order status. Fatal Error." unless (VALID_STATUSES.include? status)
+
+    return status
+  end
+
 end

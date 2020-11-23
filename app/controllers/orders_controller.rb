@@ -20,7 +20,7 @@ class OrdersController < ApplicationController
     if @order.save
       flash[:success] = "First item added to cart. Welcome to Stellar."
       session[:order_id] = @order.id
-      redirect_back fallback_location: order_path(@order.id)
+      # redirect_back fallback_location: order_path(@order.id)
     else
       flash[:error] = "Error: shopping cart was not created."
       @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
@@ -31,6 +31,9 @@ class OrdersController < ApplicationController
   end
 
   def show
+  end
+
+  def summary
   end
 
   def update
@@ -65,7 +68,8 @@ class OrdersController < ApplicationController
   # end
 
   def complete
-    if @order_item.update(status: "complete", complete_date: Time.now)
+    if @order_item.update(status: "complete") && @order.update(complete_date: Time.now)
+      @order.validate_status
       flash[:success] = "#{@order_item.product.name.capitalize} in Order ##{@order.id} has mark and shipped and designated as 'complete'."
       redirect_back fallback_location: root_path
     else
@@ -77,6 +81,7 @@ class OrdersController < ApplicationController
 
   def cancel
     if @order_item.update(status: "cancelled")
+      @order.validate_status
       flash[:success] = "#{@order_item.product.name.capitalize} in Order ##{@order.id} successfully cancelled."
     else
       flash[:error] = "Error. #{@order_item.product.name.capitalize} in Order ##{@order.id} was not cancelled. Please try again."
@@ -86,13 +91,15 @@ class OrdersController < ApplicationController
   end
 
   def status_filter
-    status = params[:status]
+    status = params[:order][:status]
     @orders = Order.filter_orders(status)
     render :index, status: :ok
     return
   end
 
   def submit
+    @order.update(status: "pending")
+
     if session[:user_id].nil?
       flash.now[:notice] = "Please note, you are completing this order as a guest user. Please log in if you would like to associate this purchase with your account."
     end
@@ -100,16 +107,12 @@ class OrdersController < ApplicationController
     if @order.validate_billing_info
       @order.update(submit_date: Time.now, status: "paid")
 
-      #TODO do this is add_product to cart stage? or here?
-      # @order.order_items.each do |order_item|
-      #   order_item.product.inventory -= order_item.quantity
-      # end
-
       flash[:success] = "Thank you for shopping with Stellar!"
       session[:order_id] = nil
-      render :summary, status: :success #sends user to order summary page after purchase, but needs to be render since session has been set to nil
+      #sends user to order summary page after purchase, but needs to be render since session has been set to nil
+      render :summary, status: :success
     else
-      flash.now[:error] = "Error: order was not submitted."
+      flash.now[:error] = "Error: order was not submitted for fulfillment."
       @order.billing_info.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
       flash.now[:error] << "Please try again."
 
