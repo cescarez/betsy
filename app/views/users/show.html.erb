@@ -24,6 +24,7 @@
       <th>Name</th>
       <th>Price</th>
       <th>Description</th>
+      <th>Categories</th>
       <th>Inventory</th>
       <th>Photo💣</th>
 
@@ -45,6 +46,11 @@
         </td>
         <td>
           <%= product.description %>
+        </td>
+        <td>
+          <% product.categories.each do |category| %>
+            <%= category.name %><br/>
+          <% end %>
         </td>
         <td>
           <%= product.inventory %>

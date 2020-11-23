@@ -26,6 +26,7 @@
       <th>Inventory</th>
       </tr>
       <% @category.products.each do |product| %>
+        <% if product.retire == false || product.retire == nil %>
         <tr>
           <td>
             <% product.categories.each do |category| %>
@@ -44,6 +45,7 @@
           <td>
             <%= product.inventory %>
           </td>
+        <% end %>
         <% end %>
     </table>
     <% end %>
