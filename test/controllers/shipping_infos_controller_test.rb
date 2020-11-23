@@ -1,7 +1,9 @@
 require "test_helper"
 
 describe ShippingInfosController do
-  # it "does a thing" do
-  #   value(1+1).must_equal 2
-  # end
+  let (:shipping1) { shipping_infos(:shipping1) }
+  let (:shipping2) { shipping_infos(:shipping2) }
+  let (:shipping3) { shipping_infos(:shipping3) }
+
+
 end

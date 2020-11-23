@@ -1,20 +1,7 @@
 class ShippingInfosController < ApplicationController
   before_action :find_shipping_info, only: [:show, :edit, :update, :destroy]
-  before_action :find_order, except: [:new]
+  before_action :find_current_order, except: [:new]
   before_action :find_user, except: [:new]
-
-  # def index
-  #   if @user
-  #     #TODO: associate it with user?
-  #     # @shipping_infos = ShippingInfo.all.filter { |shipping_info| shipping_info.user == @user }
-  #   elsif @user.nil? && @order
-  #     flash[:error] = "You must be logged in to view all shipping information associated with your account."
-  #     redirect_to order_shipping_info_path(@shipping_info.id)
-  #   else
-  #     #TODO: change this to an empty list eventually.
-  #     @shipping_infos = ShippingInfo.all
-  #   end
-  # end
 
   def new
     @shipping_info = ShippingInfo.new
@@ -23,10 +10,6 @@ class ShippingInfosController < ApplicationController
   def create
     if @shipping_info.save
       flash[:success] = "Shipping info has been saved."
-      #TODO: associate it with order and/or user?
-      # if session[:user_id]
-      #   @user.shipping_infos << @shipping_info
-      # end
       if @order.update(shipping_info: @shipping_info)
         flash[:success] << " Shipping info has been associated with the current order (Order ##{@order.id})."
       else
@@ -88,7 +71,7 @@ class ShippingInfosController < ApplicationController
     end
   end
 
-  def find_order
+  def find_current_order
     @order = Order.find_by(id: session[:order_id])
   end
 
