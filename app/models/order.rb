@@ -1,4 +1,4 @@
-VALID_STATUSES = ["pending", "paid", "complete", "cancelled"]
+VALID_STATUSES = [nil, "pending", "paid", "complete", "cancelled"]
 
 class Order < ApplicationRecord
   # belongs_to :user, optional: true
@@ -14,11 +14,11 @@ class Order < ApplicationRecord
 
     VALID_STATUSES.each do |valid_status|
       if self.order_items.all? { |order_item| order_item.status == valid_status }
-        @order.update(status: valid_status)
+        self.update(status: valid_status)
       end
     end
 
-    return @order.status
+    return self.status
   end
 
   def validate_billing_info
