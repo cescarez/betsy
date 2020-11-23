@@ -82,7 +82,6 @@ class ProductsController < ApplicationController
     @order_item = OrderItem.create(product: @product, quantity: quantity)
     @order = Order.new
 
-
     if @order.save
       flash[:success] = "First item added to cart. Welcome to Stellar."
       session[:order_id] = @order.id

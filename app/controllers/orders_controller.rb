@@ -62,7 +62,8 @@ class OrdersController < ApplicationController
   # end
 
   def complete
-    if @order_item.update(status: "complete", complete_date: Time.now)
+    if @order_item.update(status: "complete") && @order.update(complete_date: Time.now)
+      @order.validate_status
       flash[:success] = "#{@order_item.product.name.capitalize} in Order ##{@order.id} has mark and shipped and designated as 'complete'."
       redirect_back fallback_location: root_path
     else
@@ -74,6 +75,7 @@ class OrdersController < ApplicationController
 
   def cancel
     if @order_item.update(status: "cancelled")
+      @order.validate_status
       flash[:success] = "#{@order_item.product.name.capitalize} in Order ##{@order.id} successfully cancelled."
     else
       flash[:error] = "Error. #{@order_item.product.name.capitalize} in Order ##{@order.id} was not cancelled. Please try again."
