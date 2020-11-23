@@ -60,6 +60,37 @@ describe Order do
 
   describe "custom methods" do
     describe "validate_status" do
+      let (:order_item1) { order_items(:order_item1) }
+      let (:order_item2) { order_items(:order_item2) }
+      let (:order_item3) { order_items(:order_item3) }
+
+      it "will update the order status if all order items share the same status" do
+        order_item1.update(status: "complete")
+        order_item2.update(status: "complete")
+        order_item3.update(status: "complete")
+        order1.order_items.delete_all
+        order1.order_items << order_item1
+        order1.order_items << order_item2
+        order1.order_items << order_item3
+        before = order1.status
+        order1.validate_status
+        after = order1.status
+        expect(order1.status).must_equal "complete"
+        expect(after).wont_equal before
+      end
+      it "won't change the order status if all order items don't share the same status" do
+        order_item1.update(status: "complete")
+        order_item2.update(status: "paid")
+        order_item3.update(status: "complete")
+        order1.order_items << order_item1
+        order1.order_items << order_item2
+        order1.order_items << order_item3
+        order1.save
+        before = order1.status
+        order1.validate_status
+        after = order1.status
+        expect(after).must_equal before
+      end
       it "will raise an exception for an invalid order status" do
         order1.status = "chillin"
         order1.save
@@ -148,10 +179,59 @@ describe Order do
 
       it "raises an argument error if there is no billing info attached to the order" do
         order1.billing_info = nil
-        pp order1.billing_info.nil?
-        pp order1.billing_info
         expect {
           order1.validate_billing_info
+        }.must_raise ArgumentError
+      end
+    end
+
+    describe "update all items" do
+      let (:order_item1) { order_items(:order_item1) }
+      let (:order_item2) { order_items(:order_item2) }
+      let (:order_item3) { order_items(:order_item3) }
+
+      it "updates all order items and the order status" do
+        new_status = "complete"
+        order_item1.update(status: "pending")
+        order_item2.update(status: "paid")
+        order_item3.update(status: "cancelled")
+        order1.order_items.delete_all
+        order1.order_items << order_item1
+        order1.order_items << order_item2
+        order1.order_items << order_item3
+        order1.update_all_items(new_status)
+        expect(order1.status).must_equal new_status
+        order1.order_items.each do |order_item|
+          expect(order_item.status).must_equal new_status
+        end
+      end
+
+      it "generates an error validation and returns false if an order item is not able to be saved" do
+        new_status = "complete"
+        order_item1.update(status: "pending")
+        order_item2.update(status: "paid")
+        order_item3.update(status: "cancelled")
+        order1.order_items.delete_all
+        order_item1.quantity = 0
+        order1.order_items << order_item1
+        order1.order_items << order_item2
+        order1.order_items << order_item3
+        order1.update_all_items(new_status)
+        expect(order1.status).wont_equal new_status
+        expect(order1.order_items.any? {|order_item| order_item.status != new_status}).must_equal true
+      end
+
+      it "raises an argument error for an invalid status" do
+        new_status = "invalid"
+        order_item1.update(status: "pending")
+        order_item2.update(status: "paid")
+        order_item3.update(status: "cancelled")
+        order1.order_items.delete_all
+        order1.order_items << order_item1
+        order1.order_items << order_item2
+        order1.order_items << order_item3
+        expect {
+          order1.update_all_items(new_status)
         }.must_raise ArgumentError
       end
     end

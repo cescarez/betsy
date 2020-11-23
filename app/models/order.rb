@@ -14,7 +14,7 @@ class Order < ApplicationRecord
 
     VALID_STATUSES.each do |valid_status|
       if self.order_items.all? { |order_item| order_item.status == valid_status }
-        self.update(status: valid_status)
+        return self.update(status: valid_status)
       end
     end
 
@@ -46,11 +46,14 @@ class Order < ApplicationRecord
   end
 
   def update_all_items(status)
+    status = self.class.validate_status(status)
+
     self.order_items.each do |order_item|
       order_item.update(status: status)
       if order_item.errors.any?
         messages = order_item.errors.full_messages.join(" ")
         self.errors.add(:order_item, messages)
+        return false
       end
     end
     return self.update(status: status)
