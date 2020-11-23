@@ -55,7 +55,7 @@ class ProductsController < ApplicationController
       head :not_found
       flash.now[:error] = 'Something happened. Media not updated.'
       nil
-    elsif @product.update(product_params)
+    elsif @product.update!(product_params)
       flash[:success] = "#{@product.name} was successfully updated!"
       redirect_to products_path
       nil
@@ -139,6 +139,6 @@ class ProductsController < ApplicationController
   end
 
   def product_params
-    params.require(:product).permit(:category, :name, :price, :description, :inventory, :user_id, :image)
+    params.require(:product).permit(:categories, :name, :price, :description, :inventory, :user_id, :image)
   end
 end

@@ -12,11 +12,13 @@
       <li> <%= "Merchant: #{@product.user.name}" %></li>
       <li>
         <ul>
+          <% if !@product.categories.nil?%>
           <% @product.categories.each do |category| %>
           <li>
             <%= category.name %>
           </li>
           <% end %>
+            <% end %>
       </ul>
     <li> <%= "Price: #{number_to_currency(@product.price)}" %> </li>
     </ul>
