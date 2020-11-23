@@ -32,6 +32,9 @@
       <li class="nav-item app-header__nav_item">
         <%= link_to "View Users", users_path, class: "btn btn-primary"  %>
       </li>
+      <li class="nav-item app-header__nav_item">
+        <p><img src="<%=@login_user.avatar%>"></p>
+      </li>
     </ul>
   </header>
   <main>

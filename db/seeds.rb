@@ -72,7 +72,7 @@ CSV.foreach(PRODUCTS_FILE, :headers => true) do |row|
   product.categories << Category.first
   successful = product.save
   if !successful
-    binding.pry
+    #binding.pry
     product_failures << product
     puts "Failed to save products: #{product.inspect}"
   else
