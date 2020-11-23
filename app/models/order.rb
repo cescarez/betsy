@@ -38,7 +38,7 @@ class Order < ApplicationRecord
     end
     status = validate_status(status)
 
-    return Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user } && order.status == status }
+    return Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user  && order.status == status }}
   end
 
   def total_cost
