@@ -97,7 +97,7 @@ describe OrdersController do
       must_respond_with :bad_request
     end
 
-    it "responds with not_found when attempting to update an invalid order with valid params" do
+    it "responds with not_found when attempting to update an invalid order witg valid params" do
       expect {
         patch order_path(-1), params: order_hash
       }.wont_change "Order.count"
