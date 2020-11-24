@@ -30,9 +30,11 @@
         <%= link_to "View Products", products_path, class: "btn btn-primary"  %>
       </li>
       <li class="nav-item app-header__nav_item">
-        <%= link_to "View Users", users_path, class: "btn btn-primary"  %>
+        <%= link_to "View Merchants", users_path, class: "btn btn-primary"  %>
       </li>
-
+      <li class="nav-item app-header__nav_item">
+        <%= link_to "View Categories", categories_path, class: "btn btn-primary"  %>
+      </li>
       <% if session[:order_id] %>
         <li>
           <%= button_to "View Cart", checkout_order_path(session[:order_id]), method: :get, class: "btn btn-info"  %>

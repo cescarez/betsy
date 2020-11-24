@@ -34,10 +34,10 @@
             <% end %>
           </td>
           <td>
-            <%= product.name %>
+            <%= link_to product.name, product_path(product.id) %>
           </td>
           <td>
-            <%= product.price %>
+            <%= number_to_currency(product.price) %>
           </td>
           <td>
             <%= product.description %>
