@@ -103,7 +103,11 @@ class ProductsController < ApplicationController
     existing_item = nil
     if session[:order_id]
       @order = Order.find_by(id: session[:order_id])
+      if @order
       existing_item = @order.order_items.find { |order_item| order_item.product.name == @order_item.product.name }
+      else
+        @order = Order.create
+        end
     else
       @order = Order.create
     end

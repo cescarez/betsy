@@ -13,6 +13,7 @@
   <div>
     <%= f.label :feeback %>
     <%= f.text_area :description %>
+    <%= f.hidden_field :description, required: true %>
   </div>
   <%= f.submit action_name, class:'button-style' %>
 <% end %>

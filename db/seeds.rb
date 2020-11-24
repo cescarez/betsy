@@ -73,7 +73,7 @@ CSV.foreach(PRODUCTS_FILE, :headers => true) do |row|
   product.retire = row['retire']
   successful = product.save
   if !successful
-    #binding.pry
+ master
     product_failures << product
     puts "Failed to save products: #{product.inspect}"
   else
