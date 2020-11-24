@@ -7,7 +7,9 @@ class BillingInfosController < ApplicationController
   end
 
   def create
-    @billing_info = BillingInfo.new(billing_info_params)
+    #is this secure??
+    @billing_info = BillingInfo.new(billing_info_params_unnested)
+    # @billing_info = BillingInfo.new(billing_info_params)
     @billing_info.order = @order
     if @billing_info.save
       flash[:success] = "Billing info has been saved."
@@ -61,6 +63,9 @@ class BillingInfosController < ApplicationController
   private
   def billing_info_params
     return params.require(:billing_info).permit(:card_number, :card_brand, :card_cvv, :card_expiration, :email, :order_id)
+  end
+  def billing_info_params_unnested
+    return params.permit(:card_number, :card_brand, :card_cvv, :card_expiration, :email, :order_id)
   end
   def find_billing_info
     @billing_info = BillingInfo.find_by(id: params[:id])

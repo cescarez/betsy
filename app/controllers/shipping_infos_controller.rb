@@ -7,7 +7,9 @@ class ShippingInfosController < ApplicationController
   end
 
   def create
-    @shipping_info = ShippingInfo.new(shipping_info_params)
+    #insecure??
+    @shipping_info = ShippingInfo.new(shipping_info_params_unnested)
+    # @shipping_info = ShippingInfo.new(shipping_info_params)
     @shipping_info.order = @order
     if @shipping_info.save
       flash[:success] = "Shipping info has been saved."
@@ -59,8 +61,11 @@ class ShippingInfosController < ApplicationController
 
   private
   def shipping_info_params
-    # return params.require(:shipping_info).permit(:card_number, :card_brand, :card_cvv, :card_expiration)
     return params.require(:shipping_info).permit(:first_name, :last_name, :street, :city, :state, :zipcode, :country)
+  end
+
+  def shipping_info_params_unnested
+    return params.permit(:first_name, :last_name, :street, :city, :state, :zipcode, :country)
   end
 
   def find_shipping_info

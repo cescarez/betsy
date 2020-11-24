@@ -53,25 +53,15 @@
 <% if @order.shipping_info.nil? %>
   <section>
     <%= render partial: "shipping_infos/shipping-form", locals: {action_name: "Create"} %>
-    <section class="shipping buttons">
-      <% if @order %>
-        <%= button_to "Return to Shopping Cart", checkout_order_path(@order.id), method: :get %>
-      <% end %>
-    </section>
   </section>
 <% end %>
-<% if @sorder.shipping_info && @order.billing_info.nil? %>
+<% if @order.shipping_info && @order.billing_info.nil? %>
   <section>
     <%= render partial: "billing_infos/billing-form", locals: {action_name: "Create"} %>
-    <section class="billing buttons">
-      <% if @order %>
-        <%= button_to "Return to Shopping Cart", checkout_order_path(@order.id), method: :get %>
-      <% end %>
-    </section>
   </section>
 <% end %>
 <% if @order.shipping_info && @order.billing_info %>
   <section>
-    <%= button_to "Submit Order", checkout_order_path(@order.id), class:"btn btn-outline-success btn-lg %>
+    <%= button_to "Submit Order", checkout_order_path(@order.id), class:"btn btn-outline-success btn-lg" %>
   </section>
 <% end %>
