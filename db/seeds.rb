@@ -69,11 +69,10 @@ CSV.foreach(PRODUCTS_FILE, :headers => true) do |row|
   product.inventory = row['inventory']
   product.user_id = row['user_id']
   #product.order_id = row['order_id']
-  product.categories << Category.first
+  product.categories << categories.sample
   product.retire = row['retire']
   successful = product.save
   if !successful
- master
     product_failures << product
     puts "Failed to save products: #{product.inspect}"
   else
