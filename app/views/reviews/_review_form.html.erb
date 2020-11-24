@@ -1,4 +1,4 @@
-<%= form_with model: Review.new, url: product_reviews_path(product)  do |f| %>
+<%= form_with model: Review.new, url: product_reviews_path(@product)  do |f| %>
   <div>
     <%= f.label :rating, "Rate Product: " %>
     <%= f.select :rating, [
@@ -11,9 +11,8 @@
         %>
   </div>
   <div>
-    <%= f.label :feeback %>
-    <%= f.text_area :description %>
-    <%= f.hidden_field :description, required: true %>
+    <%= f.label :feedback %>
+    <%= f.text_area :description, required: true %>
   </div>
   <%= f.submit action_name, class:'button-style' %>
 <% end %>
