@@ -22,7 +22,7 @@
         <tr class="table-active">
           <td><em>Orders Summary</em></td>
           <td><%= @orders.length %></td>
-          <td><%= format_money(@orders.sum { |order| order.total_cost(session[:user_id]) }) %></td>
+          <td><%= number_to_currency(@orders.sum { |order| order.total_cost(session[:user_id]) }) %></td>
           <td colspan="2"></td> #empty cell to span last two columns
         </tr>
         <tr>
@@ -36,7 +36,7 @@
               <% end %>
             </ul>
           </td>
-          <td><%= format_money(order.total_cost(session[:user_id])) %></td>
+          <td><%= number_to_currency(order.total_cost(session[:user_id])) %></td>
           <td><%= order.status %></td>
           <td><%= order.complete_date %></td>
         </tr>
