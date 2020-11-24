@@ -1,7 +1,6 @@
 class BillingInfosController < ApplicationController
   before_action :find_billing_info, only: [:show, :edit, :update, :destroy]
   before_action :find_current_order, except: [:new]
-  # before_action :find_user, except: [:new]
 
   def new
     @billing_info = BillingInfo.new
@@ -22,7 +21,7 @@ class BillingInfosController < ApplicationController
       end
       redirect_to checkout_order_path(@order.id)
     else
-      flash[:error] = "Error: billing info was not created."
+      flash[:error] = "Error: billing info was not created. "
       @billing_info.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
       flash[:error] << "Please try again."
       render :new, status: :bad_request
@@ -74,7 +73,4 @@ class BillingInfosController < ApplicationController
   def find_current_order
     @order = Order.find_by(id: session[:order_id])
   end
-  # def find_user
-  #   @user = User.find_by(id: session[:user_id])
-  # end
 end

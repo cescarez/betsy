@@ -408,17 +408,10 @@ describe OrdersController do
     end
   end
 
-  describe "create cart" do
-    it "saves a valid order and returns a redirect code" do
-      expect {
-        post create_cart_path, params: order_hash
-      }.must_differ "Order.count", 1
+  describe "edit quantity" do
+    it "decrements the quantity of an item in the cart and" do
 
-      latest = Order.last
-
-      must_respond_with :redirect
-
-      expect(latest.status).must_equal order_hash[:order][:status]
     end
   end
+
 end

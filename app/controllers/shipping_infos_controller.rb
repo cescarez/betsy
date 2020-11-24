@@ -1,7 +1,6 @@
 class ShippingInfosController < ApplicationController
   before_action :find_shipping_info, only: [:show, :edit, :update, :destroy]
   before_action :find_current_order, except: [:new]
-  before_action :find_user, except: [:new]
 
   def new
     @shipping_info = ShippingInfo.new
@@ -75,8 +74,4 @@ class ShippingInfosController < ApplicationController
   def find_current_order
     @order = Order.find_by(id: session[:order_id])
   end
-
-  # def find_user
-  #   @user = User.find_by(id: session[:user_id])
-  # end
 end

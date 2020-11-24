@@ -1,8 +1,10 @@
 class OrdersController < ApplicationController
-  before_action :find_current_order, except: [:index, :create, :show, :status_filter, :complete, :cancel, :edit_quantity]
+  before_action :find_current_order, except: [:index, :create, :show, :status_filter, :complete, :cancel]
+  #show pulls from params, all other actions pull @order from session
   before_action :find_order, only: [:show, :complete, :cancel]
   before_action :find_order_item, only: [:show, :complete, :cancel]
   before_action :require_login, only: [:index, :complete, :cancel]
+  skip_before_action :find_user
 
   def checkout
 
@@ -21,7 +23,7 @@ class OrdersController < ApplicationController
     if @order.save
       flash[:success] = "First item added to cart. Welcome to Stellar."
       session[:order_id] = @order.id
-      # redirect_back fallback_location: order_path(@order.id)
+      redirect_back fallback_location: order_path(@order.id)
     else
       flash[:error] = "Error: shopping cart was not created."
       @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
@@ -31,7 +33,6 @@ class OrdersController < ApplicationController
     return
   end
 
-  #show pulls from params, all other actions pull @order from session
   def show
   end
 
@@ -138,10 +139,9 @@ class OrdersController < ApplicationController
   end
 
   def edit_quantity
-    order = session[:order_id]
     quantity = params[:order_item][:quantity].to_i
     order_item = OrderItem.find_by(id: params[:id])
-    order_item.remove_item(quantity, order)
+    order_item.remove_item(quantity, @order)
     redirect_back fallback_location: root_path
   end
 
@@ -159,7 +159,7 @@ class OrdersController < ApplicationController
     @order = Order.find_by(id: params[:id])
 
     if @order.nil?
-      flash.now[:error] = "There was a problem with your cart. Please clear your cookies or close your browser and revisit Stellar."
+      flash.now[:error] = "Order not found, or you do not have permissions to view this order."
       redirect_to root_path, status: :not_found
       return
     end
