@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   delete "/logout", to: "users#destroy", as: "logout"
 
   resources :products do
-    resources :reviews, only: [:create]
+    resources :reviews, only: [:create, :new]
   end
 
   patch "products/:id/add_to_cart", to: 'products#add_to_cart', as: 'add_to_cart'

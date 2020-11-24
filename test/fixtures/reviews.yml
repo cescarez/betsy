@@ -1,0 +1,8 @@
+galaxy_review:
+  rating: 5
+  description: "Best galaxy Ever!"
+  product: product_1
+sirius_review:
+  rating: 1
+  description: "not bright enough"
+  product: product_2
