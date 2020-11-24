@@ -20,14 +20,14 @@
           <tr>
             <td><%= link_to order_item.product.name, product_path(order_item.product_id) %></td>
             <td><%= order_item.quantity %></td>
-            <td><%= format_money(order_item.quantity * order_item.product.price) %></td>
+            <td><%= number_to_currency(order_item.quantity * order_item.product.price) %></td>
           </tr>
         <% end %>
       <% end %>
       <tr class="table-active">
         <td>Order Summary</td>
-        <td><%= @order.order_items.length %></td>
-        <td><%= format_money(@order.total_cost) %></td>
+        <td><%= @order.order_items.sum{|order_item| order_item.quantity} %></td>
+        <td><%= number_to_currency(@order.order_items.sum{|order_item| order_item.quantity * order_item.product.price}) %></td>
       </tr>
     <% end %>
     </tbody>

@@ -5,34 +5,36 @@
     </section>
   </h2>
   <section>
-    <ul>
-<!--      <li> <%#= "Category: #{@product.category}" %> </li>-->
-      <li> <%= "Price: #{number_to_currency(@product.price)}" %> </li>
-
-      <li> <%= "Merchant: #{@product.user.name}" %></li>
-      <li>
-        <ul>
+    <table class="table">
+      <thead>
+        <th>Price</th>
+        <th>Merchant</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>description</th>
+     </thead>
+      <tbody>
+        <td><%= number_to_currency(@product.price) %> </td>
+        <td><%= @product.user.name %></td>
+        <td>
           <% if !@product.categories.nil?%>
-          <% @product.categories.each do |category| %>
-          <li>
-            <%= category.name %>
-          </li>
-          <% end %>
+            <% @product.categories.each do |category| %>
+              <%= category.name %><br/>
             <% end %>
-      </ul>
-    <li> <%= "Price: #{number_to_currency(@product.price)}" %> </li>
-    </ul>
+          <% end %>
+        </td>
+        <td><%= number_to_currency(@product.price) %> </td>
+        <td><%= @product.description %></tdd>
+      </tbody>
+    </table>
   </section>
   <section>
-    <p>
-      <%= @product.description %>
-    </p>
     <% if @product.image.attached? %>
       <image src="<%=(url_for(@product.image)) %>" alt="celestial body">
       </image>
     <% end %>
   </section>
-  <section>
+  <section id="add-to-cart-buttons">
     <% if @product.inventory <= 0 %>
     <p>Sorry! This product is out of stock, please check back later!</p>
     <% elsif @product.retire == false || @product.retire == nil %>
@@ -52,15 +54,14 @@
           <h3>this seller has not been rated</h3>
 <!--         if user product reviews exist:-->
     <% else %>
-          <table>
-            <tr>
-              <th>Rating (⭐️ to ⭐⭐⭐⭐⭐)</th>
-              <th>Date</th>
-              <th>Review</th>
-            </tr>
-          </table>
+        <table class="table-sm">
+          <thead>
+            <th>Rating (⭐️ to ⭐⭐⭐⭐⭐)</th>
+            <th>Date</th>
+            <th>Review</th>
+          </thead>
       <% @product.reviews.each do |review| %>
-        <table>
+          <tbody>
             <tr>
               <td>
                 <% if review.rating == 1 %>
@@ -82,6 +83,7 @@
         <%= review.description %>
               </td>
             </tr>
+          </tbody>
         </table>
         <% end %>
     <% end %>

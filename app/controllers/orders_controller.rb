@@ -1,8 +1,10 @@
 class OrdersController < ApplicationController
-  before_action :find_current_order, except: [:index, :create, :show, :status_filter, :complete, :cancel]
-  before_action :find_order, only: [:show, :complete, :cancel]
+  before_action :find_current_order, except: [:index, :create, :show, :edit, :update, :status_filter, :complete, :cancel]
+  #show pulls from params, all other actions pull @order from session
+  before_action :find_order, only: [:show, :complete, :cancel, :edit, :update]
   before_action :find_order_item, only: [:show, :complete, :cancel]
-  before_action :require_login, only: [:index, :complete, :cancel]
+  before_action :require_login, only: [:index, :complete, :cancel, :edit, :update]
+  skip_before_action :find_user, except: [:update, :edit]
 
   def checkout
 
@@ -21,7 +23,7 @@ class OrdersController < ApplicationController
     if @order.save
       flash[:success] = "First item added to cart. Welcome to Stellar."
       session[:order_id] = @order.id
-      # redirect_back fallback_location: order_path(@order.id)
+      redirect_back fallback_location: order_path(@order.id)
     else
       flash[:error] = "Error: shopping cart was not created."
       @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
@@ -31,29 +33,42 @@ class OrdersController < ApplicationController
     return
   end
 
-  #show pulls from params, all other actions pull @order from session
   def show
   end
 
   def summary
   end
 
+  def edit
+    if @order.billing_info.email != @user.email
+      flash[:error] = "You do not have permission to update this order, to update this order, you must have purchased the order."
+      redirect_back fallback_location: root_path
+    end
+    return
+
+  end
+
+ #written to allow a logged in user to update already submitted orders, but that's not currently in implementation
   def update
-    if @order.complete_date
-      flash[:error] = "Your order has already been shipped. No changes may be made at this point."
-      redirect_back fallback_location: order_path(@order.id)
-    else
-      if @order.update(order_params)
-        flash[:success] = "Order successfully updated."
+    if @order.billing_info.email == @user.email
+      if @order.complete_date
+        flash[:error] = "Your order has already been shipped. No changes may be made at this point."
         redirect_back fallback_location: order_path(@order.id)
       else
-        flash.now[:error] = "Error: order did not update."
-        @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
-        flash.now[:error] << "Please try again."
-        render :show, status: :bad_request
+        if @order.update(order_params)
+          flash[:success] = "Order successfully updated."
+          redirect_back fallback_location: order_path(@order.id)
+        else
+          flash.now[:error] = "Error: order did not update."
+          @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+          flash.now[:error] << "Please try again."
+          render :show, status: :bad_request
+        end
       end
+    else
+      flash[:error] = "You do not have permission to update this order, to update this order, you must have purchased the order."
+      redirect_back fallback_location: root_path
     end
-
     return
   end
 
@@ -118,7 +133,9 @@ class OrdersController < ApplicationController
 
       @order.order_items.each do |order_item|
         order_item.product.inventory -= order_item.quantity
+        order_item.product.save
       end
+      @order.save
 
       flash[:success] = "Thank you for shopping with Stellar!"
       session[:order_id] = nil
@@ -135,6 +152,20 @@ class OrdersController < ApplicationController
     return
   end
 
+  def edit_quantity
+    quantity = params[:order_item][:quantity].to_i
+
+    order_item = @order.order_items.find params[:id]
+    if @order && (@order.order_items.include? order_item)
+      if quantity == order_item.quantity
+        order_item.destroy
+      else
+        order_item.remove_item(quantity, @order)
+      end
+    end
+    redirect_back fallback_location: root_path
+  end
+
   private
 
   def order_params
@@ -149,7 +180,7 @@ class OrdersController < ApplicationController
     @order = Order.find_by(id: params[:id])
 
     if @order.nil?
-      flash.now[:error] = "There was a problem with your cart. Please clear your cookies or close your browser and revisit Stellar."
+      flash.now[:error] = "Order not found, or you do not have permissions to view this order."
       redirect_to root_path, status: :not_found
       return
     end

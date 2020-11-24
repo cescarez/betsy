@@ -11,4 +11,13 @@ class OrderItem < ApplicationRecord
     return self.status
   end
 
+  def remove_item(quantity, order)
+    existing_item = order.order_items.find self.id
+    if existing_item
+      existing_item.quantity -= quantity
+      existing_item.save
+    end
+
+  end
+
 end

@@ -1,7 +1,5 @@
-
-
-  <section>
-  <table>
+<section>
+  <table class="table table-hover">
     <tr>
       <th>
 
@@ -18,6 +16,7 @@
       <th>
         Total Price
       </th>
+      <th></th>
     </tr>
     <% @order.order_items.each do |item| %>
     <tr>
@@ -29,7 +28,7 @@
         <%end %>
       </td>
       <td>
-        <%= item.product.name %>
+        <%= link_to item.product.name, product_path(item.product.id) %>
       </td>
       <td>
         <%= number_to_currency(item.product.price) %>
@@ -40,17 +39,29 @@
       <td>
         <%= number_to_currency(item.quantity * item.product.price) %>
       </td>
-
+      <td>
+        <%= form_with model: item, url: edit_quantity_path(item.id), method: :patch do |f| %>
+          <%= f.label :quantity %>
+          <%= f.select :quantity, (1..item.quantity) %>
+          <%= f.submit "Lower Quantity" %>
+        <% end %>
+      </td>
     </tr>
       <% end %>
   </table>
-    <% if @order.shipping_info.nil? %>
-      <%= button_to "Add Shipping Information", new_shipping_info_path, method: :get %>
-    <% end %>
-    <%# if @order.billing_info.nil? %>
-      <%#= button_to "Add Billing Information", new_billing_info_path, method: :get %>
-    <%# end %>
-    <% if @order.shipping_info && @order.billing_info %>
-      <%= button_to "Submit Order", checkout_order_path(@order.id) %>
-    <% end %>
+</section>
+<% if @order.shipping_info.nil? %>
+  <section>
+    <%= render partial: "shipping_infos/shipping-form", locals: {action_name: "Create"} %>
   </section>
+<% end %>
+<% if @order.shipping_info && @order.billing_info.nil? %>
+  <section>
+    <%= render partial: "billing_infos/billing-form", locals: {action_name: "Create"} %>
+  </section>
+<% end %>
+<% if @order.shipping_info && @order.billing_info %>
+  <section>
+    <%= button_to "Submit Order", checkout_order_path(@order.id), class:"btn btn-outline-success btn-lg" %>
+  </section>
+<% end %>

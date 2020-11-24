@@ -14,7 +14,7 @@ class BillingInfo < ApplicationRecord
     num = self.card_number.delete("\s")
 
     if !num || num.length <= 1 || num =~ /\D/
-      self.errors.add(:card_number, "Invalid card number. Please enter a valid card number to continue.")
+      self.errors.add(:card_number, "is not valid.")
       return false
     end
 
@@ -31,7 +31,7 @@ class BillingInfo < ApplicationRecord
     if (check_num.sum % 10 == 0)
       return self.card_number
     else
-      self.errors.add(:card_number, "Invalid card number. Please enter a valid card number to continue.")
+      self.errors.add(:card_number, "is not valid.")
       return false
     end
   end
@@ -40,7 +40,7 @@ class BillingInfo < ApplicationRecord
     if VALID_CARD_BRANDS.include? self.card_brand
       return self.card_brand
     else
-      self.errors.add(:card_brand, "Invalid card brand. Please enter a valid card brand to continue.")
+      self.errors.add(:card_brand, "is not valid.")
       return false
     end
   end

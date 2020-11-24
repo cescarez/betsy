@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-   # skip_before_action :require_login, only: [:new, :create, :delete, :index, :show]
+  before_action :require_login, only: [:current]
+  # skip_before_action :require_login, only: [:new, :create, :delete, :index, :show]
 
    def index
      @users = User.all
@@ -26,14 +27,12 @@ class UsersController < ApplicationController
 
      if user
        #user exists
-       flash[:status] = :success
-       flash[:result_text] = "Existing user #{user.username} is logged in."
+       flash[:success] = "Existing user #{user.username} is logged in."
      else
        #user doesn't exist yet
        user = User.build_from_github(auth_hash)
        if user.save
-         flash[:status] = :success
-         flash[:result_text] = "Logged in as new user #{user.username}"
+         flash[:success] = "Logged in as new user #{user.username}"
        else
          flash[:error] = "Could not create user account #{user.errors.messages}"
        end
@@ -50,8 +49,7 @@ class UsersController < ApplicationController
    def destroy
      if session[:user_id]
        session[:user_id] = nil
-       flash[:status] = :success
-       flash[:result_text] = "Successfully logged out"
+       flash[:status] = "Successfully logged out"
        redirect_to root_path
        return
      else

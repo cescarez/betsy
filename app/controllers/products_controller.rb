@@ -41,10 +41,16 @@ class ProductsController < ApplicationController
 
   def edit
     @product = Product.find_by(id: params[:id])
-    if @product.nil?
-      head :not_found
-      flash[:error] = 'Cannot find this product.'
-      nil
+    @user = User.find_by(id: session[:user_id])
+    if @user == @product.user
+      if @product.nil?
+        head :not_found
+        flash[:error] = 'Cannot find this product.'
+        nil
+      end
+    else
+      flash[:error] = "Nice try! You can't edit other people's products lol."
+      redirect_to products_path
     end
   end
 
@@ -128,8 +134,6 @@ class ProductsController < ApplicationController
       if @order.order_items.find { |order_item| order_item.product.name == @order_item.product.name }
         flash[:success] = "Item #{@order.order_items.last.product.name.capitalize.to_s.gsub('_', ' ')} has been added to cart."
         session[:order_id] = @order.id
-
-
         redirect_to products_path
         return
       else
