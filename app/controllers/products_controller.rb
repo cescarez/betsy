@@ -98,6 +98,7 @@ class ProductsController < ApplicationController
     end
     if @product.retire == false
     quantity = params[:product][:inventory].to_i
+
     @order_item = OrderItem.create(product: @product, quantity: quantity)
 
     existing_item = nil
@@ -123,8 +124,8 @@ class ProductsController < ApplicationController
       flash[:success] = "Item #{@order.order_items.last.product.name.capitalize.to_s.gsub('_', ' ')} has been added to cart."
       session[:order_id] = @order.id
 
-      @product.inventory -= quantity
-      @product.save
+      # @product.inventory -= quantity
+      # @product.save
 
       redirect_to products_path
     else

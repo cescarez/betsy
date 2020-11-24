@@ -1,7 +1,7 @@
 class OrdersController < ApplicationController
-  before_action :find_current_order, except: [:index, :create, :show, :status_filter, :complete, :cancel]
+  before_action :find_current_order, except: [:index, :create, :show, :status_filter, :complete, :cancel, :edit_quantity]
   before_action :find_order, only: [:show, :complete, :cancel]
-  before_action :find_order_item, only: [:show, :complete, :cancel]
+  before_action :find_order_item, only: [:show, :complete, :cancel, :edit_quantity]
   before_action :require_login, only: [:index, :complete, :cancel]
 
   def checkout
@@ -133,6 +133,11 @@ class OrdersController < ApplicationController
     end
 
     return
+  end
+
+  def edit_quantity
+    @order_item.remove_item
+    redirect_back fallback_location: root_path
   end
 
   private
