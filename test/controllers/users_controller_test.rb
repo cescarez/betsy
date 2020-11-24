@@ -51,8 +51,8 @@ describe 'logout' do
   end
 end
 
-describe "Guest users" do
-  # it "can acces the index" do
+# describe "Guest users" do
+  # it "can access the index" do
   #   get works_path
   #   must_respond_with :success
   # end
@@ -67,6 +67,13 @@ describe "Guest users" do
   #   must_redirect_to root_path
   #   flash[:message].must_equal "Must log in first!"
   # end
-end
+# end
+
+describe "Index" do
+  it "can access the index" do
+    get users_path
+    must_respond_with :success
+  end
 end
 
+end
