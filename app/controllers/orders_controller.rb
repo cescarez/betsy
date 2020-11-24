@@ -140,8 +140,14 @@ class OrdersController < ApplicationController
 
   def edit_quantity
     quantity = params[:order_item][:quantity].to_i
-    order_item = OrderItem.find_by(id: params[:id])
-    order_item.remove_item(quantity, @order)
+    order_item = @order.order_items.find params[:id]
+    if @order && (@order.order_items.include? order_item)
+      if quantity == order_item.quantity
+        order_item.destroy
+      else
+        order_item.remove_item(quantity, @order)
+      end
+    end
     redirect_back fallback_location: root_path
   end
 

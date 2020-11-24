@@ -5,6 +5,7 @@ describe OrderItem do
   let (:order_item2) { order_items(:order_item2) }
   let (:order_item3) { order_items(:order_item3) }
   let (:product1) { products(:product_1) }
+  let (:order1) { orders(:order1) }
 
   describe "instantiation" do
     it "can instantiate an OrderItem object" do
@@ -82,6 +83,24 @@ describe OrderItem do
         expect {
           order_item1.validate_status
         }.must_raise ArgumentError
+      end
+    end
+
+    describe "remove_item" do
+      it "decrements the quantity of an order item if it is in the cart" do
+        num_to_remove = 100
+        order1.order_items << order_item3
+        expected_count = order_item3.quantity - num_to_remove
+
+        order_item3.remove_item(num_to_remove, order1)
+        order_item = order1.order_items.find order_item3.id
+        expect(order_item.quantity).must_equal expected_count
+      end
+      it "will raise a no method error if a nil order is passed in (no current cart)" do
+        order1 = nil
+        expect {
+          order_item3.remove_item(10, order1)
+        }.must_raise NoMethodError
       end
     end
 
