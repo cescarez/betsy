@@ -6,22 +6,33 @@
     <%= collection_check_boxes :product, :category_ids, Category.all, :id, :name %>
   </div>
 
+<ul>
+  <li>
+    <%= f.label :name %>
+    <%= f.text_field :name, required: true %>
+  </li>
 
-  <%= f.label :name %>
-  <%= f.text_field :name, required: true %>
+  <li>
+    <%= f.label :price %>
+    <%= f.text_field :price, required: true %>
+  </li>
 
-  <%= f.label :price %>
-  <%= f.text_field :price, required: true %>
+  <li>
+    <%= f.label :description %>
+    <%= f.text_field :description, required: true %>
+  </li>
 
-  <%= f.label :description %>
-  <%= f.text_field :description, required: true %>
+  <li>
+    <%= f.label :inventory %>
+    <%= f.text_field :inventory, required: true  %>
+  </li>
 
-  <%= f.label :inventory %>
-  <%= f.text_field :inventory, required: true  %>
+  <li>
+    <%= f.label :image %>
+    <%= f.file_field :image  %>
+  </li>
 
-  <%= f.label :image %>
-  <%= f.file_field :image  %>
-
+</ul>
 
   <%= f.submit "Submit", class: "product-button" %>
 <% end %>

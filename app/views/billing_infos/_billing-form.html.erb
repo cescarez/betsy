@@ -5,20 +5,30 @@
   <% end %>
 
   <%= form_with model: @billing_info do |f| %>
-    <%= f.label :email %>
-    <%= f.text_field :email, required: true %>
+    <div class="form-group">
+      <%= f.label :email %>
+      <%= f.email_field :email, required: true %>
+    </div>
 
-    <%= f.label :card_brand %>
-    <%= f.text_field :card_brand, required: true %>
+    <div class="form-group">
+      <%= f.label :card_brand %>
+      <%= f.text_field :card_brand, required: true %>
+    </div>
 
-    <%= f.label :card_number %>
-    <%= f.text_field :card_number, required: true %>
+    <div class="form-group">
+      <%= f.label :card_number %>
+      <%= f.text_field :card_number, required: true %>
+    </div>
 
-    <%= f.label :card_expiration %>
-    <%= f.date_field :card_expiration, required: true %>
+    <div class="form-group">
+      <%= f.label :card_expiration %>
+      <%= f.date_field :card_expiration, required: true %>
+    </div>
 
-    <%= f.label :card_cvv %>
-    <%= f.text_field :card_cvv, required: true %>
+    <div class="form-group">
+      <%= f.label :card_cvv %>
+      <%= f.text_field :card_cvv, required: true %>
+    </div>
 
     <%= f.submit "Save Billing Info", class: "btn btn-secondary", data: {confirm: "Are you sure you want to submit this billing info? You will be redirected to back to your cart for final confirmation."} %>
   <% end %>

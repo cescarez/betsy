@@ -98,7 +98,8 @@ describe User do
       @user = User.new(uid: 12345, username: "Username", provider: "github", email: "email@address.com")
       @user.save!
       user_id = @user.id
-      @product = Product.new(category: "category", name: "name", price: 100, inventory: 5, user_id: user_id)
+      #@product = Product.new(category: "category", name: "name", price: 100, inventory: 5, user_id: user_id)
+      @product = Product.new(name: "name", price: 100, inventory: 5, user_id: user_id)
       @product.save!
       #@order = Order.new(id: 10, user: @user, status: "pending")
       @order = Order.new(status: "pending", user_id: user_id, submit_date: Time.now, complete_date: Time.now )

@@ -118,7 +118,9 @@ class OrdersController < ApplicationController
 
       @order.order_items.each do |order_item|
         order_item.product.inventory -= order_item.quantity
+        order_item.product.save
       end
+      @order.save
 
       flash[:success] = "Thank you for shopping with Stellar!"
       session[:order_id] = nil
