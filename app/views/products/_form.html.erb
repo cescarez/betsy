@@ -8,19 +8,19 @@
 
 
   <%= f.label :name %>
-  <%= f.text_field :name %>
+  <%= f.text_field :name, required: true %>
 
   <%= f.label :price %>
-  <%= f.text_field :price %>
+  <%= f.text_field :price, required: true %>
 
   <%= f.label :description %>
-  <%= f.text_field :description %>
+  <%= f.text_field :description, required: true %>
 
   <%= f.label :inventory %>
-  <%= f.text_field :inventory %>
+  <%= f.text_field :inventory, required: true  %>
 
   <%= f.label :image %>
-  <%= f.file_field :image %>
+  <%= f.file_field :image  %>
 
 
   <%= f.submit "Submit", class: "product-button" %>
