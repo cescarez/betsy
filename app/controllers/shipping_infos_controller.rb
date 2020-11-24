@@ -1,14 +1,15 @@
 class ShippingInfosController < ApplicationController
   before_action :find_shipping_info, only: [:show, :edit, :update, :destroy]
   before_action :find_current_order, except: [:new]
-  before_action :find_user, except: [:new]
 
   def new
     @shipping_info = ShippingInfo.new
   end
 
   def create
-    @shipping_info = ShippingInfo.new(shipping_info_params)
+    #insecure??
+    @shipping_info = ShippingInfo.new(shipping_info_params_unnested)
+    # @shipping_info = ShippingInfo.new(shipping_info_params)
     @shipping_info.order = @order
     if @shipping_info.save
       flash[:success] = "Shipping info has been saved."
@@ -18,11 +19,12 @@ class ShippingInfosController < ApplicationController
         flash[:error] = "An error occurred and while the shipping info has been saved, it has not been associated with the current order (Order #{@order.id}). Please try again."
       end
 
-      redirect_to new_billing_info_path
+      redirect_back fallback_location: checkout_order_path(@order.id)
+      # redirect_to new_billing_info_path
     else
-      flash[:error] = "Error: shipping info was not created."
-      @shipping_info.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
-      flash[:error] << "Please try again."
+      flash.now[:error] = "Error: shipping info was not created."
+      @shipping_info.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+      flash.now[:error] << "Please try again."
       render :new, status: :bad_request
     end
     return
@@ -59,12 +61,15 @@ class ShippingInfosController < ApplicationController
 
   private
   def shipping_info_params
-    # return params.require(:shipping_info).permit(:card_number, :card_brand, :card_cvv, :card_expiration)
     return params.require(:shipping_info).permit(:first_name, :last_name, :street, :city, :state, :zipcode, :country)
   end
 
+  def shipping_info_params_unnested
+    return params.permit(:first_name, :last_name, :street, :city, :state, :zipcode, :country)
+  end
+
   def find_shipping_info
-    @shipping_info = ShippingInfo.find_by(params[:id])
+    @shipping_info = ShippingInfo.find_by(id: params[:id])
     if @shipping_info.nil?
       flash[:error] = "Shipping info not found."
       render_404
@@ -75,8 +80,4 @@ class ShippingInfosController < ApplicationController
   def find_current_order
     @order = Order.find_by(id: session[:order_id])
   end
-
-  # def find_user
-  #   @user = User.find_by(id: session[:user_id])
-  # end
 end

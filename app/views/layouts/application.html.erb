@@ -9,7 +9,9 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
   <header>
-    <h1><a name="top">Stellar</a></h1>
+    <section class="title">
+      <h1><a name="top">Stellar</a></h1c>
+    </section>
     <ul class="nav app-header__user-nav-container">
       <li class="nav-item app-header__nav_item">
         <%= link_to "Home", root_path, class: "btn btn-primary" %>
@@ -37,7 +39,7 @@
       </li>
       <% if session[:order_id] %>
         <li>
-          <%= button_to "View Cart", checkout_order_path(session[:order_id]), method: :get, class: "btn btn-info"  %>
+          <%= button_to "View Cart", checkout_order_path(session[:order_id]), method: :get, class: "btn btn-info btn-lg", id:"cart-button"  %>
         </li>
       <% end %>
 

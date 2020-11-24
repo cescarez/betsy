@@ -1,6 +1,6 @@
 <section class="shipping-info">
   <h2><%= action_name %> Shipping Info</h2>
-  <%= form_with model: @shipping_info do |f| %>
+  <%= form_with model: @shipping_info, url: shipping_infos_path do |f| %>
     <div class="form-group">
       <%= f.label :first_name %>
       <%= f.text_field :first_name %>
@@ -36,7 +36,7 @@
     </div>
 
     <div class="form-group">
-      <%= f.submit "Save Shipping Info", class: "btn btn-secondary", data: {confirm: "Are you sure you want to submit this shipping info? You will be redirected to billing info."} %>
+      <%= f.submit "Save Shipping Info", class: "btn btn-secondary", data: {confirm: "Are you sure you want to submit this shipping info?"} %>
     </div>
   <% end %>
 </section>

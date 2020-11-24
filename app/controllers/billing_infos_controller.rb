@@ -1,14 +1,15 @@
 class BillingInfosController < ApplicationController
   before_action :find_billing_info, only: [:show, :edit, :update, :destroy]
   before_action :find_current_order, except: [:new]
-  # before_action :find_user, except: [:new]
 
   def new
     @billing_info = BillingInfo.new
   end
 
   def create
-    @billing_info = BillingInfo.new(billing_info_params)
+    #is this secure??
+    @billing_info = BillingInfo.new(billing_info_params_unnested)
+    # @billing_info = BillingInfo.new(billing_info_params)
     @billing_info.order = @order
     if @billing_info.save
       flash[:success] = "Billing info has been saved."
@@ -22,9 +23,9 @@ class BillingInfosController < ApplicationController
       end
       redirect_to checkout_order_path(@order.id)
     else
-      flash[:error] = "Error: billing info was not created."
-      @billing_info.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
-      flash[:error] << "Please try again."
+      flash.now[:error] = "Error: billing info was not created. "
+      @billing_info.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+      flash.now[:error] << "Please try again."
       render :new, status: :bad_request
     end
     return
@@ -61,10 +62,13 @@ class BillingInfosController < ApplicationController
 
   private
   def billing_info_params
-    return params.require(:billing_info).permit(:card_number, :card_brand, :card_cvv, :card_expiration, :email)
+    return params.require(:billing_info).permit(:card_number, :card_brand, :card_cvv, :card_expiration, :email, :order_id)
+  end
+  def billing_info_params_unnested
+    return params.permit(:card_number, :card_brand, :card_cvv, :card_expiration, :email, :order_id)
   end
   def find_billing_info
-    @billing_info = BillingInfo.find_by(params[:id])
+    @billing_info = BillingInfo.find_by(id: params[:id])
     if @billing_info.nil?
       flash[:error] = "Billing info not found."
       render_404
@@ -74,7 +78,4 @@ class BillingInfosController < ApplicationController
   def find_current_order
     @order = Order.find_by(id: session[:order_id])
   end
-  # def find_user
-  #   @user = User.find_by(id: session[:user_id])
-  # end
 end

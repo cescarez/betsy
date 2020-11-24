@@ -56,7 +56,7 @@ class Order < ApplicationRecord
   end
 
   def update_all_items(status)
-    #status = self.class.validate_status(status)
+    status = self.class.validate_status(status)
 
     self.order_items.each do |order_item|
       order_item.update(status: status)
@@ -72,11 +72,11 @@ class Order < ApplicationRecord
 
   private
 
-  # def self.validate_status(status)
-  #   raise ArgumentError, "Invalid order status. Fatal Error." unless VALID_STATUSES.include? status
-  #
-  #   return status
-  # end
+  def self.validate_status(status)
+    raise ArgumentError, "Invalid order status. Fatal Error." unless VALID_STATUSES.include? status
+
+    return status
+  end
 
 
 end

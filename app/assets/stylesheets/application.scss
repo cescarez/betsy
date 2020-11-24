@@ -16,3 +16,27 @@
 @import "bootstrap";
 
 @import "**/*";
+
+@import url('https://fonts.googleapis.com/css2?family=Offside&display=swap');
+
+body {
+  font-family: 'Offside', cursive;
+}
+
+.nav {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+#cart-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
