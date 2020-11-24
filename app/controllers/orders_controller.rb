@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_action :find_current_order, except: [:index, :create, :show, :status_filter, :complete, :cancel]
+  before_action :find_current_order, except: [:index, :create, :show, :status_filter, :complete, :cancel, :edit_quantity]
   before_action :find_order, only: [:show, :complete, :cancel]
   before_action :find_order_item, only: [:show, :complete, :cancel]
   before_action :require_login, only: [:index, :complete, :cancel]
@@ -135,6 +135,14 @@ class OrdersController < ApplicationController
     end
 
     return
+  end
+
+  def edit_quantity
+    order = session[:order_id]
+    quantity = params[:order_item][:quantity].to_i
+    order_item = OrderItem.find_by(id: params[:id])
+    order_item.remove_item(quantity, order)
+    redirect_back fallback_location: root_path
   end
 
   private

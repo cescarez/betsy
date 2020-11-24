@@ -69,6 +69,7 @@ class Order < ApplicationRecord
     return self.update(status: status)
   end
 
+
   private
 
   # def self.validate_status(status)

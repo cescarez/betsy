@@ -134,8 +134,6 @@ class ProductsController < ApplicationController
       if @order.order_items.find { |order_item| order_item.product.name == @order_item.product.name }
         flash[:success] = "Item #{@order.order_items.last.product.name.capitalize.to_s.gsub('_', ' ')} has been added to cart."
         session[:order_id] = @order.id
-
-
         redirect_to products_path
         return
       else

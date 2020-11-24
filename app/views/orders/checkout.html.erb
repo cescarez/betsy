@@ -40,6 +40,13 @@
       <td>
         <%= number_to_currency(item.quantity * item.product.price) %>
       </td>
+      <% @order.order_items.each do |order_item| %>
+      <%= form_with model: order_item, url: edit_quantity_path(order_item.id), method: :patch do |f| %>
+        <%= f.label :quantity %>
+        <%= f.select :quantity, (1..order_item.quantity) %>
+        <%= f.submit "Lower Quantity" %>
+        <% end %>
+        <% end %>
 
     </tr>
       <% end %>

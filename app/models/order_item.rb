@@ -11,4 +11,18 @@ class OrderItem < ApplicationRecord
     return self.status
   end
 
+  def remove_item(quantity, order)
+    if order
+      @order = Order.find_by(:id => order)
+      if @order
+        existing_item = @order.order_items.find self.id
+      end
+    end
+    if existing_item
+      existing_item.quantity -= quantity
+      existing_item.save
+    end
+
+  end
+
 end
