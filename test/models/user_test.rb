@@ -20,8 +20,13 @@ describe User do
       end
     end
 
-
-
+    it "has orders" do
+      user_1 = users(:user_1)
+      expect(user_1).must_respond_to :orders
+      user_1.orders.each do |order|
+        expect(order).must_be_kind_of Order
+      end
+    end
 
   end
 
