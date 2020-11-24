@@ -95,6 +95,7 @@ class ProductsController < ApplicationController
     if @product.inventory <= 0
       flash[:error] = "Item is out of stock, could not be added to cart"
       redirect_to products_path
+      return
     end
     if @product.retire == false || @product.retire == nil
       quantity = params[:product][:inventory].to_i
@@ -113,6 +114,11 @@ class ProductsController < ApplicationController
       end
 
       if existing_item
+        if (existing_item.quantity += quantity) > existing_item.product.inventory
+          flash[:error] = "You have added a number of #{existing_item.product.name} that exceeds the number the seller has in stock (#{existing_item.product.inventory})."
+          redirect_back fallback_location: product_path(@product.id)
+          return
+        end
         existing_item.quantity += quantity
         existing_item.save
       else
@@ -123,21 +129,21 @@ class ProductsController < ApplicationController
         flash[:success] = "Item #{@order.order_items.last.product.name.capitalize.to_s.gsub('_', ' ')} has been added to cart."
         session[:order_id] = @order.id
 
-        @product.inventory -= quantity
-        @product.save
 
         redirect_to products_path
+        return
       else
         flash[:error] = "Error: item #{@order.order_items.last.product.name.capitalize.to_s.gsub('_', ' ')} was not added to cart."
         @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
         flash[:error] << 'Please try again.'
         redirect_back fallback_location: root_path, status: :bad_request
+        return
       end
     else
       flash[:error] = "Sorry! This product is no longer available!"
       redirect_to products_path
+      return
     end
-    nil
   end
 
 private
