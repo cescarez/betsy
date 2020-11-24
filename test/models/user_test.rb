@@ -12,13 +12,16 @@ describe User do
       end
       end
 
-    it "has order items" do
+    it "has order items through products" do
       user_1 = users(:user_1)
       expect(user_1).must_respond_to :order_items
       user_1.order_items.each do |order_item|
         expect(order_item).must_be_kind_of OrderItem
       end
     end
+
+
+
 
   end
 
@@ -99,11 +102,19 @@ describe User do
       @user.save!
       user_id = @user.id
       #@product = Product.new(category: "category", name: "name", price: 100, inventory: 5, user_id: user_id)
+
+      @category = Category.new(name: "new_category")
+      @category.save!
       @product = Product.new(name: "name", price: 100, inventory: 5, user_id: user_id)
+      @product.category_ids = @category.id
       @product.save!
+
       #@order = Order.new(id: 10, user: @user, status: "pending")
-      @order = Order.new(status: "pending", user_id: user_id, submit_date: Time.now, complete_date: Time.now )
+      #@order = Order.new(status: "pending", user_id: user_id, submit_date: Time.now, complete_date: Time.now )
+      @order = Order.new(status: "pending", submit_date: Time.now, complete_date: Time.now )
+
       #@order_item = OrderItem.new(quantity: 1)
+
       @order.save!
       @order_item = @order.order_items.new(quantity: 1)
       #@order_item.product_id = @product.id
