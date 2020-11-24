@@ -439,7 +439,6 @@ describe OrdersController do
 
       must_respond_with :redirect
 
-      pp order.order_items
       # order_item = order.order_items.find { |order_item| order_item.product.name == order_item3.product.name }
       expect(order_item).must_be_nil
 

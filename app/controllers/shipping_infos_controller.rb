@@ -17,7 +17,8 @@ class ShippingInfosController < ApplicationController
         flash[:error] = "An error occurred and while the shipping info has been saved, it has not been associated with the current order (Order #{@order.id}). Please try again."
       end
 
-      redirect_to new_billing_info_path
+      redirect_back fallback_location: checkout_order_path(@order.id)
+      # redirect_to new_billing_info_path
     else
       flash.now[:error] = "Error: shipping info was not created."
       @shipping_info.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }

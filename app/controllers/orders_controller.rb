@@ -1,10 +1,10 @@
 class OrdersController < ApplicationController
-  before_action :find_current_order, except: [:index, :create, :show, :status_filter, :complete, :cancel]
+  before_action :find_current_order, except: [:index, :create, :show, :edit, :update, :status_filter, :complete, :cancel]
   #show pulls from params, all other actions pull @order from session
-  before_action :find_order, only: [:show, :complete, :cancel]
+  before_action :find_order, only: [:show, :complete, :cancel, :edit, :update]
   before_action :find_order_item, only: [:show, :complete, :cancel]
-  before_action :require_login, only: [:index, :complete, :cancel]
-  skip_before_action :find_user
+  before_action :require_login, only: [:index, :complete, :cancel, :edit, :update]
+  skip_before_action :find_user, except: [:update, :edit]
 
   def checkout
 
@@ -39,22 +39,36 @@ class OrdersController < ApplicationController
   def summary
   end
 
+  def edit
+    if @order.billing_info.email != @user.email
+      flash[:error] = "You do not have permission to update this order, to update this order, you must have purchased the order."
+      redirect_back fallback_location: root_path
+    end
+    return
+
+  end
+
+ #written to allow a logged in user to update already submitted orders, but that's not currently in implementation
   def update
-    if @order.complete_date
-      flash[:error] = "Your order has already been shipped. No changes may be made at this point."
-      redirect_back fallback_location: order_path(@order.id)
-    else
-      if @order.update(order_params)
-        flash[:success] = "Order successfully updated."
+    if @order.billing_info.email == @user.email
+      if @order.complete_date
+        flash[:error] = "Your order has already been shipped. No changes may be made at this point."
         redirect_back fallback_location: order_path(@order.id)
       else
-        flash.now[:error] = "Error: order did not update."
-        @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
-        flash.now[:error] << "Please try again."
-        render :show, status: :bad_request
+        if @order.update(order_params)
+          flash[:success] = "Order successfully updated."
+          redirect_back fallback_location: order_path(@order.id)
+        else
+          flash.now[:error] = "Error: order did not update."
+          @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+          flash.now[:error] << "Please try again."
+          render :show, status: :bad_request
+        end
       end
+    else
+      flash[:error] = "You do not have permission to update this order, to update this order, you must have purchased the order."
+      redirect_back fallback_location: root_path
     end
-
     return
   end
 
