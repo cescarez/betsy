@@ -41,10 +41,16 @@ class ProductsController < ApplicationController
 
   def edit
     @product = Product.find_by(id: params[:id])
-    if @product.nil?
-      head :not_found
-      flash[:error] = 'Cannot find this product.'
-      nil
+    @user = User.find_by(id: session[:user_id])
+    if @user == @product.user
+      if @product.nil?
+        head :not_found
+        flash[:error] = 'Cannot find this product.'
+        nil
+      end
+    else
+      flash[:error] = "Nice try! You can't edit other people's products lol."
+      redirect_to products_path
     end
   end
 
