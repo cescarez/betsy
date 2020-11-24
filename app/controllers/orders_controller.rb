@@ -140,6 +140,7 @@ class OrdersController < ApplicationController
 
   def edit_quantity
     quantity = params[:order_item][:quantity].to_i
+
     order_item = @order.order_items.find params[:id]
     if @order && (@order.order_items.include? order_item)
       if quantity == order_item.quantity

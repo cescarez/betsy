@@ -5,6 +5,9 @@ describe OrdersController do
   let (:order1) { orders(:order1) }
   let (:order2) { orders(:order2) }
   let (:order3) { orders(:order3) }
+  let (:order_item1) { order_items(:order_item1) }
+  let (:order_item2) { order_items(:order_item2) }
+  let (:order_item3) { order_items(:order_item3) }
 
   let (:order_hash) do
     {
@@ -230,8 +233,6 @@ describe OrdersController do
   end
 
   describe "cancel" do
-    let (:order_item1) { order_items(:order_item1) }
-    let (:order_item2) { order_items(:order_item2) }
 
     it "updates status for order_item in order that is sold by logged in user and updates status of order if all order items are set to the same status" do
       new_status = "cancelled"
@@ -409,7 +410,44 @@ describe OrdersController do
   end
 
   describe "edit quantity" do
-    it "decrements the quantity of an item in the cart and" do
+    it "decrements the quantity of an item in the cart and redirects" do
+      order = start_cart
+      order.order_items << order_item3
+      order.order_items << order_item2
+      num_to_remove = 100
+      expected_quantity = order_item3.quantity - num_to_remove
+
+      expect {
+        patch edit_quantity_path(order_item3.id), params: {order_item: {quantity: num_to_remove}}
+      }.wont_change "OrderItem.count"
+
+      must_respond_with :redirect
+
+      order_item = order.order_items.find { |order_item| order_item.product.name == order_item3.product.name }
+      expect(order_item.quantity).must_equal expected_quantity
+    end
+
+    it "removes the order item from the order if the quantity to be removed equals the quantity in the order" do
+      order_item = OrderItem.create(product: products(:product_1), quantity: 100)
+      order = start_cart
+      order.order_items << order_item
+      num_to_remove = order_item.quantity
+
+      expect {
+        patch edit_quantity_path(order_item.id), params: {order_item: {quantity: num_to_remove}}
+      }.must_change "OrderItem.count"
+
+      must_respond_with :redirect
+
+      pp order.order_items
+      # order_item = order.order_items.find { |order_item| order_item.product.name == order_item3.product.name }
+      expect(order_item).must_be_nil
+
+    end
+    it "will not decrement if there is no active cart" do
+
+    end
+    it "will not decrement if order item to be decremented is not in active cart" do
 
     end
   end
