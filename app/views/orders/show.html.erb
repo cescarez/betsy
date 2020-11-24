@@ -46,7 +46,7 @@
         <tr>
           <td><%= link_to @order_item.product.name, product_path(@order_item.product_id) %></td>
           <td><%= @order_item.quantity %></td>
-          <td><%= format_money(@order_item.quantity * @order_item.product.price) %></td>
+          <td><%= money_to_currency(@order_item.quantity * @order_item.product.price) %></td>
         </tr>
     </tbody>
   </table>
