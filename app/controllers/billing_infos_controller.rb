@@ -21,9 +21,9 @@ class BillingInfosController < ApplicationController
       end
       redirect_to checkout_order_path(@order.id)
     else
-      flash[:error] = "Error: billing info was not created. "
-      @billing_info.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
-      flash[:error] << "Please try again."
+      flash.now[:error] = "Error: billing info was not created. "
+      @billing_info.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+      flash.now[:error] << "Please try again."
       render :new, status: :bad_request
     end
     return
@@ -60,7 +60,7 @@ class BillingInfosController < ApplicationController
 
   private
   def billing_info_params
-    return params.require(:billing_info).permit(:card_number, :card_brand, :card_cvv, :card_expiration, :email)
+    return params.require(:billing_info).permit(:card_number, :card_brand, :card_cvv, :card_expiration, :email, :order_id)
   end
   def find_billing_info
     @billing_info = BillingInfo.find_by(id: params[:id])
