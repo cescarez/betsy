@@ -1,7 +1,7 @@
 class BillingInfosController < ApplicationController
   before_action :find_billing_info, only: [:show, :edit, :update, :destroy]
   before_action :find_current_order, except: [:new]
-  before_action :find_user, except: [:new]
+  # before_action :find_user, except: [:new]
 
   def new
     @billing_info = BillingInfo.new
@@ -16,7 +16,7 @@ class BillingInfosController < ApplicationController
         flash[:success] << " Billing info has been associated with the current order (Order ##{@order.id})."
 
         #for now, the shipping info for payment is the same as the shipping address
-        @billing_info.shipping_infos << @billing_info.order.shipping_info
+        @billing_info.shipping_infos << @order.shipping_info
       else
         flash[:error] = "An error occurred and while the billing info has been saved, it has not been associated with the current order (Order #{@order.id}). Please try again."
       end

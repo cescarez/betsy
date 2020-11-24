@@ -7,10 +7,10 @@ describe BillingInfosController do
 
   let (:billing_info_hash) do
     order1 = orders(:order1)
+    order1.shipping_info = shipping_infos(:shipping1)
     {
       billing_info: {
         order: order1,
-        shipping_infos: billing1.shipping_infos,
         card_number: billing1.card_number,
         card_brand: billing1.card_brand,
         card_cvv: billing1.card_cvv,
