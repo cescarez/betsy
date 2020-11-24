@@ -63,7 +63,7 @@ class BillingInfosController < ApplicationController
     return params.require(:billing_info).permit(:card_number, :card_brand, :card_cvv, :card_expiration, :email)
   end
   def find_billing_info
-    @billing_info = BillingInfo.find_by(params[:id])
+    @billing_info = BillingInfo.find_by(id: params[:id])
     if @billing_info.nil?
       flash[:error] = "Billing info not found."
       render_404

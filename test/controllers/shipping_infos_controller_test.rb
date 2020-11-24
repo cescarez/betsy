@@ -6,9 +6,10 @@ describe ShippingInfosController do
   let (:shipping2) { shipping_infos(:shipping2) }
   let (:shipping3) { shipping_infos(:shipping3) }
 
+  let (:order1) { orders(:order1) }
+
+
   let (:shipping_info_hash) do
-    order1 = orders(:order1)
-    order1.shipping_info = shipping_infos(:shipping1)
     {
       shipping_info: {
         order: order1,
@@ -33,6 +34,7 @@ describe ShippingInfosController do
 
   describe "create" do
     it "can create a shipping info if there are items in a cart (thus session[:order_id] exists)" do
+      order1.shipping_info = shipping_infos(:shipping1)
       start_cart
       expect {
         post shipping_infos_path, params: shipping_info_hash
@@ -49,24 +51,15 @@ describe ShippingInfosController do
       expect(latest.zipcode).must_equal shipping1.zipcode
     end
 
-    it " a shipping info if there are items in a cart (thus session[:order_id] exists)" do
-      start_cart
+    it "shipping info won't save if there is no current cart" do
       expect {
         post shipping_infos_path, params: shipping_info_hash
-      }.must_differ 'ShippingInfo.count', 1
-
-      must_respond_with  :redirect
-      latest = ShippingInfo.last
-      expect(latest.first_name).must_equal shipping1.first_name
-      expect(latest.last_name).must_equal shipping1.last_name
-      expect(latest.street).must_equal shipping1.street
-      expect(latest.city).must_equal shipping1.city
-      expect(latest.state).must_equal shipping1.state
-      expect(latest.country).must_equal shipping1.country
-      expect(latest.zipcode).must_equal shipping1.zipcode
+      }.wont_change 'ShippingInfo.count'
+      expect(flash[:error]).wont_be_nil
     end
 
     it "will not create a shipping_info with invalid params" do
+      order1.shipping_info = shipping_infos(:shipping1)
       start_cart
       shipping_info_hash[:shipping_info][:first_name] = nil
 
@@ -80,84 +73,85 @@ describe ShippingInfosController do
 
   describe "show" do
     it "responds with success when accessing a valid shipping_info" do
-      shipping_info = shipping_infos(:album1)
-      get shipping_info_path(shipping_info.id)
+      start_cart
+      get shipping_info_path(shipping2.id)
       must_respond_with :success
     end
 
     it "responds with not_found when accessing a non-existing shipping_info" do
+      start_cart
       get shipping_info_path(-1)
       must_respond_with :not_found
     end
   end
 
   describe "edit" do
-    it "responds with success for an existing, valid driver" do
-      shipping_info = shipping_infos(:shipping_info1)
-      get edit_shipping_info_path(shipping_info.id)
+    it "responds with success for an existing, valid shipping info" do
+      start_cart
+      get edit_shipping_info_path(shipping1.id)
       must_respond_with :success
     end
 
     it "responds with redirect when getting the edit page for a non-existing shipping_info" do
+      start_cart
       get edit_shipping_info_path(-1)
       must_respond_with :not_found
     end
   end
 
   describe "update" do
-
-    it "will update a model with a valid post request" do
-      id = ShippingInfo.first.id
+    it "will update an existing shipping info with a valid post request" do
+      start_cart
       expect {
-        patch shipping_info_path(id), params: new_shipping_info_hash
+        patch shipping_info_path(shipping2.id), params: shipping_info_hash
       }.wont_change "ShippingInfo.count"
 
       must_respond_with :redirect
 
-      shipping_info = ShippingInfo.find_by(id: id)
-      expect(shipping_info.title).must_equal new_shipping_info_hash[:shipping_info][:title]
-      expect(shipping_info.author.name).must_equal authors(:madeleine_lengle).name
-      expect(shipping_info.description).must_equal new_shipping_info_hash[:shipping_info][:description]
+      shipping2.reload
+      expect(shipping2.first_name).must_equal shipping1.first_name
+      expect(shipping2.last_name).must_equal shipping1.last_name
+      expect(shipping2.street).must_equal shipping1.street
+      expect(shipping2.city).must_equal shipping1.city
+      expect(shipping2.state).must_equal shipping1.state
+      expect(shipping2.country).must_equal shipping1.country
+      expect(shipping2.zipcode).must_equal shipping1.zipcode
     end
 
     it "will respond with not_found for invalid ids" do
-      id = -1
-
+      start_cart
       expect {
-        patch shipping_info_path(id), params: new_shipping_info_hash
+        patch shipping_info_path(-1), params: shipping_info_hash
       }.wont_change "ShippingInfo.count"
 
       must_respond_with :not_found
     end
 
     it "will not update if the params are invalid" do
-      new_shipping_info_hash[:shipping_info][:title] = nil
-      shipping_info = ShippingInfo.first
+      start_cart
+      shipping_info_hash[:shipping_info][:first_name] = nil
 
       expect {
-        patch shipping_info_path(shipping_info.id), params: new_shipping_info_hash
+        patch shipping_info_path(shipping2.id), params: shipping_info_hash
       }.wont_change "ShippingInfo.count"
 
-      shipping_info.reload # refresh the shipping_info from the database
+      shipping2.reload
       must_respond_with :bad_request
-      expect(shipping_info.title).wont_be_nil
+      expect(shipping2.first_name).wont_be_nil
     end
   end
 
   describe "destroy" do
     it "destroys an existing shipping_info then redirects" do
-      shipping_info = shipping_infos(:album1)
-
+      shipping = ShippingInfo.create(first_name: "Test", last_name: "Person", street: "1234 st.", city: "LA", state: "CA", country: "USA", zipcode: "123214", order: order1)
       expect {
-        delete shipping_info_path(shipping_info.id)
+        delete shipping_info_path(shipping.id)
       }.must_differ "ShippingInfo.count", -1
 
-      found_shipping_info = ShippingInfo.find_by(title: shipping_info.title)
-
+      found_shipping_info = ShippingInfo.find_by(last_name: shipping.last_name)
       expect(found_shipping_info).must_be_nil
 
-      must_redirect_to shipping_infos_path
-
+      must_respond_with :redirect
     end
 
     it "does not change the db when the driver does not exist, then responds with " do
@@ -166,6 +160,7 @@ describe ShippingInfosController do
       }.wont_change "ShippingInfo.count"
 
       must_respond_with :not_found
+      expect(flash[:error]).wont_be_nil
     end
   end
 end

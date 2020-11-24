@@ -19,9 +19,9 @@ class ShippingInfosController < ApplicationController
 
       redirect_to new_billing_info_path
     else
-      flash[:error] = "Error: shipping info was not created."
-      @shipping_info.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
-      flash[:error] << "Please try again."
+      flash.now[:error] = "Error: shipping info was not created."
+      @shipping_info.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+      flash.now[:error] << "Please try again."
       render :new, status: :bad_request
     end
     return
@@ -63,7 +63,7 @@ class ShippingInfosController < ApplicationController
   end
 
   def find_shipping_info
-    @shipping_info = ShippingInfo.find_by(params[:id])
+    @shipping_info = ShippingInfo.find_by(id: params[:id])
     if @shipping_info.nil?
       flash[:error] = "Shipping info not found."
       render_404
