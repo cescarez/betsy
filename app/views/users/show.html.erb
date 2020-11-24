@@ -1,77 +1,86 @@
-<% if @user.id == session[:user_id]%>
-  <h2>Sellar: <%= @user.username %></h2>
-  <h2> <%= link_to "View my dashboard", current_user_path %> </h2>
-<% else %>
-  <h2>Seller: <%= @user.username %></h2>
-<% end %>
-
-<h3>Seller information</h3>
-<p>Name: <%=@user.name %></p>
-<p>Member Since: <%= @user.created_at %></p>
-<p><img src="<%=@user.avatar%>"></p>
-
-<% if @user.products.nil? %>
-  <h3>
-    <%= "#{@user.name} does not currently have celestial bodies for sale" %>
-  </h3>
-<% else %>
-  <h3>
-  <%= "#{@user.name} is currently selling:" %>
-  </h3>
-  <table>
-    <tr>
-<!--      <th>Category</th>-->
-      <th>Name</th>
-      <th>Price</th>
-      <th>Description</th>
-      <th>Categories</th>
-      <th>Inventory</th>
-      <th>Photo💣</th>
-
-      <% if @user.id == session[:user_id]%>
-        <th>Edit</th>
-        <th>Retire</th>
-      <%end %>
-    </tr>
-    <% @user.products.each do |product| %>
+<section id="user-show-bio">
+  <div id="user-show-info">
+    <% if @user.id == session[:user_id]%>
+      <h2>Sellar: <%= @user.username %></h2>
+      <h2> <%= link_to "View my dashboard", current_user_path %> </h2>
+    <% else %>
+      <h2>Seller: <%= @user.username %></h2>
+    <% end %>
+    <h3>Seller information</h3>
+    <p>Name: <%=@user.name %></p>
+    <p>Member Since: <%= @user.created_at %></p>
+  </div>
+  <div id="user-show-avatar">
+    <img src="<%=@user.avatar%>"></p>
+  </div>
+</section>
+<section>
+  <% if @user.products.nil? %>
+    <h3>
+      <%= "#{@user.name} does not currently have celestial bodies for sale" %>
+    </h3>
+  <% else %>
+    <h3>
+    <%= "#{@user.name} is currently selling:" %>
+    </h3>
+</section>
+  <table class="table">
+    <thead>
       <tr>
-<!--        <td>-->
-          <%#= product.category %>
-<!--        </td>-->
-        <td>
-          <%= link_to "#{product.name}", product_path(product.id)  %>
-        </td>
-        <td>
-          <%= number_to_currency(product.price) %>
-        </td>
-        <td>
-          <%= product.description %>
-        </td>
-        <td>
-          <% product.categories.each do |category| %>
-            <%= category.name %><br/>
-          <% end %>
-        </td>
-        <td>
-          <%= product.inventory %>
-        </td>
-        <% if product.image.attached? %>
-          <td>
-            <a href="<%= product_path(product.id) %>"><image src="<%=(url_for(product.image)) %>" alt="celestial object" class="dashboard-image">
-            </image></a>
-          </td>
-        <% else %>
-          <td>
-            <%= link_to "👾No Image🧨", product_path(product.id) %>
-          </td>
-        <% end %>
+  <!--      <th>Category</th>-->
+        <th>Name</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Categories</th>
+        <th>Inventory</th>
+        <th>Photo💣</th>
 
         <% if @user.id == session[:user_id]%>
-          <td> <%= button_to "Edit", edit_product_path(product.id), method: :get %></td>
-          <td> <%= button_to product_retire_string(product), retire_path(product.id), method: :patch %>
-
-      <%end %>
+          <th>Edit</th>
+          <th>Retire</th>
+        <%end %>
       </tr>
-    <% end %>
+    </thead>
+    <tbody>
+      <% @user.products.each do |product| %>
+        <tr>
+  <!--        <td>-->
+            <%#= product.category %>
+  <!--        </td>-->
+          <td>
+            <%= link_to "#{product.name}", product_path(product.id)  %>
+          </td>
+          <td>
+            <%= number_to_currency(product.price) %>
+          </td>
+          <td>
+            <%= product.description %>
+          </td>
+          <td>
+            <% product.categories.each do |category| %>
+              <%= category.name %><br/>
+            <% end %>
+          </td>
+          <td>
+            <%= product.inventory %>
+          </td>
+          <% if product.image.attached? %>
+            <td>
+              <a href="<%= product_path(product.id) %>"><image src="<%=(url_for(product.image)) %>" alt="celestial object" class="dashboard-image">
+              </image></a>
+            </td>
+          <% else %>
+            <td>
+              <%= link_to "👾No Image🧨", product_path(product.id) %>
+            </td>
+          <% end %>
+
+          <% if @user.id == session[:user_id] %>
+            <td> <%= button_to "Edit #{product.name}", edit_product_path(product.id), method: :get, class:"btn btn-outline-warning btn-sm" %></td>
+            <td> <%= button_to product_retire_string(product), retire_path(product.id), method: :patch, class: "btn btn-outline-danger btn-sm" %>
+        <%end %>
+        </tr>
+      <% end %>
+    </tbody>
   </table>
 <% end %>
