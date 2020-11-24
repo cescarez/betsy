@@ -10,12 +10,12 @@ class OrderItem < ApplicationRecord
 
     return self.status
   end
-  def remove_product
-    quantity = params[:order_item][:quantity].to_i
-    if session[:order_id]
-      @order = Order.find_by(:id => session[:order_id])
+
+  def remove_item(quantity, order)
+    if order
+      @order = Order.find_by(:id => order)
       if @order
-        existing_item = @order.order_items.find { |order_item| order_item.product.name == @order_item.product.name }
+        existing_item = @order.order_items.find self.id
       end
     end
     if existing_item
