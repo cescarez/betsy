@@ -96,51 +96,51 @@ class ProductsController < ApplicationController
       flash[:error] = "Item is out of stock, could not be added to cart"
       redirect_to products_path
     end
-    if @product.retire == false
-    quantity = params[:product][:inventory].to_i
-    @order_item = OrderItem.create(product: @product, quantity: quantity)
+    if @product.retire == false || @product.retire == nil
+      quantity = params[:product][:inventory].to_i
+      @order_item = OrderItem.create(product: @product, quantity: quantity)
 
-    existing_item = nil
-    if session[:order_id]
-      @order = Order.find_by(id: session[:order_id])
-      if @order
-      existing_item = @order.order_items.find { |order_item| order_item.product.name == @order_item.product.name }
+      existing_item = nil
+      if session[:order_id]
+        @order = Order.find_by(id: session[:order_id])
+        if @order
+          existing_item = @order.order_items.find { |order_item| order_item.product.name == @order_item.product.name }
+        else
+          @order = Order.create
+        end
       else
         @order = Order.create
-        end
-    else
-      @order = Order.create
-    end
+      end
 
-    if existing_item
-      existing_item.quantity += quantity
-      existing_item.save
-    else
-      @order.order_items << @order_item
-    end
+      if existing_item
+        existing_item.quantity += quantity
+        existing_item.save
+      else
+        @order.order_items << @order_item
+      end
 
-    if @order.order_items.find { |order_item| order_item.product.name == @order_item.product.name }
-      flash[:success] = "Item #{@order.order_items.last.product.name.capitalize.to_s.gsub('_', ' ')} has been added to cart."
-      session[:order_id] = @order.id
+      if @order.order_items.find { |order_item| order_item.product.name == @order_item.product.name }
+        flash[:success] = "Item #{@order.order_items.last.product.name.capitalize.to_s.gsub('_', ' ')} has been added to cart."
+        session[:order_id] = @order.id
 
-      @product.inventory -= quantity
-      @product.save
+        @product.inventory -= quantity
+        @product.save
 
-      redirect_to products_path
-    else
-      flash[:error] = "Error: item #{@order.order_items.last.product.name.capitalize.to_s.gsub('_', ' ')} was not added to cart."
-      @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
-      flash[:error] << 'Please try again.'
-      redirect_back fallback_location: root_path, status: :bad_request
-    end
+        redirect_to products_path
+      else
+        flash[:error] = "Error: item #{@order.order_items.last.product.name.capitalize.to_s.gsub('_', ' ')} was not added to cart."
+        @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+        flash[:error] << 'Please try again.'
+        redirect_back fallback_location: root_path, status: :bad_request
+      end
     else
       flash[:error] = "Sorry! This product is no longer available!"
       redirect_to products_path
-      end
+    end
     nil
   end
 
-  private
+private
 
   def find_product
     @product = Product.find_by(id: params[:id])
