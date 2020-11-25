@@ -60,58 +60,33 @@ describe OrdersController do
     end
   end
 
-  describe "update" do
-    it "can update current order with valid params" do
-      start_cart
-      order = Order.find_by(id: session[:order_id])
+  describe "summary" do
+    it "responds with success if the email address associated with the order matches the current user's email" do
+      perform_login(user1)
+      BillingInfo.create(card_brand: "visa", card_cvv: "123", card_expiration: Time.now + 3.years, card_number: billing1.card_number, email: user1.email, order: order1)
 
-      expect {
-        patch order_path(order.id), params: order_hash
-      }.wont_change "Order.count"
-
-      must_respond_with :redirect
-
-      order.reload
-
-      expect(order.status).must_equal order_hash[:order][:status]
+      get order_summary_path(order1.id)
+      must_respond_with :success
     end
+    it "redirects to the Seller Dashboard the logged in user did not buy the order they are attempting to access" do
+      perform_login(user1)
+      user2 = users(:user_2)
+      BillingInfo.create(card_brand: "visa", card_cvv: "123", card_expiration: Time.now + 3.years, card_number: billing1.card_number, email: user2.email, order: order1)
 
-    it "responds with a redirect and bad_request code when updating a completed order" do
-      start_cart
-      order = Order.find_by(id: session[:order_id])
-      order.update(complete_date: Time.now)
-
-      expect {
-        patch order_path(order.id), params: order_hash
-      }.wont_change "Order.count"
-
+      get order_summary_path(order1.id)
       must_respond_with :redirect
     end
+    it "responds with 404 if attempting to view an order that does not exist, whether the uesr is logged in or not" do
+      get order_summary_path(-1)
+      must_respond_with :not_found
 
-    it "responds with bad_request when attempting to update an existing order with invalid params" do
-      start_cart
-      order = Order.find_by(id: session[:order_id])
-
-      expect {
-        patch order_path(order.id), params: {order: {submit_date: Time.now + 1.year }}
-      }.wont_change "Order.count"
-
-      must_respond_with :bad_request
-    end
-
-    it "responds with not_found when attempting to update an invalid order witg valid params" do
-      expect {
-        patch order_path(-1), params: order_hash
-      }.wont_change "Order.count"
-
+      perform_login(user1)
+      get order_summary_path(-1)
       must_respond_with :not_found
     end
   end
 
   describe "complete" do
-    let (:order_item1) { order_items(:order_item1) }
-    let (:order_item2) { order_items(:order_item2) }
-
     it "updates status for order_item in order that is sold by logged in user and updates status of order and sets complete date if all order items are set to the same status" do
       new_status = "complete"
       perform_login(user1)
