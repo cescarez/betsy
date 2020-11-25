@@ -22,7 +22,22 @@ describe 'create users' do
    }.must_change 'User.count', 1
  end
 
+ it "will flash error if the user is not successfully logged in" do
+   invalid_auth_hash = {
+       uid: "uid",
+       provider: "provider",
+       info: {
+           name: nil,
+           email: "email",
+           image: "No photo"
+       }
+   }
+   OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(invalid_auth_hash)
 
+   get omniauth_callback_path(:github)
+
+   assert_equal "Could not create user account Username can't be blank", flash[:error]
+ end
 
 end
 
