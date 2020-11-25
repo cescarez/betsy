@@ -29,12 +29,37 @@ describe BillingInfosController do
   end
 
   describe "create" do
+    let (:order1) { orders(:order1) }
+    let (:shipping1) { shipping_infos(:shipping1) }
+    let (:shipping_info_hash_unnested) do
+      {
+        order: order1,
+        first_name: shipping1.first_name,
+        last_name: shipping1.last_name,
+        street: shipping1.street,
+        city: shipping1.city,
+        state: shipping1.state,
+        zipcode: shipping1.zipcode,
+        country: shipping1.country
+      }
+    end
+    let (:billing_info_hash_unnested) do
+      {
+        order: order1,
+        card_number: billing1.card_number,
+        card_brand: billing1.card_brand,
+        card_cvv: billing1.card_cvv,
+        card_expiration: billing1.card_expiration,
+        email: billing1.email
+      }
+    end
+
     it "can create a billing info if there are items in a cart (thus session[:order_id] exists)" do
       order = start_cart
-      order.billing_info = billing_infos(:billing1)
 
+      post shipping_infos_path, params: shipping_info_hash_unnested
       expect {
-        post billing_infos_path, params: billing_info_hash
+        post billing_infos_path, params: billing_info_hash_unnested
       }.must_differ 'BillingInfo.count', 1
 
       must_respond_with :redirect
@@ -47,7 +72,7 @@ describe BillingInfosController do
     end
 
     it "will not create a billing_info with invalid params" do
-      start_cart
+      order = start_cart
       billing_info_hash[:billing_info][:card_number] = nil
 
       expect {
@@ -55,6 +80,7 @@ describe BillingInfosController do
       }.must_differ "BillingInfo.count", 0
 
       must_respond_with :bad_request
+      flash[:error].must_equal "Error: billing info was not created. Card brand can't be blank.Card expiration translation missing: en.activerecord.errors.models.billing_info.attributes.card_expiration.invalid_date.Card number can't be blank.Card cvv can't be blank.Email can't be blank.Please try again."
     end
   end
 
