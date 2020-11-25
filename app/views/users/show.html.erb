@@ -27,13 +27,12 @@
   <table class="table">
     <thead>
       <tr>
-  <!--      <th>Category</th>-->
         <th>Name</th>
         <th>Price</th>
         <th>Description</th>
         <th>Categories</th>
         <th>Inventory</th>
-        <th>Photo💣</th>
+        <th>Photo</th>
 
         <% if @user.id == session[:user_id]%>
           <th>Edit</th>
@@ -44,9 +43,6 @@
     <tbody>
       <% @user.products.each do |product| %>
         <tr>
-  <!--        <td>-->
-            <%#= product.category %>
-  <!--        </td>-->
           <td>
             <%= link_to "#{product.name}", product_path(product.id)  %>
           </td>

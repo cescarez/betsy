@@ -54,6 +54,21 @@ title {
   animation: glow 1s ease-in-out infinite alternate;
 }
 
+h3, th, li, p {
+  color: white;
+  text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+  font-size: larger
+}
+
+td {
+  color: #cac7d4;
+  text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+}
+
+ul, li {
+  list-style-type: none;
+}
+
 @-webkit-keyframes glow {
   from {
     text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
@@ -63,6 +78,8 @@ title {
     text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
   }
 }
+
+
 
 
 /* https://codepen.io/natarajg/pen/WNxVgmV */
@@ -234,4 +251,74 @@ $stars-lg: createStars(300, $s3);
 .btn:hover:after {
   bottom: 0;
   left: 0;
+}
+
+.glitch {
+  font: {
+    size: 1.25em;
+    weight: 100;
+  }
+  text-decoration: none;
+  text-transform: uppercase;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  color: #fff;
+  letter-spacing: 5px;
+
+  &:before, &:after {
+    display: block;
+    content: attr(data-glitch);
+    text-transform: uppercase;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: .8;
+  } &:after {
+      color: #f0f;
+      z-index: -2;
+    } &:before {
+        color: #0ff;
+        z-index: -1;
+      }
+  &:hover {
+    &:before {
+      animation: glitch .3s cubic-bezier(.25, .46, .45, .94) both 5
+    }
+    &:after {
+      animation: glitch .3s cubic-bezier(.25, .46, .45, .94) reverse both 5
+    }
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .glitch {
+    font-size: 1em;
+  }
+}
+
+
+@keyframes glitch {
+  0% {
+    transform: translate(0)
+  }
+  20% {
+    transform: translate(-5px, 5px)
+  }
+  40% {
+    transform: translate(-5px, -5px)
+  }
+  60% {
+    transform: translate(5px, 5px)
+  }
+  80% {
+    transform: translate(5px, -5px)
+  }
+  to {
+    transform: translate(0)
+  }
 }
