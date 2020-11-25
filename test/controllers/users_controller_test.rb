@@ -56,9 +56,11 @@ describe 'current' do
     must_respond_with :redirect
     must_redirect_to root_path
   end
+
 end
 
 describe 'logout' do
+
   it "can logout an existing user" do
     perform_login(users(:user_1))
     expect(session[:user_id]).wont_be_nil
@@ -77,29 +79,13 @@ describe 'logout' do
 
 end
 
-# describe "Guest users" do
-  # it "can access the index" do
-  #   get works_path
-  #   must_respond_with :success
-  # end
-  #
-  # it "cannot access new" do
-  #   get new_work_path
-  #   must_redirect_to root_path
-  # end
-  #
-  # it "tries to log out" do
-  #   delete logout_path
-  #   must_redirect_to root_path
-  #   flash[:message].must_equal "Must log in first!"
-  # end
-# end
-
 describe "Index" do
+
   it "can access the index" do
     get users_path
     must_respond_with :success
   end
+
 end
 
 describe "show" do
@@ -117,17 +103,5 @@ describe "show" do
 end
 
 end
-# describe "Show" do
-#   it "will work if user can be retrieved by params" do
-#     perform_login(users(:user_1))
-#     @user.id = users(:user_1).id
-#     get user_path
-#     must_respond_with :success
-#   end
-#
-#   it "will render 404 if User cannot be retrieved with params" do
-#
-#   end
-#
-# end
+
 
