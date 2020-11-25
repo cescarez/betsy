@@ -15,8 +15,6 @@ class ShippingInfosController < ApplicationController
       flash[:success] = "Shipping info has been saved."
       if @order.update(shipping_info: @shipping_info)
         flash[:success] << " Shipping info has been associated with the current order (Order ##{@order.id})."
-      else
-        flash[:error] = "An error occurred and while the shipping info has been saved, it has not been associated with the current order (Order #{@order.id}). Please try again."
       end
 
       redirect_back fallback_location: checkout_order_path(@order.id)
@@ -52,9 +50,6 @@ class ShippingInfosController < ApplicationController
   def destroy
     if @shipping_info.destroy
       flash[:success] = "Shipping info was successfully deleted."
-    # TODO: delete 56 & 57? @shipping_info renders a message if @shipping_info.nil
-    # else
-    #   flash[:error] = "Some error occurred and shipping info was not able to be deleted. Please try again."
     end
     redirect_back fallback_location: root_path
     return
