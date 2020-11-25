@@ -23,6 +23,7 @@ describe 'create users' do
  end
 
 
+
 end
 
 describe 'current' do
@@ -92,3 +93,6 @@ end
 # end
 
 end
+
+# get user_path(-1)
+# must_respond_with: 404
