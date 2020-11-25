@@ -2,7 +2,7 @@ require "test_helper"
 
 describe UsersController do
 
-describe 'create users' do
+describe 'Create' do
 
  it 'can log in an existing user' do
    perform_login(users(:user_1))
@@ -41,7 +41,7 @@ describe 'create users' do
 
 end
 
-describe 'current' do
+describe 'Current' do
 
   it "can return the page if the user is logged in" do
     perform_login(users(:user_1))
@@ -59,7 +59,7 @@ describe 'current' do
 
 end
 
-describe 'logout' do
+describe 'Logout' do
 
   it "can logout an existing user" do
     perform_login(users(:user_1))
@@ -88,7 +88,7 @@ describe "Index" do
 
 end
 
-describe "show" do
+describe "Show" do
 
   it "will respond with success if user id is incorrect" do
     get user_path(User.first.id)
