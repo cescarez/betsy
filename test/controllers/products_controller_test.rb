@@ -138,7 +138,24 @@ describe ProductsController do
     must_respond_with :redirect
     end
     it "increases the quantity of an already added to cart" do
-
+      start_cart
+      product = Product.find_by(name: "Sirius")
+      product.inventory = 10
+      order = Order.find_by(id: session[:order_id])
+      patch add_to_cart_path(product.id), params: { product: { inventory: 2 } }
+      existing_item = order.order_items.find { |order_item| order_item.product.name == order_item.product.name }
+      existing_item.save
+      order.save
+      before_quantity = existing_item.quantity
+      patch add_to_cart_path(product.id), params: { product: { inventory: 2 } }
+      order.reload
+       order.order_items.each do |orderitem|
+         pp  orderitem.quantity
+      end
+      existing_item.save
+      pp order.order_items.length
+      existing_item = order.order_items.find { |order_item| order_item.product.name == order_item.product.name }
+      expect(existing_item.quantity).must_equal before_quantity + 2
     end
   end
 
