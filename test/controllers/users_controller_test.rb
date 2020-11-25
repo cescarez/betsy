@@ -94,6 +94,15 @@ describe "Index" do
   end
 end
 
+describe "show" do
+
+  it "will respond with success if user id is incorrect" do
+    get user_path(User.first.id)
+    must_respond_with :success
+  end
+end
+
+end
 # describe "Show" do
 #   it "will work if user can be retrieved by params" do
 #     perform_login(users(:user_1))
@@ -105,9 +114,6 @@ end
 #   it "will render 404 if User cannot be retrieved with params" do
 #
 #   end
+#
 # end
 
-end
-
-# get user_path(-1)
-# must_respond_with: 404
