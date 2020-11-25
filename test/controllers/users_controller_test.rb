@@ -21,6 +21,8 @@ describe 'create users' do
      perform_login(user_3)
    }.must_change 'User.count', 1
  end
+
+
 end
 
 describe 'current' do
@@ -51,8 +53,8 @@ describe 'logout' do
   end
 end
 
-describe "Guest users" do
-  # it "can acces the index" do
+# describe "Guest users" do
+  # it "can access the index" do
   #   get works_path
   #   must_respond_with :success
   # end
@@ -67,6 +69,26 @@ describe "Guest users" do
   #   must_redirect_to root_path
   #   flash[:message].must_equal "Must log in first!"
   # end
-end
+# end
+
+describe "Index" do
+  it "can access the index" do
+    get users_path
+    must_respond_with :success
+  end
 end
 
+# describe "Show" do
+#   it "will work if user can be retrieved by params" do
+#     perform_login(users(:user_1))
+#     @user.id = users(:user_1).id
+#     get user_path
+#     must_respond_with :success
+#   end
+#
+#   it "will render 404 if User cannot be retrieved with params" do
+#
+#   end
+# end
+
+end
