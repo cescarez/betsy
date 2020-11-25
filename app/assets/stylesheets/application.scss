@@ -23,9 +23,9 @@ body {
   font-family: 'Offside', cursive;
 }
 
-h1 {
-  color: #cf7304;
-}
+//h1 {
+//  color: #cf7304;
+//}
 
 .nav {
   display: flex;
@@ -43,6 +43,25 @@ title {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.glow {
+  font-size: 80px;
+  color: #fff;
+  text-align: center;
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+  -moz-animation: glow 1s ease-in-out infinite alternate;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+  }
+
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+  }
 }
 
 
@@ -90,8 +109,8 @@ $stars-lg: createStars(300, $s3);
 
 #starfield {
   position: relative;
-  height: 200vh;
-  width: 100%;
+  height: 300vh;
+  width: auto;
 }
 
 #starfield::before {
@@ -164,3 +183,4 @@ $stars-lg: createStars(300, $s3);
   from { transform: translateY(0px); }
   to { transform: translateY(2000px); }
 }
+
