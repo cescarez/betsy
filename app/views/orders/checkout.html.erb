@@ -22,7 +22,7 @@
     <tr>
       <td>
         <%if item.product.image.attached? %>
-          <image src="<%=(url_for(item.product.image)) %>" alt="celestial body"></image>
+          <image src="<%=(url_for(item.product.image)) %>" alt="celestial body" class="dashboard-image"></image>
         <%else %>
           No image
         <%end %>
