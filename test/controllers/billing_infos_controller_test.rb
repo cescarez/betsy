@@ -5,6 +5,7 @@ describe BillingInfosController do
   let (:billing2) { billing_infos(:billing2) }
   let (:billing3) { billing_infos(:billing3) }
 
+  let (:shipping1) { shipping_infos(:shipping1) }
   let (:order1) { orders(:order1) }
 
   let (:billing_info_hash) do
@@ -20,6 +21,17 @@ describe BillingInfosController do
     }
   end
 
+  let (:billing_info_hash_unnested) do
+    {
+      order: order1,
+      card_number: billing1.card_number,
+      card_brand: billing1.card_brand,
+      card_cvv: billing1.card_cvv,
+      card_expiration: billing1.card_expiration,
+      email: billing1.email
+    }
+  end
+
   describe "new" do
     it "can get the new_billing_info_path" do
       get new_billing_info_path
@@ -31,12 +43,13 @@ describe BillingInfosController do
   describe "create" do
     it "can create a billing info if there are items in a cart (thus session[:order_id] exists)" do
       order = start_cart
-      order.billing_info = billing_infos(:billing1)
+      order.shipping_info = shipping1
+
       expect {
-        post billing_infos_path, params: billing_info_hash
+        post billing_infos_path, params: billing_info_hash_unnested
       }.must_differ 'BillingInfo.count', 1
 
-      must_respond_with  :redirect
+      must_respond_with :redirect
       latest = BillingInfo.last
       expect(latest.card_number).must_equal billing1.card_number
       expect(latest.card_expiration).must_equal billing1.card_expiration
@@ -46,14 +59,16 @@ describe BillingInfosController do
     end
 
     it "will not create a billing_info with invalid params" do
-      start_cart
-      billing_info_hash[:billing_info][:card_number] = nil
+      order = start_cart
+      order.shipping_info = shipping1
+      billing_info_hash_unnested[:card_number] = nil
 
       expect {
-        post billing_infos_path, params: billing_info_hash
-      }.must_differ "BillingInfo.count", 0
+        post billing_infos_path, params: billing_info_hash_unnested
+      }.wont_differ "BillingInfo.count"
 
       must_respond_with :bad_request
+      expect(flash[:error]).wont_be_nil
     end
   end
 

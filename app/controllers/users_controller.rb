@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
   before_action :require_login, only: [:current]
-  # skip_before_action :require_login, only: [:new, :create, :delete, :index, :show]
 
    def index
      @users = User.all
@@ -12,12 +11,13 @@ class UsersController < ApplicationController
    end
 
    def current
-     @user = User.find_by(id: session[:user_id])
-     if @user.nil?
-       flash[:error] = "You must be logged in to view this page"
-       redirect_to root_path
-       return
-     end
+     #@user = User.find_by(id: session[:user_id])
+     @user = @login_user
+     # if @user.nil?
+     #   flash[:error] = "You must be logged in to view this page "
+     #   redirect_to root_path
+     #   return
+     # end
    end
 
    def create
@@ -34,7 +34,7 @@ class UsersController < ApplicationController
        if user.save
          flash[:success] = "Logged in as new user #{user.username}"
        else
-         flash[:error] = "Could not create user account #{user.errors.messages}"
+         flash[:error] = "Could not create user account #{user.errors.full_messages.join(", ")}"
        end
      end
 
