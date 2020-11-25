@@ -22,7 +22,7 @@
         <td><em>Orders Summary</em></td>
         <td><%= @orders.length %></td>
         <td><%= number_to_currency(@orders.sum { |order| order.total_cost(session[:user_id]) }) %></td>
-        <td colspan="2"></td> #empty cell to span last two columns
+        <td colspan="2"></td>
       </tr>
       <% @orders.each do |order| %>
         <tr>
