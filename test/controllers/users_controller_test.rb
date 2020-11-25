@@ -21,6 +21,8 @@ describe 'create users' do
      perform_login(user_3)
    }.must_change 'User.count', 1
  end
+
+
 end
 
 describe 'current' do
@@ -75,5 +77,18 @@ describe "Index" do
     must_respond_with :success
   end
 end
+
+# describe "Show" do
+#   it "will work if user can be retrieved by params" do
+#     perform_login(users(:user_1))
+#     @user.id = users(:user_1).id
+#     get user_path
+#     must_respond_with :success
+#   end
+#
+#   it "will render 404 if User cannot be retrieved with params" do
+#
+#   end
+# end
 
 end

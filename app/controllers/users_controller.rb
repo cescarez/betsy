@@ -34,7 +34,8 @@ class UsersController < ApplicationController
        if user.save
          flash[:success] = "Logged in as new user #{user.username}"
        else
-         flash[:error] = "Could not create user account #{user.errors.messages}"
+         # flash[:error] = "Could not create user account #{user.errors.messages}"
+         flash[:error] = "Could not create user account"
        end
      end
 
