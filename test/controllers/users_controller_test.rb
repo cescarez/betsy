@@ -100,6 +100,12 @@ describe "show" do
     get user_path(User.first.id)
     must_respond_with :success
   end
+
+  it "will respond with a 404 error if user id is incorrect" do
+    get user_path(-1)
+    must_respond_with 404
+  end
+
 end
 
 end
