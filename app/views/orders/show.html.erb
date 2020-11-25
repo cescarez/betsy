@@ -6,49 +6,52 @@
 
 <!--only show purchaser information and order items if the logged in user has an order item in this order-->
 <% if @order_item %>
-<section class="orders-show user-table">
-  <table class="table table-sm">
-    <thead>
-      <th scope="col">Name</th>
-      <th scope="col">Email</th>
-      <th scope="col">Mailing Address</th>
-      <th scope="col">Card Information</th>
-      <th scope="col">Card Exp. Date</th>
-    </thead>
-    <tbody>
-    <tr>
-      <% if @order.shipping_info %>
-        <td><%= @order.shipping_info.first_name %> <%= @order.shipping_info.last_name %></td>
-        <td><%= "#{@order.shipping_info.street} #{@order.shipping_info.city}, #{@order.shipping_info.state} #{@order.shipping_info.zipcode}, #{@order.shipping_info.country}" %></td>
-      <% end %>
-      <% if @order.billing_info %>
-        <td><%= @order.billing_info.email %></td>
-        <td><%= @order.billing_info.card_brand %>: <%= hide_card(@order.billing_info.card_number) %></td>
-        <td><%= @order.billing_info.card_expiration %></td>
-      <% end %>
-    </tr>
-    </tbody>
-  </table>
-</section>
+  <section class="orders-show user-table">
+    <table class="table table-sm">
+      <thead>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Mailing Address</th>
+        <th scope="col">Card Information</th>
+        <th scope="col">Card Exp. Date</th>
+      </thead>
+      <tbody>
+      <tr>
+        <% if @order.shipping_info %>
+          <td><%= @order.shipping_info.first_name %> <%= @order.shipping_info.last_name %></td>
+          <td><%= "#{@order.shipping_info.street} #{@order.shipping_info.city}, #{@order.shipping_info.state} #{@order.shipping_info.zipcode}, #{@order.shipping_info.country}" %></td>
+        <% end %>
+        <% if @order.billing_info %>
+          <td><%= @order.billing_info.email %></td>
+          <td><%= @order.billing_info.card_brand %>: <%= hide_card(@order.billing_info.card_number) %></td>
+          <td><%= @order.billing_info.card_expiration %></td>
+        <% end %>
+      </tr>
+      </tbody>
+    </table>
+  </section>
 
-<section class="orders-show order-table">
-  <%= button_to "Mark Order as Shipped", complete_order_path(@order.id), class:"btn btn-success"  %>
-  <%= button_to "Mark Order as Cancelled", cancel_order_path(@order.id), class:"btn btn-danger", data:{confirm: 'Are you sure you would like to cancel this order?'} %>
-  <table class="table table-hover">
-    <thead>
-    <tr>
-      <th scope="col">Item</th>
-      <th scope="col">Number Ordered</th>
-      <th scope="col">Line Item Cost</th>
-    </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><%= link_to @order_item.product.name, product_path(@order_item.product_id) %></td>
-          <td><%= @order_item.quantity %></td>
-          <td><%= number_to_currency(@order_item.quantity * @order_item.product.price) %></td>
-        </tr>
-    </tbody>
-  </table>
-</section>
+  <section class="orders-show order-table">
+    <%= button_to "Mark Order as Shipped", complete_order_path(@order.id), class:"btn btn-success"  %>
+    <%= button_to "Mark Order as Cancelled", cancel_order_path(@order.id), class:"btn btn-danger", data:{confirm: 'Are you sure you would like to cancel this order?'} %>
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th scope="col">Item</th>
+        <th scope="col">Number Ordered</th>
+        <th scope="col">Line Item Cost</th>
+      </tr>
+      </thead>
+      <tbody>
+          <tr>
+            <td><%= link_to @order_item.product.name, product_path(@order_item.product_id) %></td>
+            <td><%= @order_item.quantity %></td>
+            <td><%= number_to_currency(@order_item.quantity * @order_item.product.price) %></td>
+          </tr>
+      </tbody>
+    </table>
+  </section>
 <% end %>
+<section>
+  <%= button_to "Return to My Orders", orders_path, method: :get, class: "btn btn-outline-secondary" %>
+</section>

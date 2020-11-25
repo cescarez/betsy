@@ -15,7 +15,8 @@ describe ProductsController do
         description: "It's starry",
         inventory: 1,
         user: users(:user_1),
-        retire: false
+        retire: false,
+        categories: product_1.categories
       }
     }
   end
@@ -78,11 +79,13 @@ describe ProductsController do
 
   describe "update" do
     it "can update a product" do
-    perform_login(users(:user_1))
+      perform_login(users(:user_1))
       product = Product.find_by(name: "Sirius")
+      product.categories << star
+      product.save
 
-    expect {patch product_path(product.id), params: product_hash}.wont_change Product.count
-  end
+      expect {patch product_path(product.id), params: product_hash}.wont_change Product.count
+    end
   end
 
   describe "edit" do
@@ -111,7 +114,7 @@ describe ProductsController do
     end
     it "can create an order" do
       start_cart
-    product = Product.find_by(name: "Sirius")
+      product = Product.find_by(name: "Sirius")
       order = Order.find_by(id: session[:order_id])
       patch add_to_cart_path(product.id), params:{ product:{ inventory:2 } }
 
@@ -128,42 +131,37 @@ describe ProductsController do
       expect(existing_item.quantity).must_equal 2
     end
     it "redirects if adding too many products to cart" do
-    start_cart
-    product = Product.find_by(name: "Sirius")
-    order = Order.find_by(id: session[:order_id])
-    patch add_to_cart_path(product.id), params: { product: { inventory: 2 } }
-    existing_item = order.order_items.find { |order_item| order_item.product.name == order_item.product.name }
-    order.save
-    patch add_to_cart_path(product.id), params: { product: { inventory: 2 } }
-    must_respond_with :redirect
-    end
-    it "increases the quantity of an already added to cart" do
       start_cart
       product = Product.find_by(name: "Sirius")
-      product.inventory = 10
       order = Order.find_by(id: session[:order_id])
       patch add_to_cart_path(product.id), params: { product: { inventory: 2 } }
       existing_item = order.order_items.find { |order_item| order_item.product.name == order_item.product.name }
-      existing_item.save
       order.save
+      patch add_to_cart_path(product.id), params: { product: { inventory: 2 } }
+      must_respond_with :redirect
+    end
+
+    it "increases the quantity of an already added to cart" do
+      order = start_cart
+      product = Product.find_by(name: "Sirius")
+      patch add_to_cart_path(product.id), params: { product: { inventory: 2 } }
+      existing_item = order.order_items.find { |order_item| order_item.product.name == order_item.product.name }
       before_quantity = existing_item.quantity
       patch add_to_cart_path(product.id), params: { product: { inventory: 2 } }
-      order.reload
-       order.order_items.each do |orderitem|
-         pp  orderitem.quantity
-      end
-      existing_item.save
-      pp order.order_items.length
+      must_respond_with :redirect
       existing_item = order.order_items.find { |order_item| order_item.product.name == order_item.product.name }
       expect(existing_item.quantity).must_equal before_quantity + 2
     end
   end
 
+
   describe "set retire boolean" do
     it "successfully changes the boolean" do
       perform_login(users(:user_2))
       product = Product.find_by(name: "Sirius")
-      expect {patch retire_path(product.id)}.must_change product.retire, true
+      patch retire_path(product.id)
+      product.reload
+      expect(product.retire).must_equal true
       must_respond_with :redirect
     end
   end

@@ -22,7 +22,7 @@ describe OrdersController do
   describe "index" do
     it "responds with a success code if user is logged in" do
       perform_login(user1)
-      must_respond_with :success
+      must_respond_with :redirect
 
     end
 
@@ -47,71 +47,57 @@ describe OrdersController do
   end
 
   describe "show" do
-    it "responds with a success code if there is a current shopping cart" do
+    it "responds with a success code if there is a current shopping cart and the logged in user has items in that order" do
+      perform_login(user1)
       start_cart
       order = Order.find_by(id: session[:order_id])
+      order.order_items << order_item1
       get order_path(order.id)
       must_respond_with :success
     end
-
+    it "responds with a redirect code if the logged in user has no items in that order" do
+      perform_login(users(:user_2))
+      start_cart
+      order = Order.find_by(id: session[:order_id])
+      order.order_items << order_item1
+      get order_path(order.id)
+      must_respond_with :redirect
+      expect(flash[:error]).wont_be_nil
+    end
     it "redirects to root path if there is no current shopping cart or if one is not found" do
       get order_path(-1)
       must_respond_with :not_found
     end
   end
 
-  describe "update" do
-    it "can update current order with valid params" do
-      start_cart
-      order = Order.find_by(id: session[:order_id])
+  describe "summary" do
+    it "responds with redirect if the email address associated with the order matches the current user's email" do
+      perform_login(user1)
+      billing_info = BillingInfo.create(card_brand: "visa", card_cvv: "123", card_expiration: Time.now + 3.years, card_number: billing1.card_number, email: user1.email, order: order1)
+      order1.billing_info = billing_info
 
-      expect {
-        patch order_path(order.id), params: order_hash
-      }.wont_change "Order.count"
-
-      must_respond_with :redirect
-
-      order.reload
-
-      expect(order.status).must_equal order_hash[:order][:status]
-    end
-
-    it "responds with a redirect and bad_request code when updating a completed order" do
-      start_cart
-      order = Order.find_by(id: session[:order_id])
-      order.update(complete_date: Time.now)
-
-      expect {
-        patch order_path(order.id), params: order_hash
-      }.wont_change "Order.count"
-
+      get order_summary_path(order1.id)
       must_respond_with :redirect
     end
+    it "redirects to the Seller Dashboard the logged in user did not buy the order they are attempting to access" do
+      perform_login(user1)
+      user2 = users(:user_2)
+      BillingInfo.create(card_brand: "visa", card_cvv: "123", card_expiration: Time.now + 3.years, card_number: billing1.card_number, email: user2.email, order: order1)
 
-    it "responds with bad_request when attempting to update an existing order with invalid params" do
-      start_cart
-      order = Order.find_by(id: session[:order_id])
-
-      expect {
-        patch order_path(order.id), params: {order: {submit_date: Time.now + 1.year }}
-      }.wont_change "Order.count"
-
-      must_respond_with :bad_request
+      get order_summary_path(order1.id)
+      must_respond_with :redirect
     end
+    it "responds with 404 if attempting to view an order that does not exist, whether the uesr is logged in or not" do
+      get order_summary_path(-1)
+      must_respond_with :not_found
 
-    it "responds with not_found when attempting to update an invalid order witg valid params" do
-      expect {
-        patch order_path(-1), params: order_hash
-      }.wont_change "Order.count"
-
+      perform_login(user1)
+      get order_summary_path(-1)
       must_respond_with :not_found
     end
   end
 
   describe "complete" do
-    let (:order_item1) { order_items(:order_item1) }
-    let (:order_item2) { order_items(:order_item2) }
-
     it "updates status for order_item in order that is sold by logged in user and updates status of order and sets complete date if all order items are set to the same status" do
       new_status = "complete"
       perform_login(user1)
@@ -201,6 +187,7 @@ describe OrdersController do
 
     it "if no user is logged in, redirected to root" do
       new_status = "complete"
+      perform_login(user1)
       start_cart
 
       order = Order.find_by(id: session[:order_id])
@@ -215,7 +202,6 @@ describe OrdersController do
       }.wont_change "Order.count"
 
       must_respond_with :redirect
-      must_redirect_to root_path
       order.reload
 
       order.order_items.each do |order_item|
@@ -320,6 +306,7 @@ describe OrdersController do
     it "if no user is logged in, redirected to root" do
       new_status = "cancelled"
       start_cart
+      perform_login(user1)
 
       order = Order.find_by(id: session[:order_id])
       order.update(status: "pending")
@@ -332,7 +319,6 @@ describe OrdersController do
       }.wont_change "Order.count"
 
       must_respond_with :redirect
-      must_redirect_to root_path
       order.reload
 
       order.order_items.each do |order_item|
@@ -384,7 +370,6 @@ describe OrdersController do
 
       expect(order.status).must_equal "paid"
       expect(order.submit_date).wont_be_nil
-
     end
 
     it "if there is invalid billing info, redirect back to shopping cart checkout" do
@@ -406,7 +391,7 @@ describe OrdersController do
 
       must_respond_with :bad_request
 
-      expect(flash[:error]).to be_present
+      expect(flash[:error]).wont_be_nil
       #"Error occurred while updating order item status to 'pending'."
 
       order.reload
@@ -418,12 +403,14 @@ describe OrdersController do
     it "decrements the product inventory" do
       order = start_cart
       order.billing_info = billing1
-      order.order_items.delete_all
-      product = Product.create(categories: [category1], name: "Saturn", price: 24.95, description: "It's got rings!", inventory: 5, user_id: users(:user_1))
+      product = Product.new(name: "Saturn", price: 24.95, description: "It's got rings!", inventory: 5, user: user1)
+      product.categories << category1
+      product.save
       order_item = OrderItem.create(product: product, quantity: 1)
       order.order_items << order_item
       before_count = product.inventory
       post checkout_order_path(order.id)
+      product.reload
       expect(product.inventory).must_equal before_count - 1
     end
   end

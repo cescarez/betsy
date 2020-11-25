@@ -1,6 +1,7 @@
 star:
   name: star
   description: This is a star
+  products: product_1
 planet:
   name: planet
   description: This is a planet

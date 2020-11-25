@@ -7,23 +7,18 @@ describe ProductsHelper, :helper do
   let (:user1) { users(:user_1) }
   let (:star) {categories(:nebula)}
 
-  let (:product_hash) do
-    {
-        product: {
-            name: "Starry",
-            price: 200.00,
-            description: "It's starry",
-            inventory: 1,
-            user: (:user_1),
-            retire: false
-        }
-    }
+  describe "product_retire_string" do
+    it "will display 'Set Active'? if the product is retired" do
+      product_1.update(retire: true)
+      expect(product_1.retire).must_equal true
+      string = product_retire_string(product_1)
+      expect(string).must_equal "Set Active"
+    end
+    it "will display 'Retire <product name>' if the product is active" do
+      expect(product_1.retire).must_equal false
+      string = product_retire_string(product_1)
+      expect(string).must_equal "Retire #{product_1.name}"
+    end
   end
-  # describe "product_retire_string" do
-  #   it "does not raise an error"
-  #   product = Product.find_by(name: "Andromeda")
-  #   expect (product_retire_string(product)).must_be_close_to "Retire #{product.name}"
-
-  # end
 
 end

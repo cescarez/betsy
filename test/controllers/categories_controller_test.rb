@@ -30,8 +30,8 @@ describe CategoriesController do
     it "won't allow access if not logged in" do
     expect {
       post categories_path, params: category_hash
-    }.wont_change
-    must_respond_with :ArgumentError
+    }.wont_change "Category.count"
+    must_respond_with :redirect
     end
   end
   describe "show" do
