@@ -53,8 +53,8 @@ class BillingInfosController < ApplicationController
   def destroy
     if @billing_info.destroy
       flash[:success] = "Billing info was successfully deleted."
-    else
-      flash[:error] = "Some error occurred and billing info was not able to be deleted. Please try again."
+    # else
+    #   flash[:error] = "Some error occurred and billing info was not able to be deleted. Please try again."
     end
     redirect_back fallback_location: root_path
     return

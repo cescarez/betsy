@@ -4,17 +4,14 @@ class OrdersController < ApplicationController
   before_action :find_order, only: [:show, :complete, :cancel, :edit, :update]
   before_action :find_order_item, only: [:show, :complete, :cancel]
   before_action :require_login, only: [:index, :complete, :cancel, :edit, :update]
-  skip_before_action :find_user, except: [:update, :edit]
+  skip_before_action :find_user, except: [:index, :update, :edit]
 
   def checkout
 
   end
 
   def index
-    if @orders.nil?
-      current_user = User.find_by(id: session[:user_id])
-      @orders = Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == current_user }}
-    end
+    @orders = Order.all.filter { |order| order.order_items.any? {|order_item| order_item.user == @user }}
   end
 
   def create
@@ -24,11 +21,6 @@ class OrdersController < ApplicationController
       flash[:success] = "First item added to cart. Welcome to Stellar."
       session[:order_id] = @order.id
       redirect_back fallback_location: order_path(@order.id)
-    else
-      flash[:error] = "Error: shopping cart was not created."
-      @order.errors.each { |name, message| flash[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
-      flash[:error] << "Please try again."
-      redirect_back fallback_location: root_path, status: :bad_request
     end
     return
   end
@@ -39,38 +31,38 @@ class OrdersController < ApplicationController
   def summary
   end
 
-  def edit
-    if @order.billing_info.email != @user.email
-      flash[:error] = "You do not have permission to update this order, to update this order, you must have purchased the order."
-      redirect_back fallback_location: root_path
-    end
-    return
-
-  end
+  # def edit
+  #   if @order.billing_info.email != @user.email
+  #     flash[:error] = "You do not have permission to update this order, to update this order, you must have purchased the order."
+  #     redirect_back fallback_location: root_path
+  #   end
+  #   return
+  #
+  # end
 
  #written to allow a logged in user to update already submitted orders, but that's not currently in implementation
-  def update
-    if @order.billing_info.email == @user.email
-      if @order.complete_date
-        flash[:error] = "Your order has already been shipped. No changes may be made at this point."
-        redirect_back fallback_location: order_path(@order.id)
-      else
-        if @order.update(order_params)
-          flash[:success] = "Order successfully updated."
-          redirect_back fallback_location: order_path(@order.id)
-        else
-          flash.now[:error] = "Error: order did not update."
-          @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
-          flash.now[:error] << "Please try again."
-          render :show, status: :bad_request
-        end
-      end
-    else
-      flash[:error] = "You do not have permission to update this order, to update this order, you must have purchased the order."
-      redirect_back fallback_location: root_path
-    end
-    return
-  end
+ #  def update
+ #    if @order.billing_info.email == @user.email
+ #      if @order.complete_date
+ #        flash[:error] = "Your order has already been shipped. No changes may be made at this point."
+ #        redirect_back fallback_location: order_path(@order.id)
+ #      else
+ #        if @order.update(order_params)
+ #          flash[:success] = "Order successfully updated."
+ #          redirect_back fallback_location: order_path(@order.id)
+ #        else
+ #          flash.now[:error] = "Error: order did not update."
+ #          @order.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
+ #          flash.now[:error] << "Please try again."
+ #          render :show, status: :bad_request
+ #        end
+ #      end
+ #    else
+ #      flash[:error] = "You do not have permission to update this order, to update this order, you must have purchased the order."
+ #      redirect_back fallback_location: root_path
+ #    end
+ #    return
+ #  end
 
   def complete
     if @order_item
@@ -114,10 +106,6 @@ class OrdersController < ApplicationController
 
   def submit
     @order.update_all_items("pending")
-    if @order.errors.any?
-      flash.now[:error] = "Error occurred while updating order item status to 'pending'."
-      @order.errors.each { |error| flash.now[:error] += error.full_message.join(" ") }
-    end
 
     if session[:user_id].nil?
       flash.now[:notice] = "Please note, you are completing this order as a guest user. Please log in if you would like to associate this purchase with your account."
@@ -126,10 +114,6 @@ class OrdersController < ApplicationController
     if @order.validate_billing_info
       @order.update(submit_date: Time.now)
       @order.update_all_items("paid")
-      if @order.errors.any?
-        flash.now[:error] = "Error occurred while updating order item status to 'paid'."
-        @order.errors.each { |error| flash.now[:error] += error.full_message.join(" ") }
-      end
 
       @order.order_items.each do |order_item|
         order_item.product.inventory -= order_item.quantity
