@@ -52,9 +52,6 @@ class ShippingInfosController < ApplicationController
   def destroy
     if @shipping_info.destroy
       flash[:success] = "Shipping info was successfully deleted."
-    # TODO: delete 56 & 57? @shipping_info renders a message if @shipping_info.nil
-    # else
-    #   flash[:error] = "Some error occurred and shipping info was not able to be deleted. Please try again."
     end
     redirect_back fallback_location: root_path
     return
