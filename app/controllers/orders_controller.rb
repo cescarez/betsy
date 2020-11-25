@@ -47,7 +47,9 @@ class OrdersController < ApplicationController
 
       flash[:success] = "Thank you for shopping with Stellar!"
       session[:order_id] = nil
-      redirect_to order_summary_path, status: :ok
+      # redirect_to order_summary_path, status: :ok
+      render :summary, status: :ok
+
     else
       flash.now[:error] = "Error: order was not submitted for fulfillment."
       @order.billing_info.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
@@ -82,10 +84,10 @@ class OrdersController < ApplicationController
   end
 
   def summary
-    unless @order.billing_info.email == @login_user.email
-      flash[:error] = "You do not have permissions to view the order summary as a buyer. If you are a seller, please find information related to this order in your Dashboard, under 'My Orders'."
-      redirect_to current_user_path
-    end
+    # unless @order.billing_info.email == @login_user.email
+    #   flash[:error] = "You do not have permissions to view the order summary as a buyer. If you are a seller, please find information related to this order in your Dashboard, under 'My Orders'."
+    #   redirect_to current_user_path
+    # end
   end
 
   def complete

@@ -26,7 +26,7 @@
       </tr>
       <% @orders.each do |order| %>
         <tr>
-          <th scope="row"><%= link_to order.id, order_path(order.id) %></th>
+          <th scope="row"><%= button_to order.id, order_path(order.id), method: :get, class: "btn btn-outline-secondary" %></th>
           <td>
               <% order.order_items.each do |order_item| %>
                 <% if order_item.product.user.id == session[:user_id] %>
