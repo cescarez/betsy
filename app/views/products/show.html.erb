@@ -24,13 +24,13 @@
           <% end %>
         </td>
         <td><%= number_to_currency(@product.price) %> </td>
-        <td><%= @product.description %></tdd>
+        <td><%= @product.description %></td>
       </tbody>
     </table>
   </section>
   <section>
     <% if @product.image.attached? %>
-      <image src="<%=(url_for(@product.image)) %>" alt="celestial body">
+      <image src="<%=(url_for(@product.image)) %>" alt="celestial body" class="product-image" >
       </image>
     <% end %>
   </section>
@@ -48,7 +48,7 @@
       <% end %>
   </section>
   <section>
-    <h2>Stellar Product Reviews:</h2>
+    <h2 class="small-glow">Stellar Product Reviews:</h2>
     <!--     if user product reviews don't exist:-->
     <% if @product.reviews.length < 1 %>
           <h3>this seller has not been rated</h3>
