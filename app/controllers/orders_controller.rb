@@ -1,9 +1,9 @@
 class OrdersController < ApplicationController
   before_action :find_current_order, only: [:checkout, :submit, :edit_quantity]
-  before_action :find_order, only: [:show, :complete, :cancel, :summary]
+  before_action :find_order, only: [:show, :complete, :cancel, :summary, :find_order_item]
   before_action :find_order_item, only: [:show, :complete, :cancel]
   before_action :require_login, only: [:index, :complete, :cancel]
-  skip_before_action :find_user, except: [:index, :status_filter, :summary, :complete, :cancel]
+  skip_before_action :find_user, except: [:index, :status_filter, :summary, :find_order_item]
 
   def create
     @order = Order.new(order_params)
@@ -22,7 +22,7 @@ class OrdersController < ApplicationController
 
   def status_filter
     status = params[:status]
-    @orders = Order.filter_orders(status, @login_user)
+    @orders = Order.filter_orders(status, @login_user).order_by { |order| order.id }
     render :index, status: :ok
     return
   end
@@ -89,32 +89,24 @@ class OrdersController < ApplicationController
   end
 
   def complete
-    if @order_item
-      if @order_item.update(status: "complete")
-        if @order.validate_status
-          @order.update(complete_date: Time.now)
-        end
-        flash[:success] = "#{@order_item.product.name.capitalize} in Order ##{@order.id} has marked as shipped and designated as 'complete'."
-      else
-        flash[:error] = "Error: #{@order_item.product.name.capitalize} in Order ##{@order.id} was not marked as shipped. Please try again."
+    if @order_item.update(status: "complete")
+      if @order.validate_status
+        @order.update(complete_date: Time.now)
       end
+      flash[:success] = "#{@order_item.product.name.capitalize} in Order ##{@order.id} has marked as shipped and designated as 'complete'."
     else
-      flash[:error] = "You do are not the seller for any items in Order ##{@order.id}."
+      flash[:error] = "Error: #{@order_item.product.name.capitalize} in Order ##{@order.id} was not marked as shipped. Please try again."
     end
     redirect_back fallback_location: order_path(@order.id)
     return
   end
 
   def cancel
-    if @order_item
-      if @order_item.update(status: "cancelled")
-        @order.validate_status
-        flash[:success] = "#{@order_item.product.name.capitalize} in Order ##{@order.id} successfully cancelled."
-      else
-        flash[:error] = "Error. #{@order_item.product.name.capitalize} in Order ##{@order.id} was not cancelled. Please try again."
-      end
+    if @order_item.update(status: "cancelled")
+      @order.validate_status
+      flash[:success] = "#{@order_item.product.name.capitalize} in Order ##{@order.id} successfully cancelled."
     else
-      flash[:error] = "You do are not the seller for any items in Order ##{@order.id}."
+      flash[:error] = "Error. #{@order_item.product.name.capitalize} in Order ##{@order.id} was not cancelled. Please try again."
     end
     redirect_back fallback_location: order_path(@order.id)
     return
@@ -142,7 +134,14 @@ class OrdersController < ApplicationController
   end
 
   def find_order_item
-    current_user =  User.find_by(id: session[:user_id])
-    @order_item = @order.order_items.find { |order_item| order_item.user == current_user }
+    @login_user = User.find_by(id: session[:user_id])
+    @order_item = @order.order_items.find { |order_item| order_item.user.email == @login_user.email }
+    pp @login_user
+    # pp @order_item
+    # pp @order
+    if @order_item.nil?
+      flash[:error] = "You do are not the seller for any items in Order ##{@order.id}."
+      redirect_back fallback_location: orders_path
+    end
   end
 end
