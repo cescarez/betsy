@@ -32,11 +32,12 @@ describe BillingInfosController do
     it "can create a billing info if there are items in a cart (thus session[:order_id] exists)" do
       order = start_cart
       order.billing_info = billing_infos(:billing1)
+
       expect {
         post billing_infos_path, params: billing_info_hash
       }.must_differ 'BillingInfo.count', 1
 
-      must_respond_with  :redirect
+      must_respond_with :redirect
       latest = BillingInfo.last
       expect(latest.card_number).must_equal billing1.card_number
       expect(latest.card_expiration).must_equal billing1.card_expiration

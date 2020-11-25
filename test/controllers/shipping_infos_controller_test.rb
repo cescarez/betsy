@@ -36,9 +36,15 @@ describe ShippingInfosController do
     it "can create a shipping info if there are items in a cart (thus session[:order_id] exists)" do
       order1.shipping_info = shipping_infos(:shipping1)
       start_cart
+
       expect {
         post shipping_infos_path, params: shipping_info_hash
       }.must_differ 'ShippingInfo.count', 1
+
+      # shipping = ShippingInfo.create(first_name: "Test", last_name: "Person", street: "1234 st.", city: "LA", state: "CA", country: "USA", zipcode: "123214", order: order1)
+      # expect {
+      #   post shipping_infos_path
+      # }.must_differ "ShippingInfo.count", 1
 
       must_respond_with  :redirect
       latest = ShippingInfo.last
@@ -49,6 +55,8 @@ describe ShippingInfosController do
       expect(latest.state).must_equal shipping1.state
       expect(latest.country).must_equal shipping1.country
       expect(latest.zipcode).must_equal shipping1.zipcode
+      flash[:success].must_equal "Shipping info has been saved."
+      flash[:success].must_equal "Shipping info has been associated with teh current order"
     end
 
     it "shipping info won't save if there is no current cart" do
@@ -56,6 +64,8 @@ describe ShippingInfosController do
         post shipping_infos_path, params: shipping_info_hash
       }.wont_change 'ShippingInfo.count'
       expect(flash[:error]).wont_be_nil
+      flash[:error].must_equal "An error occurred and while the shipping info has been saved, it has not been associated with the current order (Order #{@order.id}). Please try again."
+      must_respond_with :redirect
     end
 
     it "will not create a shipping_info with invalid params" do
@@ -154,13 +164,18 @@ describe ShippingInfosController do
       must_respond_with :redirect
     end
 
-    it "does not change the db when the driver does not exist, then responds with " do
+    it "does not change the db when the shiping info does not exist, then responds with " do
       expect{
         delete shipping_info_path(-1)
       }.wont_change "ShippingInfo.count"
 
       must_respond_with :not_found
       expect(flash[:error]).wont_be_nil
+      flash[:error].must_equal "Shipping info not found."
+    end
+
+    it "will respond with flash error if shipping info cannot be destroyed" do
+
     end
   end
 end
