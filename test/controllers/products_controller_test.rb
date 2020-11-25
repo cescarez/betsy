@@ -16,7 +16,7 @@ describe ProductsController do
         inventory: 1,
         user: users(:user_1),
         retire: false,
-        categories: [star]
+        categories: categories_products(:category_product1)
       }
     }
   end
