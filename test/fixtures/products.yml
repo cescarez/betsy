@@ -5,6 +5,7 @@ product_1:
   inventory: 1
   user: user_1
   retire: false
+  categories: star
 
 product_2:
   name: "Sirius"
