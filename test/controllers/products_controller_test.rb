@@ -15,7 +15,8 @@ describe ProductsController do
         description: "It's starry",
         inventory: 1,
         user: users(:user_1),
-        retire: false
+        retire: false,
+        categories: [star]
       }
     }
   end
@@ -78,11 +79,13 @@ describe ProductsController do
 
   describe "update" do
     it "can update a product" do
-    perform_login(users(:user_1))
+      perform_login(users(:user_1))
       product = Product.find_by(name: "Sirius")
+      product.categories << star
+      product.save
 
-    expect {patch product_path(product.id), params: product_hash}.wont_change Product.count
-  end
+      expect {patch product_path(product.id), params: product_hash}.wont_change Product.count
+    end
   end
 
   describe "edit" do
@@ -108,7 +111,9 @@ describe ProductsController do
     it "successfully changes the boolean" do
       perform_login(users(:user_2))
       product = Product.find_by(name: "Sirius")
-      expect {patch retire_path(product.id)}.must_change product.retire, true
+      patch retire_path(product.id)
+      product.reload
+      expect(product.retire).must_equal true
       must_respond_with :redirect
     end
   end
