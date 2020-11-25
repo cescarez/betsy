@@ -142,22 +142,12 @@ describe ProductsController do
     end
 
     it "increases the quantity of an already added to cart" do
-      perform_login(users(:user_1))
-      product = Product.find_by(name: "Sirius")
-      product.categories << categories(:star)
       order = start_cart
-
+      product = Product.find_by(name: "Sirius")
       patch add_to_cart_path(product.id), params: { product: { inventory: 2 } }
-
       existing_item = order.order_items.find { |order_item| order_item.product.name == order_item.product.name }
-      before_quantity = existing_item.quantity
-
       patch add_to_cart_path(product.id), params: { product: { inventory: 2 } }
-
-      product.reload
-      order.reload
-      existing_item.reload
-
+      must_respond_with :redirect
       existing_item = order.order_items.find { |order_item| order_item.product.name == order_item.product.name }
       expect(existing_item.quantity).must_equal before_quantity + 2
     end

@@ -8,7 +8,6 @@ describe ShippingInfosController do
 
   let (:order1) { orders(:order1) }
 
-
   let (:shipping_info_hash) do
     {
       shipping_info: {
@@ -24,6 +23,19 @@ describe ShippingInfosController do
     }
   end
 
+  let (:shipping_info_hash_unnested) do
+    {
+      order: order1,
+      first_name: shipping1.first_name,
+      last_name: shipping1.last_name,
+      street: shipping1.street,
+      city: shipping1.city,
+      state: shipping1.state,
+      zipcode: shipping1.zipcode,
+      country: shipping1.country
+    }
+  end
+
   describe "new" do
     it "can get the new_shipping_info_path" do
       get new_shipping_info_path
@@ -33,21 +45,8 @@ describe ShippingInfosController do
   end
 
   describe "create" do
-    let (:shipping_info_hash_unnested) do
-      {
-        order: order1,
-        first_name: shipping1.first_name,
-        last_name: shipping1.last_name,
-        street: shipping1.street,
-        city: shipping1.city,
-        state: shipping1.state,
-        zipcode: shipping1.zipcode,
-        country: shipping1.country
-      }
-    end
     it "can create a shipping info if there are items in a cart (thus session[:order_id] exists)" do
-      order1.shipping_info = shipping_infos(:shipping1)
-      start_cart
+      order = start_cart
 
       expect {
         post shipping_infos_path, params: shipping_info_hash_unnested

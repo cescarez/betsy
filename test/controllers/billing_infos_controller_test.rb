@@ -5,6 +5,7 @@ describe BillingInfosController do
   let (:billing2) { billing_infos(:billing2) }
   let (:billing3) { billing_infos(:billing3) }
 
+  let (:shipping1) { shipping_infos(:shipping1) }
   let (:order1) { orders(:order1) }
 
   let (:billing_info_hash) do
@@ -42,7 +43,7 @@ describe BillingInfosController do
   describe "create" do
     it "can create a billing info if there are items in a cart (thus session[:order_id] exists)" do
       order = start_cart
-      order.shipping_info = shipping_infos(:shipping1)
+      order.shipping_info = shipping1
 
       expect {
         post billing_infos_path, params: billing_info_hash_unnested
@@ -59,14 +60,15 @@ describe BillingInfosController do
 
     it "will not create a billing_info with invalid params" do
       order = start_cart
-      order.shipping_info = shipping_infos(:shipping1)
+      order.shipping_info = shipping1
       billing_info_hash_unnested[:card_number] = nil
 
       expect {
         post billing_infos_path, params: billing_info_hash_unnested
-      }.must_differ "BillingInfo.count", 0
+      }.wont_differ "BillingInfo.count"
 
       must_respond_with :bad_request
+      expect(flash[:error]).wont_be_nil
     end
   end
 
