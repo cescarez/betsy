@@ -1,14 +1,12 @@
 <main>
-  <h2>
-    <section class=”product-index”>
-      Products
+  <h2 class="small-glow">Products</h2>
+    <section class="container"> <!--class was "product-image" before -->
+      <ul>
+        <% @products.each do |product|  %>
+          <% if product.retire == false || product.retire == nil%>
+            <span><li> <%= link_to product.name, product_path(product), class: "hover-5"%> </li></span>
+        <% end %>
+          <% end %>
+      </ul>
     </section>
-  </h2>
-  <ul>
-    <% @products.each do |product|  %>
-      <% if product.retire == false || product.retire == nil%>
-      <li> <%= link_to product.name, product_path(product) %> </li>
-    <% end %>
-      <% end %>
-  </ul>
 </main>

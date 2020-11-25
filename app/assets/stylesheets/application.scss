@@ -23,6 +23,10 @@ body {
   font-family: 'Offside', cursive;
 }
 
+//h1 {
+//  color: #cf7304;
+//}
+
 .nav {
   display: flex;
   width: 100%;
@@ -39,4 +43,282 @@ title {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.glow {
+  font-size: 80px;
+  color: #fff;
+  text-align: center;
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+  -moz-animation: glow 1s ease-in-out infinite alternate;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+h3, th, li, p {
+  color: white;
+  text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+  font-size: larger
+}
+
+td {
+  color: #cac7d4;
+  text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+}
+
+ul, li {
+  list-style-type: none;
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+  }
+
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+  }
+}
+
+
+
+
+/* https://codepen.io/natarajg/pen/WNxVgmV */
+// browser clear
+html, body {margin:0; padding:0;}
+
+// star and gradient colors
+$s1: #c1d6de;
+$s2: #855954;
+$s3: #93b0ba;
+$g0: #1E1D35;
+$g1: #11101A;
+
+// star settings
+$blur: 3;
+$spread: 1;
+
+/**
+ * createStars
+ * create n number of stars of color, c (hex code)
+ **/
+@function createStars ($n, $c) {
+  $value: '#{random(2000)}px #{random(2000)}px #{$blur}px #{$spread}px #{$c}';
+  @for $i from 2 through $n {
+    $value: '#{$value} , #{random(2000)}px #{random(2000)}px #{$blur}px #{$spread}px #{$c}';
+  }
+  @return unquote($value)
+}
+
+$stars-sm: createStars(1200, $s1);
+$stars-md: createStars(600, $s2);
+$stars-lg: createStars(300, $s3);
+
+#outerspace {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  background: radial-gradient(ellipse at bottom, $g0 0%, $g1 100%);
+  overflow: hidden;
+  z-index: -11;
+}
+
+#starfield {
+  position: relative;
+  height: 300vh;
+  width: auto;
+}
+
+#starfield::before {
+  content: " ";
+  background-image: url(https://www.nasa.gov/sites/default/files/images/137981main_image_feature_450_ys_full.jpg); //Original image before I changed it: 'https://www.jpl.nasa.gov/spaceimages/images/largesize/PIA22564_hires.jpg';
+  background-size: cover;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  opacity: 0.3;
+}
+
+#stars-sm {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  box-shadow: $stars-sm;
+  animation: movestars 800s linear infinite;
+
+  &:after {
+    content: " ";
+    position: absolute;
+    top: -2000px;
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    box-shadow: $stars-sm;
+  }
+}
+
+#stars-md {
+  width: 2px;
+  height: 2px;
+  background: transparent;
+  box-shadow: $stars-md;
+  animation: movestars 400s linear infinite;
+
+  &:after {
+    content: " ";
+    position: absolute;
+    top: -2000px;
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    box-shadow: $stars-md;
+  }
+}
+
+#stars-lg {
+  width: 3px;
+  height: 3px;
+  background: transparent;
+  box-shadow: $stars-lg;
+  animation: movestars 200s linear infinite;
+
+  &:after {
+    content: " ";
+    position: absolute;
+    top: -2000px;
+    width: 3px;
+    height: 3px;
+    background: transparent;
+    box-shadow: $stars-lg;
+  }
+}
+
+@keyframes movestars {
+  from { transform: translateY(0px); }
+  to { transform: translateY(2000px); }
+}
+
+// wibble buttons from:
+// https://codepen.io/pietvanzoen/pen/HtiAG
+
+
+.btn,
+.btn:before,
+.btn:after {
+  cursor: pointer;
+  padding: 0.5em 2em;
+  display: inline-block;
+  background-color: rgba(127, 157, 181, 0.6);
+  color: #fff;
+  border-radius: 6px;
+  position: relative;
+  -webkit-transition: all 0.5s cubic-bezier(0.5, 0, 0.5, 1);
+  transition: all 0.5s cubic-bezier(0.5, 0, 0.5, 1);
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+}
+
+.btn:before,
+.btn:after {
+  position: absolute;
+  content: attr(data-title);
+  z-index: -1;
+}
+
+.btn:before {
+  top: -0.1em;
+  right: -0.1em;
+  background-color: rgba(255, 0, 0, 0.5);
+}
+
+.btn:after {
+  bottom: -0.1em;
+  left: -0.1em;
+  background-color: rgba(0, 0, 255, 0.5);
+}
+
+.btn:hover {
+  background-color: rgba(127, 157, 181, 1);
+  box-shadow: 0.05em 0.05em 0.1em rgba(0,0,0,0.5);
+}
+
+.btn:hover:before {
+  top: 0;
+  right: 0;
+}
+.btn:hover:after {
+  bottom: 0;
+  left: 0;
+}
+
+.glitch {
+  font: {
+    size: 1.25em;
+    weight: 100;
+  }
+  text-decoration: none;
+  text-transform: uppercase;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  color: #fff;
+  letter-spacing: 5px;
+
+  &:before, &:after {
+    display: block;
+    content: attr(data-glitch);
+    text-transform: uppercase;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: .8;
+  } &:after {
+      color: #f0f;
+      z-index: -2;
+    } &:before {
+        color: #0ff;
+        z-index: -1;
+      }
+  &:hover {
+    &:before {
+      animation: glitch .3s cubic-bezier(.25, .46, .45, .94) both 5
+    }
+    &:after {
+      animation: glitch .3s cubic-bezier(.25, .46, .45, .94) reverse both 5
+    }
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .glitch {
+    font-size: 1em;
+  }
+}
+
+
+@keyframes glitch {
+  0% {
+    transform: translate(0)
+  }
+  20% {
+    transform: translate(-5px, 5px)
+  }
+  40% {
+    transform: translate(-5px, -5px)
+  }
+  60% {
+    transform: translate(5px, 5px)
+  }
+  80% {
+    transform: translate(5px, -5px)
+  }
+  to {
+    transform: translate(0)
+  }
 }
