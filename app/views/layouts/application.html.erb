@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Stellar</title>
+    <title>🌌Stellar</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -10,7 +10,7 @@
   </head>
   <header>
     <section class="title">
-      <h1><a name="top">Stellar</a></h1c>
+      <h1 class="glow"><a name="top">Stellar</a></h1>
     </section>
     <ul class="nav app-header__user-nav-container">
       <li class="nav-item app-header__nav_item">
@@ -55,6 +55,16 @@
         <% end %>
       </section>
     <% end %>
+    <!-- I got it from my mamma, j/k...
+    I got it from:
+    https://codepen.io/natarajg/pen/WNxVgmV-->
+    <div id="outerspace">
+      <div id="starfield">
+        <div id="stars-sm"></div>
+        <div id="stars-md"></div>
+        <div id="stars-lg"></div>
+      </div>
+    </div>
     <%= yield %>
   </main>
   </body>

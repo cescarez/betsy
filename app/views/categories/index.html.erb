@@ -1,11 +1,10 @@
 <main>
-  <h2>
-    <section class=”category-index”>
-      Categories
+  <h2 class="small-glow"> Categories</h2>
+    <section class="container"> <!--class was "category-index" before -->
+      <ul>
+        <% @categories.each do |category|  %>
+        <span><li> <%= link_to category.name, category_path(category), class: "hover-5" %> </li></span>
+        <% end %>
+      </ul>
     </section>
-  </h2>
-  <ul> <% @categories.each do |category|  %>
-      <li> <%= link_to category.name, category_path(category) %> </li>
-    <% end %>
-  </ul>
 </main>
