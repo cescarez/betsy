@@ -136,9 +136,6 @@ class OrdersController < ApplicationController
   def find_order_item
     @login_user = User.find_by(id: session[:user_id])
     @order_item = @order.order_items.find { |order_item| order_item.user.email == @login_user.email }
-    pp @login_user
-    # pp @order_item
-    # pp @order
     if @order_item.nil?
       flash[:error] = "You do are not the seller for any items in Order ##{@order.id}."
       redirect_back fallback_location: orders_path

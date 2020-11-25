@@ -47,13 +47,23 @@ describe OrdersController do
   end
 
   describe "show" do
-    it "responds with a success code if there is a current shopping cart" do
+    it "responds with a success code if there is a current shopping cart and the logged in user has items in that order" do
+      perform_login(user1)
       start_cart
       order = Order.find_by(id: session[:order_id])
+      order.order_items << order_item1
       get order_path(order.id)
       must_respond_with :success
     end
-
+    it "responds with a redirect code if the logged in user has no items in that order" do
+      perform_login(users(:user_2))
+      start_cart
+      order = Order.find_by(id: session[:order_id])
+      order.order_items << order_item1
+      get order_path(order.id)
+      must_respond_with :redirect
+      expect(flash[:error]).wont_be_nil
+    end
     it "redirects to root path if there is no current shopping cart or if one is not found" do
       get order_path(-1)
       must_respond_with :not_found
@@ -177,6 +187,7 @@ describe OrdersController do
 
     it "if no user is logged in, redirected to root" do
       new_status = "complete"
+      perform_login(user1)
       start_cart
 
       order = Order.find_by(id: session[:order_id])
@@ -191,7 +202,6 @@ describe OrdersController do
       }.wont_change "Order.count"
 
       must_respond_with :redirect
-      must_redirect_to root_path
       order.reload
 
       order.order_items.each do |order_item|
@@ -296,6 +306,7 @@ describe OrdersController do
     it "if no user is logged in, redirected to root" do
       new_status = "cancelled"
       start_cart
+      perform_login(user1)
 
       order = Order.find_by(id: session[:order_id])
       order.update(status: "pending")
@@ -308,7 +319,6 @@ describe OrdersController do
       }.wont_change "Order.count"
 
       must_respond_with :redirect
-      must_redirect_to root_path
       order.reload
 
       order.order_items.each do |order_item|

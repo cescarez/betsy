@@ -146,6 +146,7 @@ describe ProductsController do
       product = Product.find_by(name: "Sirius")
       patch add_to_cart_path(product.id), params: { product: { inventory: 2 } }
       existing_item = order.order_items.find { |order_item| order_item.product.name == order_item.product.name }
+      before_quantity = existing_item.quantity
       patch add_to_cart_path(product.id), params: { product: { inventory: 2 } }
       must_respond_with :redirect
       existing_item = order.order_items.find { |order_item| order_item.product.name == order_item.product.name }
