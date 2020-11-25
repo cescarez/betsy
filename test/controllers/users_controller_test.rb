@@ -67,6 +67,14 @@ describe 'logout' do
     must_respond_with :redirect
     must_redirect_to root_path
   end
+
+  it "will flash error if not logged in and redirect to root_path" do
+    delete logout_path, params: {}
+    expect(session[:user_id]).must_be_nil
+    must_respond_with :redirect
+    must_redirect_to root_path
+  end
+
 end
 
 # describe "Guest users" do
