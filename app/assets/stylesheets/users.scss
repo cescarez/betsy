@@ -50,12 +50,14 @@
 }
 
 
+//https://codepen.io/jegedeolamide99/pen/MOqrZj
 a {color:#492059;}
 .container {
-  display: flex;
+  display: inline-flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  margin: 20px;
   max-width: 1230px;
   background: rgba(255,255,255,0);
   flex-direction: row;
@@ -112,4 +114,19 @@ a:before, a:after, a > span:before, a > span:after {
 }
 .hover-5:hover:before, .hover-5:hover:after, .hover-5:hover > span:before, .hover-5:hover > span:after {
   transform: translate(0, 0);
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70%;
+  height: auto
+}
+
+ul, li {
+  color: white;
+  font-size: 1.45em;
+  color: #cac7d4;
+  text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
 }

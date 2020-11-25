@@ -1,6 +1,6 @@
 <main>
   <h2>
-    <section class=”product-show”>
+    <section class="product-show">
       <%= "Product: #{@product.name}" %>
     </section>
   </h2>
@@ -51,7 +51,7 @@
     <h2 class="small-glow">Stellar Product Reviews:</h2>
     <!--     if user product reviews don't exist:-->
     <% if @product.reviews.length < 1 %>
-          <h3>this seller has not been rated</h3>
+          <h3 class="small-glow">this seller has not been rated</h3>
 <!--         if user product reviews exist:-->
     <% else %>
         <table class="table-sm">
@@ -88,8 +88,8 @@
         <% end %>
     <% end %>
   </section>
-  <section>
-    <h2>Throw some sound in the void:</h2>
+  <section class="small-glow">
+    <h2 class="small-glow">Throw some sound in the void:</h2>
     <%= render partial: "reviews/review_form", locals: { action_name: "Leave your Mark", product: @product } %>
   </section>
 
