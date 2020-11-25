@@ -55,12 +55,12 @@
     <%= render partial: "shipping_infos/shipping-form", locals: {action_name: "Create"} %>
   </section>
 <% end %>
-<% if @order.shipping_info && @order.billing_info.nil? %>
+<% if @order.shipping_info && (@order.billing_info.nil? || !@order.validate_billing_info) %>
   <section>
     <%= render partial: "billing_infos/billing-form", locals: {action_name: "Create"} %>
   </section>
 <% end %>
-<% if @order.shipping_info && @order.billing_info %>
+<% if @order.shipping_info && @order.billing_info && @order.validate_billing_info %>
   <section>
     <%= button_to "Submit Order", checkout_order_path(@order.id), class:"btn btn-outline-success btn-lg" %>
   </section>
