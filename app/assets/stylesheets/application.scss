@@ -23,6 +23,10 @@ body {
   font-family: 'Offside', cursive;
 }
 
+h1 {
+  color: #cf7304;
+}
+
 .nav {
   display: flex;
   width: 100%;
@@ -39,4 +43,124 @@ title {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+
+/* https://codepen.io/natarajg/pen/WNxVgmV */
+// browser clear
+html, body {margin:0; padding:0;}
+
+// star and gradient colors
+$s1: #c1d6de;
+$s2: #855954;
+$s3: #93b0ba;
+$g0: #1E1D35;
+$g1: #11101A;
+
+// star settings
+$blur: 3;
+$spread: 1;
+
+/**
+ * createStars
+ * create n number of stars of color, c (hex code)
+ **/
+@function createStars ($n, $c) {
+  $value: '#{random(2000)}px #{random(2000)}px #{$blur}px #{$spread}px #{$c}';
+  @for $i from 2 through $n {
+    $value: '#{$value} , #{random(2000)}px #{random(2000)}px #{$blur}px #{$spread}px #{$c}';
+  }
+  @return unquote($value)
+}
+
+$stars-sm: createStars(1200, $s1);
+$stars-md: createStars(600, $s2);
+$stars-lg: createStars(300, $s3);
+
+#outerspace {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  background: radial-gradient(ellipse at bottom, $g0 0%, $g1 100%);
+  overflow: hidden;
+  z-index: -11;
+}
+
+#starfield {
+  position: relative;
+  height: 200vh;
+  width: 100%;
+}
+
+#starfield::before {
+  content: " ";
+  background-image: url(https://www.nasa.gov/sites/default/files/images/137981main_image_feature_450_ys_full.jpg); //Original image before I changed it: 'https://www.jpl.nasa.gov/spaceimages/images/largesize/PIA22564_hires.jpg';
+  background-size: cover;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  opacity: 0.3;
+}
+
+#stars-sm {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  box-shadow: $stars-sm;
+  animation: movestars 800s linear infinite;
+
+  &:after {
+    content: " ";
+    position: absolute;
+    top: -2000px;
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    box-shadow: $stars-sm;
+  }
+}
+
+#stars-md {
+  width: 2px;
+  height: 2px;
+  background: transparent;
+  box-shadow: $stars-md;
+  animation: movestars 400s linear infinite;
+
+  &:after {
+    content: " ";
+    position: absolute;
+    top: -2000px;
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    box-shadow: $stars-md;
+  }
+}
+
+#stars-lg {
+  width: 3px;
+  height: 3px;
+  background: transparent;
+  box-shadow: $stars-lg;
+  animation: movestars 200s linear infinite;
+
+  &:after {
+    content: " ";
+    position: absolute;
+    top: -2000px;
+    width: 3px;
+    height: 3px;
+    background: transparent;
+    box-shadow: $stars-lg;
+  }
+}
+
+@keyframes movestars {
+  from { transform: translateY(0px); }
+  to { transform: translateY(2000px); }
 }
