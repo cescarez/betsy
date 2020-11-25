@@ -17,12 +17,12 @@ class OrdersController < ApplicationController
   end
 
   def index
-    @orders = Order.filter_orders(nil, @login_user)
+    @orders = Order.filter_orders(nil, @login_user).sort_by { |order| order.id }
   end
 
   def status_filter
     status = params[:status]
-    @orders = Order.filter_orders(status, @login_user).order_by { |order| order.id }
+    @orders = Order.filter_orders(status, @login_user).sort_by { |order| order.id }
     render :index, status: :ok
     return
   end
