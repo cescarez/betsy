@@ -36,7 +36,7 @@
           </td>
           <td><%= number_to_currency(order.total_cost(session[:user_id])) %></td>
           <td><%= order.status %></td>
-          <td><%= order.complete_date %></td>
+          <td><%= order.submit_date %></td>
         </tr>
       <% end %>
     </tbody>

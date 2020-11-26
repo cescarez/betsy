@@ -47,9 +47,7 @@ class OrdersController < ApplicationController
 
       flash[:success] = "Thank you for shopping with Stellar!"
       session[:order_id] = nil
-      # redirect_to order_summary_path, status: :ok
       render :summary, status: :ok
-
     else
       flash.now[:error] = "Error: order was not submitted for fulfillment."
       @order.billing_info.errors.each { |name, message| flash.now[:error] << "#{name.capitalize.to_s.gsub('_', ' ')} #{message}." }
