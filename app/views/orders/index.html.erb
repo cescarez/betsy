@@ -13,14 +13,16 @@
         <th scope="col">Order #</th>
         <th scope="col">Items Ordered</th>
         <th scope="col">Order Total</th>
-        <th scope="col">Order Status</th>
+        <th scope="col">Order Item Status</th>
         <th scope="col">Date Placed</th>
       </tr>
     </thead>
     <tbody>
-      <tr class="table-active">
+      <tr class="table-active summary-row">
         <td><em>Orders Summary</em></td>
-        <td><%= @orders.length %></td>
+        <td>
+          <%= @orders.length %> orders
+        </td>
         <td><%= number_to_currency(@orders.sum { |order| order.total_cost(session[:user_id]) }) %></td>
         <td colspan="2"></td>
       </tr>
@@ -35,10 +37,19 @@
               <% end %>
           </td>
           <td><%= number_to_currency(order.total_cost(session[:user_id])) %></td>
-          <td><%= order.status %></td>
+          <td>
+            <% order.order_items.each do |order_item| %>
+              <% if order_item.product.user.id == session[:user_id] %>
+              <%= order_item.status %>
+              <% end %>
+            <% end %>
+          </td>
           <td><%= order.submit_date %></td>
         </tr>
       <% end %>
     </tbody>
   </table>
+</section>
+<section>
+  <%= button_to "Return to Dashboard", current_user_path, method: :get, class: "btn btn-outline-secondary" %>
 </section>
