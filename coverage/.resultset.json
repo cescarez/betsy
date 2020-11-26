@@ -1,7 +1,7 @@
 {
   "Minitest": {
     "coverage": {
-      "/Users/ada/ADA-PROJECTS/betsy/app/controllers/billing_infos_controller.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/controllers/billing_infos_controller.rb": {
         "lines": [
           1,
           1,
@@ -86,7 +86,7 @@
           null
         ]
       },
-      "/Users/ada/ADA-PROJECTS/betsy/app/controllers/application_controller.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/controllers/application_controller.rb": {
         "lines": [
           1,
           null,
@@ -101,9 +101,9 @@
           1,
           null,
           1,
-          94,
-          17,
-          17,
+          96,
+          16,
+          16,
           null,
           null,
           null,
@@ -117,7 +117,7 @@
           null
         ]
       },
-      "/Users/ada/ADA-PROJECTS/betsy/app/controllers/categories_controller.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/controllers/categories_controller.rb": {
         "lines": [
           1,
           1,
@@ -162,7 +162,7 @@
           null
         ]
       },
-      "/Users/ada/ADA-PROJECTS/betsy/app/controllers/orders_controller.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/controllers/orders_controller.rb": {
         "lines": [
           1,
           1,
@@ -172,12 +172,12 @@
           1,
           null,
           1,
-          37,
+          38,
           null,
-          37,
-          37,
-          37,
-          37,
+          38,
+          38,
+          38,
+          38,
           null,
           null,
           null,
@@ -213,9 +213,7 @@
           null,
           2,
           2,
-          null,
           2,
-          null,
           null,
           1,
           2,
@@ -284,7 +282,7 @@
           1,
           null,
           1,
-          37,
+          38,
           null,
           null,
           1,
@@ -302,20 +300,17 @@
           null,
           null,
           1,
-          9,
-          17,
-          7,
-          null,
-          null,
-          7,
-          3,
-          3,
+          10,
+          20,
+          10,
+          5,
+          5,
           null,
           null,
           null
         ]
       },
-      "/Users/ada/ADA-PROJECTS/betsy/app/controllers/products_controller.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/controllers/products_controller.rb": {
         "lines": [
           null,
           1,
@@ -481,7 +476,7 @@
           null
         ]
       },
-      "/Users/ada/ADA-PROJECTS/betsy/app/controllers/reviews_controller.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/controllers/reviews_controller.rb": {
         "lines": [
           1,
           null,
@@ -528,7 +523,7 @@
           null
         ]
       },
-      "/Users/ada/ADA-PROJECTS/betsy/app/controllers/shipping_infos_controller.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/controllers/shipping_infos_controller.rb": {
         "lines": [
           1,
           1,
@@ -611,7 +606,7 @@
           null
         ]
       },
-      "/Users/ada/ADA-PROJECTS/betsy/app/controllers/users_controller.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/controllers/users_controller.rb": {
         "lines": [
           1,
           1,
@@ -636,13 +631,13 @@
           null,
           null,
           1,
-          28,
+          31,
           null,
-          28,
+          31,
           null,
-          28,
+          31,
           null,
-          26,
+          29,
           null,
           null,
           2,
@@ -653,9 +648,9 @@
           null,
           null,
           null,
-          28,
-          28,
-          28,
+          31,
+          31,
+          31,
           null,
           null,
           null,
@@ -679,7 +674,7 @@
           null
         ]
       },
-      "/Users/ada/ADA-PROJECTS/betsy/app/models/billing_info.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/models/billing_info.rb": {
         "lines": [
           1,
           null,
@@ -730,14 +725,14 @@
           null
         ]
       },
-      "/Users/ada/ADA-PROJECTS/betsy/app/models/application_record.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/models/application_record.rb": {
         "lines": [
           1,
           1,
           null
         ]
       },
-      "/Users/ada/ADA-PROJECTS/betsy/app/models/category.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/models/category.rb": {
         "lines": [
           1,
           1,
@@ -747,7 +742,7 @@
           null
         ]
       },
-      "/Users/ada/ADA-PROJECTS/betsy/app/models/order_item.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/models/order_item.rb": {
         "lines": [
           1,
           1,
@@ -774,7 +769,7 @@
           null
         ]
       },
-      "/Users/ada/ADA-PROJECTS/betsy/app/models/order.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/models/order.rb": {
         "lines": [
           1,
           null,
@@ -860,7 +855,7 @@
           null
         ]
       },
-      "/Users/ada/ADA-PROJECTS/betsy/app/models/product.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/models/product.rb": {
         "lines": [
           1,
           1,
@@ -879,7 +874,7 @@
           null
         ]
       },
-      "/Users/ada/ADA-PROJECTS/betsy/app/models/review.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/models/review.rb": {
         "lines": [
           1,
           1,
@@ -889,7 +884,7 @@
           null
         ]
       },
-      "/Users/ada/ADA-PROJECTS/betsy/app/models/shipping_info.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/models/shipping_info.rb": {
         "lines": [
           1,
           1,
@@ -905,7 +900,7 @@
           null
         ]
       },
-      "/Users/ada/ADA-PROJECTS/betsy/app/models/user.rb": {
+      "/home/christabel/Documents/Ada/betsy/app/models/user.rb": {
         "lines": [
           1,
           1,
@@ -952,6 +947,6 @@
         ]
       }
     },
-    "timestamp": 1606346755
+    "timestamp": 1606364026
   }
 }
