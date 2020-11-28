@@ -125,7 +125,6 @@ class ProductsController < ApplicationController
           redirect_back fallback_location: product_path(@product.id)
           return
         end
-        existing_item.quantity += quantity
         existing_item.save
       else
         @order.order_items << @order_item
