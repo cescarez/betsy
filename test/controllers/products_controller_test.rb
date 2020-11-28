@@ -16,7 +16,7 @@ describe ProductsController do
         inventory: 1,
         user: users(:user_1),
         retire: false,
-        categories: product_1.categories
+        category_ids: [product_1.categories.first.id]
       }
     }
   end
@@ -62,9 +62,9 @@ describe ProductsController do
     it "responds with 404 for a bad id" do
       bad_id = -22
 
-    get product_path(bad_id)
+      get product_path(bad_id)
 
-    must_respond_with :not_found
+      must_respond_with :not_found
     end
   end
 

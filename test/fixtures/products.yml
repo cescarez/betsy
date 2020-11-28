@@ -14,3 +14,4 @@ product_2:
   inventory: 3
   user: user_2
   retire: false
+  categories: galaxy, moon
