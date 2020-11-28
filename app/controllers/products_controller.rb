@@ -99,7 +99,7 @@ class ProductsController < ApplicationController
   # low priority: refactor and break this method into method calls to order and only keep product-related code in products controller
   def add_to_cart
     if @product.inventory <= 0
-      # flash[:error] = "Item is out of stock, could not be added to cart"
+      flash[:error] = "Item is out of stock, could not be added to cart"
       redirect_to products_path
       return
     end
