@@ -1,3 +1,5 @@
+_deployed here: https://misc-celestial-bodies-betsy.herokuapp.com/_
+
 # bEtsy
 
 ## At a Glance
